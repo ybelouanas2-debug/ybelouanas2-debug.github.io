@@ -422,7 +422,8 @@ h1, h2, h3 { text-wrap: balance; }
 .proj h3 a { text-decoration: none; }
 .proj h3 a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
 .proj h3 a:focus-visible { outline: none; }
-.proj:focus-within { outline: 3px solid var(--guide); outline-offset: 4px; border-radius: 6px; }
+/* le cadre de focus ne s'affiche qu'au clavier, pas au clic */
+.proj:has(h3 a:focus-visible) { outline: 3px solid var(--guide); outline-offset: 4px; border-radius: 6px; }
 .proj-hook { margin-top: 14px; font-size: 1.08rem; line-height: 1.5; max-width: 44ch; }
 .proj-meta { margin-top: 18px; display: grid; gap: 7px; font-size: .95rem; line-height: 1.45; }
 .proj-meta > div { display: grid; grid-template-columns: 4.6rem minmax(0, 1fr); gap: 12px; }
@@ -1085,6 +1086,16 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 .cine .hero h1 > span:last-child { transform: translateX(calc(var(--p, 0) * 3vw)); }
 .cine .hero-art { z-index: 3; transform-origin: 50% 0; transform: translateY(calc(var(--p, 0) * -47vh)) scale(calc(1 + var(--p, 0) * .62)); }
 .cine .card { animation: none; translate: 0 calc(var(--p, 0) * var(--k, 10px) * -3.4); }
+.cine .hero-art { perspective: 1100px; }
+.cine .card {
+  transform: translate3d(calc(var(--px, 0) * var(--k, 10px)), calc(var(--py, 0) * var(--k, 10px)), calc(var(--k, 10px) * 2))
+             rotateY(calc(var(--px, 0) * 16deg)) rotateX(calc(var(--py, 0) * -11deg));
+}
+.cine .card .shot { position: relative; }
+.cine .hero-live:not(.hero-wire) .card .shot::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(112deg, #fff0 34%, #ffffff59 50%, #fff0 66%) calc(50% + var(--px, 0) * 150%) 0 / 260% 100% no-repeat;
+}
 
 /* Scènes 2 à 6, les projets : chacun tient l'écran le temps d'un travelling */
 .cine .proj { height: 150vh; border-bottom: 0; }
@@ -1100,9 +1111,24 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 }
 /* le texte ne bouge pas : le lien du titre couvre toute la scène, et doit rester au-dessus du visuel */
 .cine .proj h3 a::after { z-index: 2; }
-.cine .proj-visual { transform: translateY(calc((.5 - var(--p, 0)) * 12vh)) scale(calc(.9 + var(--p, 0) * .14)); }
-.cine .proj:focus-within { outline: none; }
-.cine .proj:focus-within .proj-stage { outline: 3px solid var(--guide); outline-offset: -3px; }
+/* le visuel vit dans un vrai volume : il vient du fond, flou, se met au point, puis penche selon le pointeur */
+.cine .proj-stage { perspective: 1500px; }
+.cine .proj-visual {
+  transform: translate3d(0, calc((.5 - var(--p, 0)) * 12vh), calc(-260px + var(--p, 0) * 260px))
+             rotateY(calc(var(--tx, 0) * 13deg)) rotateX(calc(var(--ty, 0) * -9deg));
+  filter: blur(calc((1 - var(--e, 1)) * 7px));
+  opacity: clamp(.18, calc((1 - var(--p, 0)) * 7), 1);
+}
+.cine .proj-stage::before { opacity: clamp(0, calc((1 - var(--p, 0)) * 7), 1); }
+/* cliquer sur un projet : la caméra plonge dans le visuel, puis l'étude de cas s'ouvre */
+.cine .proj.is-diving .proj-visual {
+  transition: transform 620ms var(--ease-in), opacity 260ms linear 360ms;
+  transform: translate3d(0, 0, 1180px); opacity: 0; filter: none;
+}
+.cine .proj.is-diving .proj-text, .cine .proj.is-diving .proj-stage::before { transition: opacity var(--dur-base) var(--ease-out); opacity: 0; }
+.view.is-arriving { animation: fondu var(--dur-base) var(--ease-out); }
+.cine .proj:has(h3 a:focus-visible) { outline: none; }
+.cine .proj:has(h3 a:focus-visible) .proj-stage { outline: 3px solid var(--guide); outline-offset: -3px; }
 
 /* les mots géants arrivent de loin, celui de la bande noire traverse l'écran */
 .cine .band-head .h2 { transform-origin: 50% 100%; transform: translateY(calc((1 - var(--e, 1)) * 9vh)) scale(calc(1.34 - var(--e, 1) * .34)); }
@@ -1111,6 +1137,40 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 /* contact : les deux lignes du titre viennent chacune d'un côté et se rejoignent */
 .cine .contact .h2 > span:first-child { transform: translateX(calc((1 - var(--e, 1)) * -22vw)); }
 .cine .contact .h2 > span:last-child { transform: translateX(calc((1 - var(--e, 1)) * 22vw)); }
+
+/* ---------- Les instruments ----------
+   Un calque posé sur la page, comme les règles et l'inspecteur d'un outil de maquettage : le calque
+   en cours, la position du pointeur, le zoom de la caméra, la hauteur dans la page. Il ne capte aucun
+   clic et n'existe que lorsque les scènes tournent. */
+.hud, .hud-sound { display: none; }
+.cine .hud { display: block; position: fixed; inset: 0; z-index: 38; pointer-events: none; color: #fff; mix-blend-mode: difference; }
+.hud p, .hud-sound { font: 600 .68rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.hud p { position: absolute; bottom: 18px; display: flex; gap: 8px; align-items: baseline; margin: 0; white-space: nowrap; }
+.hud span { opacity: .55; }
+.hud b { font-weight: 600; margin-right: 10px; }
+.hud-a { left: 132px; }
+.hud-b { right: 44px; }
+.hud-c { position: absolute; width: 12px; height: 12px; border: 0 solid currentColor; }
+.hud-c.tl { left: 14px; top: calc(var(--bar-h) + 12px); border-width: 1.5px 0 0 1.5px; }
+.hud-c.tr { right: 14px; top: calc(var(--bar-h) + 12px); border-width: 1.5px 1.5px 0 0; }
+.hud-c.bl { left: 14px; bottom: 12px; border-width: 0 0 1.5px 1.5px; }
+.hud-c.br { right: 14px; bottom: 12px; border-width: 0 1.5px 1.5px 0; }
+/* la règle de droite : la hauteur dans la page */
+.hud-rule {
+  position: absolute; right: 18px; top: 28vh; height: 44vh; width: 9px;
+  background: repeating-linear-gradient(to bottom, currentColor 0 1px, transparent 1px 10%) right / 100% 100% no-repeat;
+  border-bottom: 1px solid currentColor; opacity: .8;
+}
+.hud-rule i { position: absolute; right: 100%; top: 0; width: 16px; height: 2px; margin-top: -1px; background: currentColor; transform: translateY(calc(var(--alt, 0) * 44vh)); }
+/* une valeur qui change se verrouille d'un coup sec, comme sur un appareil de mesure */
+.hud b.is-lock { animation: verrou 240ms steps(2, jump-none) 2; }
+@keyframes verrou { 50% { opacity: .2; } }
+.cine .hud-sound {
+  display: block; position: fixed; left: 30px; bottom: 9px; z-index: 39;
+  min-height: 30px; padding: 0 12px; border: 1px solid currentColor; border-radius: 999px; cursor: pointer;
+  background: none; color: #fff; mix-blend-mode: difference;
+}
+.cine .hud-sound[aria-pressed="true"] { background: #fff; color: #000; }
 
 /* le survol n'existe qu'avec une souris : au doigt, c'est l'appui qui répond */
 @media (hover: hover) and (pointer: fine) {
@@ -1195,7 +1255,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   .motion, .viewwipe { display: none; }
 }
 @media print {
-  .topbar, .split, .split-hint, .hero-clip, .ticker, .viewwipe, .motion, body::after { display: none !important; }
+  .topbar, .split, .split-hint, .hero-clip, .ticker, .viewwipe, .motion, .hud, .hud-sound, body::after { display: none !important; }
   [data-reveal] { opacity: 1 !important; translate: none !important; }
   [data-reveal]::after, .wt::before, .wt::after { display: none !important; }
   .wt-t { clip-path: none !important; }
@@ -2321,6 +2381,8 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 <footer class="site-foot"><div class="wrap"><p>© 2026 Yasser Belouanas. Projets réalisés pendant mon BUT MMI à l’IUT de Haguenau.</p><button class="motion" id="motion" type="button">Couper les animations</button></div></footer>
 
 <div class="viewwipe" aria-hidden="true"></div>
+<div class="hud" aria-hidden="true"><i class="hud-c tl"></i><i class="hud-c tr"></i><i class="hud-c bl"></i><i class="hud-c br"></i><p class="hud-a"><span>Calque</span><b id="hud-layer">Ouverture</b></p><p class="hud-b"><span>X</span><b id="hud-x">0000</b><span>Y</span><b id="hud-y">0000</b><span>Zoom</span><b id="hud-z">100 %</b></p><div class="hud-rule"><i id="hud-mark"></i></div></div>
+<button class="hud-sound" id="sound" type="button" aria-pressed="false">Son coupé</button>
 
 <script>
 (function () {
@@ -2348,6 +2410,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   var current = '';                    /* '' = accueil, sinon l'identifiant de l'étude de cas */
   var homeY = 0;                       /* où en était la liste des projets quand on l'a quittée */
   var first = true;
+  var diving = false;                  /* vrai le temps d'une plongée de la caméra dans un projet */
 
   function show(id) {
     var changed = id !== current;
@@ -2357,8 +2420,15 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
     current = id;
     /* les deux versions d'une maquette doivent être prêtes avant qu'on demande la bascule */
     $$('.cmp img', view).forEach(function (i) { i.loading = 'eager'; });
+    if (!id) { $$('.is-diving').forEach(function (n) { n.classList.remove('is-diving'); }); }
     if (!changed || first) { return; }
-    if (wipe && on()) {
+    if (diving) {
+      /* on arrive au bout de la plongée : l'étude de cas apparaît en fondu, sans rideau */
+      diving = false;
+      view.classList.remove('is-arriving');
+      void view.offsetWidth;
+      view.classList.add('is-arriving');
+    } else if (wipe && on()) {
       /* la ligne bleue traverse l'écran et laisse la nouvelle page derrière elle */
       wipe.classList.remove('run');
       void wipe.offsetWidth;
@@ -2474,26 +2544,89 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 
   /* ---------- Scènes : le défilement fait avancer la caméra ----------
      Pour chaque scène à l'écran, on calcule où elle en est (entre 0 et 1) et on rattrape cette valeur
-     avec de l'inertie. Le CSS fait le reste. Aucune écriture hors de ces variables. */
+     avec de l'inertie. Le CSS fait le reste. Le même tour de boucle tient à jour les instruments. */
   var mqCine = w.matchMedia ? w.matchMedia('(min-width: 900px) and (min-height: 700px)') : null;
-  var scenes = $$('[data-scene]').map(function (el) {
-    return { el: el, kind: el.getAttribute('data-scene'), cur: {}, near: el === hero };
+  var scenes = $$('[data-scene]').map(function (el, i) {
+    var kind = el.getAttribute('data-scene');
+    var name = 'Ouverture';
+    if (kind === 'pin') {
+      var n = $$('.proj').indexOf(el) + 1;
+      name = 'Projet 0' + n + ' / 05 · ' + $('h3', el).textContent.trim().slice(0, 30);
+    } else if (kind === 'pass') {
+      name = el.id === 'contact' ? 'Contact' : $('.h2', el).textContent.trim();
+    }
+    return { el: el, kind: kind, name: name, cur: {}, near: el === hero, tx: 0, ty: 0 };
   });
-  var cineOn = false, looping = false, lastT = 0;
+  var cineOn = false, looping = false, lastT = 0, lastY = w.scrollY, speed = 0;
   var remeasure = function () {};
   var clamp = function (x) { return x < 0 ? 0 : (x > 1 ? 1 : x); };
-  var goal = function (sc, vh) {
-    if (sc.kind === 'hero') {
-      var y = w.scrollY;
-      return { p: clamp(y / (vh * 0.95)), c: clamp((y - vh * 0.95) / vh) };
-    }
-    var r = sc.el.getBoundingClientRect();
-    if (sc.kind === 'pin') {
-      var room = r.height - (vh - 56);
-      return { p: room > 0 ? clamp((56 - r.top) / room) : 0 };
-    }
-    return { e: clamp((vh - r.top) / (vh * 0.8)), v: clamp((vh - r.top) / (vh + r.height)) };
+  var ptr = { x: 0, y: 0, moved: false };
+
+  /* les instruments */
+  var hud = { layer: $('#hud-layer'), x: $('#hud-x'), y: $('#hud-y'), z: $('#hud-z'), mark: $('#hud-mark'), name: '', zoom: -1 };
+  var GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/+=<>[]';
+  var scrambleId = 0;
+  var scramble = function (el, text) {       /* les caractères défilent, puis se verrouillent de gauche à droite */
+    var id = ++scrambleId, t0 = 0, dur = 320 + text.length * 16;
+    var run = function (now) {
+      if (id !== scrambleId) { return; }
+      if (!t0) { t0 = now; }
+      var k = Math.min(1, (now - t0) / dur), lock = Math.floor(k * text.length), out = text.slice(0, lock);
+      for (var i = lock; i < text.length; i++) { out += text.charAt(i) === ' ' ? ' ' : GLYPHS.charAt((Math.random() * GLYPHS.length) | 0); }
+      el.textContent = out;
+      if (k < 1) { raf(run); } else { el.classList.remove('is-lock'); void el.offsetWidth; el.classList.add('is-lock'); }
+    };
+    raf(run);
   };
+  var pad = function (n) { n = String(Math.max(0, Math.round(n))); while (n.length < 4) { n = '0' + n; } return n; };
+
+  /* le son : coupé par défaut, synthétisé, et lié à la vitesse de la descente */
+  var snd = { on: false, want: false, ctx: null, gain: null, filt: null };
+  var sndStart = function () {
+    if (snd.ctx) { if (snd.ctx.state === 'suspended') { snd.ctx.resume(); } return; }
+    var AC = w.AudioContext || w.webkitAudioContext;
+    if (!AC) { return; }
+    try {
+      var ctx = new AC(), len = ctx.sampleRate * 2, buf = ctx.createBuffer(1, len, ctx.sampleRate), data = buf.getChannelData(0), last = 0;
+      for (var i = 0; i < len; i++) { last = (last + 0.02 * (Math.random() * 2 - 1)) / 1.02; data[i] = last * 3.5; }   /* un souffle grave */
+      var src = ctx.createBufferSource(); src.buffer = buf; src.loop = true;
+      snd.filt = ctx.createBiquadFilter(); snd.filt.type = 'lowpass'; snd.filt.frequency.value = 90;
+      snd.gain = ctx.createGain(); snd.gain.gain.value = 0;
+      src.connect(snd.filt); snd.filt.connect(snd.gain); snd.gain.connect(ctx.destination); src.start();
+      snd.ctx = ctx;
+    } catch (e) { snd.on = false; }
+  };
+  var tick = function (freq, long) {
+    if (!snd.on || !snd.ctx) { return; }
+    try {
+      var c = snd.ctx, o = c.createOscillator(), g = c.createGain(), t = c.currentTime, d = long ? 0.5 : 0.05;
+      o.type = 'sine'; o.frequency.setValueAtTime(freq, t);
+      if (long) { o.frequency.exponentialRampToValueAtTime(freq * 0.35, t + d); }
+      g.gain.setValueAtTime(long ? 0.09 : 0.035, t); g.gain.exponentialRampToValueAtTime(0.001, t + d);
+      o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + d + 0.02);
+    } catch (e) { /* pas de son, rien de grave */ }
+  };
+  var sndBtn = $('#sound');
+  var sndSet = function (next) {
+    snd.on = next;
+    if (next) { sndStart(); } else if (snd.gain) { snd.gain.gain.value = 0; }
+    if (sndBtn) { sndBtn.setAttribute('aria-pressed', next ? 'true' : 'false'); sndBtn.textContent = next ? 'Son actif' : 'Son coupé'; }
+    try { localStorage.setItem('yb-sound', next ? 'on' : 'off'); } catch (e) { /* le choix vaut pour cette visite */ }
+    if (next) { tick(660); }
+  };
+  if (sndBtn) {
+    sndBtn.addEventListener('click', function () { sndSet(!snd.on); });
+    try { snd.want = localStorage.getItem('yb-sound') === 'on'; } catch (e) { snd.want = false; }
+    if (snd.want) {
+      /* un navigateur ne laisse jouer du son qu'après un geste : on attend le premier */
+      var wake = function () { w.removeEventListener('pointerdown', wake); if (cineOn && !snd.on) { sndSet(true); } };
+      w.addEventListener('pointerdown', wake);
+    }
+    d.addEventListener('pointerover', function (e) {
+      if (snd.on && e.target.closest && e.target.closest('a, button') && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('a, button') === e.target.closest('a, button'))) { tick(430); }
+    });
+  }
+
   var kick = function () { if (cineOn && !looping) { looping = true; raf(step); } };
   function step(now) {
     looping = false;
@@ -2501,10 +2634,23 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
     var dt = Math.min(64, (now - lastT) || 16);
     lastT = now;
     var k = 1 - Math.exp(-dt / 130);   /* l'inertie : plus le diviseur est grand, plus le mouvement est lourd */
-    var vh = w.innerHeight, moving = false;
+    var vh = w.innerHeight, y = w.scrollY, moving = false, here = null, zoom = 100;
     scenes.forEach(function (sc) {
       if (!sc.near || sc.el.getClientRects().length === 0) { return; }
-      var t = goal(sc, vh);
+      var t;
+      if (sc.kind === 'hero') {
+        t = { p: clamp(y / (vh * 0.95)), c: clamp((y - vh * 0.95) / vh) };
+        if (y < vh * 1.45) { here = sc; }
+      } else {
+        var r = sc.el.getBoundingClientRect();
+        if (sc.kind === 'pin') {
+          var room = r.height - (vh - 56);
+          t = { p: room > 0 ? clamp((56 - r.top) / room) : 0, e: clamp((vh - r.top) / (vh * 0.9)), tx: sc.tx, ty: sc.ty };
+        } else {
+          t = { e: clamp((vh - r.top) / (vh * 0.8)), v: clamp((vh - r.top) / (vh + r.height)) };
+        }
+        if (r.top < vh * 0.5 && r.bottom > vh * 0.5) { here = sc; }
+      }
       for (var key in t) {
         var c = sc.cur[key];
         var n = c === undefined ? t[key] : c + (t[key] - c) * k;
@@ -2516,6 +2662,27 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
         sc.el.classList.toggle('is-rest', sc.cur.c >= 1);
       }
     });
+    /* les instruments : calque en cours, pointeur, zoom, hauteur */
+    if (hud.layer) {
+      var name = current ? 'Étude de cas · ' + current : (here ? here.name : hud.name || 'Ouverture');
+      if (name !== hud.name) { hud.name = name; scramble(hud.layer, name); tick(660); }
+      if (here && here.kind === 'hero') { zoom = 100 + (here.cur.p || 0) * 46; }
+      else if (here && here.kind === 'pin') { zoom = 85 + (here.cur.p || 0) * 15; }
+      zoom = Math.round(zoom);
+      if (zoom !== hud.zoom) { hud.zoom = zoom; hud.z.textContent = zoom + ' %'; }
+      if (ptr.moved) { ptr.moved = false; hud.x.textContent = pad(ptr.x); hud.y.textContent = pad(ptr.y); }
+      var H = d.documentElement.scrollHeight - vh;
+      hud.mark.style.setProperty('--alt', (H > 0 ? clamp(y / H) : 0).toFixed(4));
+    }
+    /* le souffle monte avec la vitesse de la descente */
+    speed += (Math.abs(y - lastY) / dt - speed) * 0.2;
+    lastY = y;
+    if (snd.on && snd.gain) {
+      var v = Math.min(1, speed / 3.2), at = snd.ctx.currentTime;
+      snd.gain.gain.setTargetAtTime(v * 0.2, at, 0.09);
+      snd.filt.frequency.setTargetAtTime(90 + v * 560, at, 0.09);
+      if (speed > 0.01) { moving = true; }
+    }
     if (moving) { kick(); }
   }
   var setCine = function () {
@@ -2527,8 +2694,9 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
       scenes.forEach(function (sc) {
         for (var key in sc.cur) { sc.el.style.removeProperty('--' + key); }
         sc.cur = {};
-        sc.el.classList.remove('is-deep', 'is-rest');
+        sc.el.classList.remove('is-deep', 'is-rest', 'is-diving');
       });
+      if (snd.on) { sndSet(false); }
     }
     remeasure();
     kick();
@@ -2536,7 +2704,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   if (hasIO) {
     var nearby = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
-        scenes.forEach(function (sc) { if (sc.el === e.target) { sc.near = e.isIntersecting; if (!sc.near) { sc.cur = sc.cur; } } });
+        scenes.forEach(function (sc) { if (sc.el === e.target) { sc.near = e.isIntersecting; } });
       });
       kick();
     }, { rootMargin: '30% 0px 30% 0px' });
@@ -2544,6 +2712,32 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   }
   w.addEventListener('scroll', kick, { passive: true });   /* ne fait que réveiller la boucle */
   w.addEventListener('resize', kick);
+  /* le pointeur : il fait pencher le visuel du projet survolé, et alimente les instruments */
+  w.addEventListener('pointermove', function (e) {
+    if (!cineOn) { return; }
+    ptr.x = e.clientX; ptr.y = e.clientY; ptr.moved = true;
+    var stage = e.pointerType === 'mouse' && e.target.closest ? e.target.closest('.proj-stage') : null;
+    scenes.forEach(function (sc) {
+      if (sc.kind !== 'pin') { return; }
+      if (stage && sc.el.contains(stage)) {
+        var r = stage.getBoundingClientRect();
+        sc.tx = (e.clientX - r.left) / r.width - 0.5;
+        sc.ty = (e.clientY - r.top) / r.height - 0.5;
+      } else { sc.tx = 0; sc.ty = 0; }
+    });
+    kick();
+  }, { passive: true });
+  /* cliquer sur un projet : la caméra plonge dans son visuel avant d'ouvrir l'étude de cas */
+  d.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('.proj h3 a') : null;
+    if (!a || !cineOn || e.metaKey || e.ctrlKey || e.shiftKey || e.button) { return; }
+    var row = a.closest('.proj');
+    e.preventDefault();
+    if (row.classList.contains('is-diving')) { return; }
+    row.classList.add('is-diving');
+    tick(240, true);
+    w.setTimeout(function () { diving = true; location.hash = a.getAttribute('href'); }, 560);
+  });
   if (mqCine) {
     if (mqCine.addEventListener) { mqCine.addEventListener('change', setCine); } else if (mqCine.addListener) { mqCine.addListener(setCine); }
   }
