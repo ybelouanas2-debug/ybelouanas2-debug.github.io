@@ -407,12 +407,12 @@ h1, h2, h3 { text-wrap: balance; }
 .count { min-height: 1.6em; margin-top: 12px; font-size: .93rem; color: var(--ink-2); }
 
 .projects { margin-top: 14px; border-top: 1px solid var(--line); }
-.proj {
+.proj { border-bottom: 1px solid var(--line); }
+.proj-stage {
   position: relative;
   display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   gap: clamp(22px, 4.4vw, 72px); align-items: center;
   padding-block: clamp(28px, 4.4vw, 56px);
-  border-bottom: 1px solid var(--line);
 }
 .proj h3 {
   font-family: var(--display); font-weight: 700;
@@ -968,6 +968,7 @@ body::after {
 .facts-list > div { align-items: baseline; }
 .contact { text-align: center; }
 .contact .h2 { font-size: clamp(2.8rem, 11vw, 9.6rem); max-width: none; }
+.contact .h2 > span { display: block; }
 .contact-text { margin-inline: auto; max-width: 46ch; }
 .mail-row { justify-content: center; }
 .mail { font-size: clamp(1.15rem, 3.6vw, 2.5rem); text-transform: none; letter-spacing: -.01em; }
@@ -1059,6 +1060,58 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   @keyframes lecture { to { transform: scaleX(1); } }
 }
 
+/* ---------- Les scènes ----------
+   Sur un écran assez grand, le défilement ne fait plus seulement descendre la page : il fait avancer
+   une caméra. Le script calcule où en est chaque scène (--p pendant qu'elle est épinglée, --e à son
+   entrée, --v pendant sa traversée, --c quand la suivante la recouvre) et amortit ces valeurs pour
+   donner du poids au mouvement. Ici, on ne fait que traduire ces valeurs en déplacements et en échelles.
+   Tout est sous .cine : sans lui (téléphone, animations coupées), la page reste une page normale. */
+
+/* Scène 1, l'ouverture : elle reste en place, le titre grandit, les maquettes montent et passent devant */
+.cine .hero { position: sticky; top: 0; height: 100vh; z-index: 0; }
+.cine .hero.is-rest { visibility: hidden; }
+.cine .hero.is-rest .card > * { animation-play-state: paused; }
+.cine #vue-accueil > .ticker { margin-top: 95vh; z-index: 1; }
+.cine #vue-accueil > main { position: relative; z-index: 1; background: var(--canvas); }
+.cine .hero .wrap { transform: translateY(calc(var(--c, 0) * -10vh)); }
+.cine .hero .kicker, .cine .hero-sub, .cine .split-hint {
+  opacity: calc(1 - var(--p, 0) * 3.4); transform: translateY(calc(var(--p, 0) * -7vh));
+}
+.cine .hero.is-deep .hero-sub, .cine .hero.is-deep .split-hint { visibility: hidden; }
+.cine .split { opacity: calc(1 - var(--p, 0) * 3.4); }
+.cine .hero.is-deep .split { visibility: hidden; }
+.cine .hero h1 { z-index: 2; transform-origin: 50% 0; transform: translateY(calc(var(--p, 0) * 4vh)) scale(calc(1 + var(--p, 0) * .46)); }
+.cine .hero h1 > span:first-child { transform: translateX(calc(var(--p, 0) * -3vw)); }
+.cine .hero h1 > span:last-child { transform: translateX(calc(var(--p, 0) * 3vw)); }
+.cine .hero-art { z-index: 3; transform-origin: 50% 0; transform: translateY(calc(var(--p, 0) * -47vh)) scale(calc(1 + var(--p, 0) * .62)); }
+.cine .card { animation: none; translate: 0 calc(var(--p, 0) * var(--k, 10px) * -3.4); }
+
+/* Scènes 2 à 6, les projets : chacun tient l'écran le temps d'un travelling */
+.cine .proj { height: 150vh; border-bottom: 0; }
+.cine .proj-stage {
+  position: sticky; top: var(--bar-h); height: calc(100vh - var(--bar-h));
+  z-index: 0; padding-block: 0; overflow: hidden; border-bottom: 1px solid var(--ink);
+}
+.cine .proj-stage::before {
+  content: counter(p, decimal-leading-zero); position: absolute; z-index: -1; left: -.04em; bottom: -.1em;
+  font-family: var(--display); font-weight: 900; font-stretch: 62%; font-size: 62vh; line-height: .8;
+  color: var(--soft); pointer-events: none;
+  transform: translateY(calc((var(--p, 0) - .5) * -16vh));
+}
+/* le texte ne bouge pas : le lien du titre couvre toute la scène, et doit rester au-dessus du visuel */
+.cine .proj h3 a::after { z-index: 2; }
+.cine .proj-visual { transform: translateY(calc((.5 - var(--p, 0)) * 12vh)) scale(calc(.9 + var(--p, 0) * .14)); }
+.cine .proj:focus-within { outline: none; }
+.cine .proj:focus-within .proj-stage { outline: 3px solid var(--guide); outline-offset: -3px; }
+
+/* les mots géants arrivent de loin, celui de la bande noire traverse l'écran */
+.cine .band-head .h2 { transform-origin: 50% 100%; transform: translateY(calc((1 - var(--e, 1)) * 9vh)) scale(calc(1.34 - var(--e, 1) * .34)); }
+.cine .band.dark .band-head .h2 { transform: translateX(calc((.5 - var(--v, .5)) * 26vw)); }
+.cine .band-head p { transform: translateY(calc((1 - var(--e, 1)) * 5vh)); }
+/* contact : les deux lignes du titre viennent chacune d'un côté et se rejoignent */
+.cine .contact .h2 > span:first-child { transform: translateX(calc((1 - var(--e, 1)) * -22vw)); }
+.cine .contact .h2 > span:last-child { transform: translateX(calc((1 - var(--e, 1)) * 22vw)); }
+
 /* le survol n'existe qu'avec une souris : au doigt, c'est l'appui qui répond */
 @media (hover: hover) and (pointer: fine) {
   .site-nav a:hover { background-size: 100% 2px; }
@@ -1104,7 +1157,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 
 /* ---------- Écrans étroits ---------- */
 @media (max-width: 960px) {
-  .proj { grid-template-columns: minmax(0, 1fr); }
+  .proj-stage { grid-template-columns: minmax(0, 1fr); }
   .about { grid-template-columns: minmax(0, 1fr); }
   .other { grid-template-columns: minmax(0, 1fr); }
   .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1165,7 +1218,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 
 <div class="view" id="vue-accueil">
 
-<header class="hero" id="haut">
+<header class="hero" id="haut" data-scene="hero">
   <div class="hero-live">
     <div class="wrap">
       <div class="site-head" data-wire="BANDEAU - nom et navigation">
@@ -1208,7 +1261,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 
   <section class="band" id="projets">
     <div class="wrap">
-      <div class="band-head">
+      <div class="band-head" data-scene="pass">
         <h2 class="h2" data-reveal="bar"><span class="wt"><span class="wt-t">Projets</span></span></h2>
         <p>Cinq projets racontés en détail. Chacun montre une partie différente du métier, du benchmark jusqu’à la mise en ligne.</p>
       </div>
@@ -1226,7 +1279,8 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 
       <div class="projects">
 
-        <article class="proj" data-skills="recherche parcours">
+        <article class="proj" data-skills="recherche parcours" data-scene="pin">
+          <div class="proj-stage">
           <div class="proj-text" data-reveal="rise">
             <h3><a href="#escalade">Le site d’une salle d’escalade associative</a></h3>
             <p class="proj-hook">Trois personnes, trois frustrations, et une arborescence où chaque page répond à l’une d’elles.</p>
@@ -1240,9 +1294,11 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
           <div class="proj-visual v-escalade" aria-hidden="true" data-reveal="wipe">
             <svg class="mini" viewBox="0 0 520 344" aria-hidden="true" focusable="false"><g class="p-camille"><text x="96" y="22" text-anchor="middle">Camille</text><rect class="pl" x="48" y="40" width="96" height="16" rx="8"/><line class="ln" x1="96" y1="56" x2="96" y2="66"/><rect class="st" x="48" y="66" width="96" height="16" rx="2"/><line class="ln" x1="96" y1="82" x2="96" y2="92"/><polygon class="dc" points="96,92 130,105.0 96,118 62,105.0"/><line class="ln" x1="96" y1="118" x2="96" y2="128"/><rect class="st" x="48" y="128" width="96" height="16" rx="2"/><line class="ln" x1="96" y1="144" x2="96" y2="154"/><polygon class="dc" points="96,154 130,167.0 96,180 62,167.0"/><line class="ln" x1="96" y1="180" x2="96" y2="190"/><rect class="st" x="48" y="190" width="96" height="16" rx="2"/><line class="ln" x1="96" y1="206" x2="96" y2="216"/><polygon class="dc" points="96,216 130,229.0 96,242 62,229.0"/><line class="ln" x1="96" y1="242" x2="96" y2="252"/><rect class="st" x="48" y="252" width="96" height="16" rx="2"/><line class="ln" x1="96" y1="268" x2="96" y2="278"/><polygon class="dc" points="96,278 130,291.0 96,304 62,291.0"/><line class="ln" x1="96" y1="304" x2="96" y2="314"/><rect class="pl" x="48" y="314" width="96" height="16" rx="8"/><circle class="walker" cx="96" cy="48.0" r="6" style="--len:274px;--dur:9.1s;--dl:0.0s"/></g><g class="p-ines"><text x="260" y="22" text-anchor="middle">Ines</text><rect class="pl" x="212" y="40" width="96" height="16" rx="8"/><line class="ln" x1="260" y1="56" x2="260" y2="66"/><rect class="st" x="212" y="66" width="96" height="16" rx="2"/><line class="ln" x1="260" y1="82" x2="260" y2="92"/><rect class="st" x="212" y="92" width="96" height="16" rx="2"/><line class="ln" x1="260" y1="108" x2="260" y2="118"/><rect class="st" x="212" y="118" width="96" height="16" rx="2"/><line class="ln" x1="260" y1="134" x2="260" y2="144"/><rect class="st" x="212" y="144" width="96" height="16" rx="2"/><line class="ln" x1="260" y1="160" x2="260" y2="170"/><polygon class="dc" points="260,170 294,183.0 260,196 226,183.0"/><line class="ln" x1="260" y1="196" x2="260" y2="206"/><rect class="st" x="212" y="206" width="96" height="16" rx="2"/><line class="ln" x1="260" y1="222" x2="260" y2="232"/><polygon class="dc" points="260,232 294,245.0 260,258 226,245.0"/><line class="ln" x1="260" y1="258" x2="260" y2="268"/><rect class="pl" x="212" y="268" width="96" height="16" rx="8"/><circle class="walker" cx="260" cy="48.0" r="6" style="--len:228px;--dur:7.6s;--dl:-3.4s"/></g><g class="p-marc"><text x="424" y="22" text-anchor="middle">Marc</text><rect class="pl" x="376" y="40" width="96" height="16" rx="8"/><line class="ln" x1="424" y1="56" x2="424" y2="66"/><rect class="st" x="376" y="66" width="96" height="16" rx="2"/><line class="ln" x1="424" y1="82" x2="424" y2="92"/><polygon class="dc" points="424,92 458,105.0 424,118 390,105.0"/><line class="ln" x1="424" y1="118" x2="424" y2="128"/><rect class="st" x="376" y="128" width="96" height="16" rx="2"/><line class="ln" x1="424" y1="144" x2="424" y2="154"/><polygon class="dc" points="424,154 458,167.0 424,180 390,167.0"/><line class="ln" x1="424" y1="180" x2="424" y2="190"/><rect class="st" x="376" y="190" width="96" height="16" rx="2"/><line class="ln" x1="424" y1="206" x2="424" y2="216"/><polygon class="dc" points="424,216 458,229.0 424,242 390,229.0"/><line class="ln" x1="424" y1="242" x2="424" y2="252"/><rect class="st" x="376" y="252" width="96" height="16" rx="2"/><line class="ln" x1="424" y1="268" x2="424" y2="278"/><rect class="pl" x="376" y="278" width="96" height="16" rx="8"/><circle class="walker" cx="424" cy="48.0" r="6" style="--len:238px;--dur:7.9s;--dl:-6.8s"/></g></svg>
           </div>
+        </div>
         </article>
 
-        <article class="proj" data-skills="recherche parcours ui">
+        <article class="proj" data-skills="recherche parcours ui" data-scene="pin">
+          <div class="proj-stage">
           <div class="proj-text" data-reveal="rise">
             <h3><a href="#webdoc">Un webdocumentaire à maquetter avant son contenu</a></h3>
             <p class="proj-hook">Un site mobile pour les enquêtes des étudiants en journalisme du CUEJ, dessiné alors que ni les textes ni les photos n’existent encore.</p>
@@ -1259,9 +1315,11 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
               <div class="phone"><span class="shot pan" style="--pan:-62.0%;--pan-d:19s"><img src="img/webdoc-specimen.webp" width="390" height="1843" alt="" loading="lazy" decoding="async"></span></div>
             </div>
           </div>
+        </div>
         </article>
 
-        <article class="proj" data-skills="strategie ui">
+        <article class="proj" data-skills="strategie ui" data-scene="pin">
+          <div class="proj-stage">
           <div class="proj-text" data-reveal="rise">
             <h3><a href="#ecole-hiver">Faire connaître l’École d’Hiver aux doctorants</a></h3>
             <p class="proj-hook">Un vrai commanditaire, le Pôle universitaire d’innovation Alsace, et une page à concevoir pour donner envie aux doctorants de partir trois jours en résidence.</p>
@@ -1275,9 +1333,11 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
           <div class="proj-visual v-eh" aria-hidden="true" data-reveal="wipe">
             <div class="browser"><span class="shot pan" style="--pan:-70.0%;--pan-d:22s"><img src="img/cover-eh-long.webp" width="960" height="2000" alt="" loading="lazy" decoding="async"></span></div>
           </div>
+        </div>
         </article>
 
-        <article class="proj" data-skills="recherche strategie ui">
+        <article class="proj" data-skills="recherche strategie ui" data-scene="pin">
+          <div class="proj-stage">
           <div class="proj-text" data-reveal="rise">
             <h3><a href="#dive-in">DIVE IN, un théâtre qui se ressent</a></h3>
             <p class="proj-hook">Un spectacle immersif sans dialogue imaginé pour le Relais Culturel de Haguenau : une stratégie, puis une page de présentation et une landing page qui ne font pas le même travail.</p>
@@ -1291,9 +1351,11 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
           <div class="proj-visual v-divein" aria-hidden="true" data-reveal="wipe">
             <div class="browser"><span class="shot pan" style="--pan:-55.1%;--pan-d:17s"><img src="img/divein-landing.webp" width="1440" height="2003" alt="" loading="lazy" decoding="async"></span></div>
           </div>
+        </div>
         </article>
 
-        <article class="proj" data-skills="code">
+        <article class="proj" data-skills="code" data-scene="pin">
+          <div class="proj-stage">
           <div class="proj-text" data-reveal="rise">
             <h3><a href="#kyoto">Découvrir Kyoto</a></h3>
             <p class="proj-hook">Mon premier site relié à une base de données. Un travail individuel, de la maquette à la mise en ligne.</p>
@@ -1307,6 +1369,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
           <div class="proj-visual v-kyoto" aria-hidden="true" data-reveal="wipe">
             <div class="browser"><span class="shot pan" style="--pan:-55.1%;--pan-d:16s"><img src="img/kyoto-accueil.webp" width="1280" height="1782" alt="" loading="lazy" decoding="async"></span></div>
           </div>
+        </div>
         </article>
 
       </div>
@@ -1315,7 +1378,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 
   <section class="band" id="autres">
     <div class="wrap">
-      <div class="band-head">
+      <div class="band-head" data-scene="pass">
         <h2 class="h2" data-reveal="bar"><span class="wt"><span class="wt-t">Et aussi</span></span></h2>
         <p>Des projets plus courts, qui m’ont fait toucher à d’autres supports.</p>
       </div>
@@ -1356,7 +1419,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 
   <section class="band dark" id="a-propos" data-reveal="curtain">
     <div class="wrap">
-      <div class="band-head"><h2 class="h2">À propos</h2></div>
+      <div class="band-head" data-scene="pass"><h2 class="h2">À propos</h2></div>
       <div class="about">
         <div class="about-text">
           <p>J’ai 19 ans et je suis en 2<sup>e</sup> année de BUT Métiers du Multimédia et de l’Internet à l’IUT de Haguenau (Université de Strasbourg), dans le parcours Stratégie de communication et UX design.</p>
@@ -2243,9 +2306,9 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 </div></main>
 </div>
 
-<section class="contact" id="contact" data-reveal="curtain">
+<section class="contact" id="contact" data-reveal="curtain" data-scene="pass">
 <div class="wrap">
-<h2 class="h2">Un stage UX/UI au printemps ?</h2>
+<h2 class="h2"><span>Un stage UX/UI</span> <span>au printemps ?</span></h2>
 <p class="contact-text">Je suis disponible 8 semaines, du 12 avril au 4 juin 2027, avec une convention de stage de l’IUT de Haguenau. Écrivez-moi et je vous envoie mon CV.</p>
 <div class="mail-row">
 <a class="mail" id="mail" href="mailto:ybelouanas2@gmail.com">ybelouanas2<wbr>@gmail.com</a>
@@ -2346,6 +2409,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
     }
     first = false;
     sync();
+    if (typeof kick === 'function') { raf(kick); }
   }
 
   /* ---------- Barre du haut : visible après l'ouverture, rubrique en cours soulignée ----------
@@ -2371,11 +2435,13 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
     });
   }
   if (hasIO && topbar) {
-    if (hero) {
+    var gate = $('.ticker') || hero;
+    if (gate) {
       new IntersectionObserver(function (e) {
-        heroGone = !e[e.length - 1].isIntersecting;
+        var last = e[e.length - 1];
+        heroGone = !last.isIntersecting && last.boundingClientRect.top < 64;
         sync();
-      }, { rootMargin: '-64px 0px 0px 0px' }).observe(hero);
+      }, { rootMargin: '-64px 0px 0px 0px' }).observe(gate);
     }
     var spy = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) { crossing[e.target.id] = e.isIntersecting; });
@@ -2405,6 +2471,83 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
       if (m) { e.preventDefault(); m.focus(); m.scrollIntoView(); }
     });
   }
+
+  /* ---------- Scènes : le défilement fait avancer la caméra ----------
+     Pour chaque scène à l'écran, on calcule où elle en est (entre 0 et 1) et on rattrape cette valeur
+     avec de l'inertie. Le CSS fait le reste. Aucune écriture hors de ces variables. */
+  var mqCine = w.matchMedia ? w.matchMedia('(min-width: 900px) and (min-height: 700px)') : null;
+  var scenes = $$('[data-scene]').map(function (el) {
+    return { el: el, kind: el.getAttribute('data-scene'), cur: {}, near: el === hero };
+  });
+  var cineOn = false, looping = false, lastT = 0;
+  var remeasure = function () {};
+  var clamp = function (x) { return x < 0 ? 0 : (x > 1 ? 1 : x); };
+  var goal = function (sc, vh) {
+    if (sc.kind === 'hero') {
+      var y = w.scrollY;
+      return { p: clamp(y / (vh * 0.95)), c: clamp((y - vh * 0.95) / vh) };
+    }
+    var r = sc.el.getBoundingClientRect();
+    if (sc.kind === 'pin') {
+      var room = r.height - (vh - 56);
+      return { p: room > 0 ? clamp((56 - r.top) / room) : 0 };
+    }
+    return { e: clamp((vh - r.top) / (vh * 0.8)), v: clamp((vh - r.top) / (vh + r.height)) };
+  };
+  var kick = function () { if (cineOn && !looping) { looping = true; raf(step); } };
+  function step(now) {
+    looping = false;
+    if (!cineOn) { return; }
+    var dt = Math.min(64, (now - lastT) || 16);
+    lastT = now;
+    var k = 1 - Math.exp(-dt / 130);   /* l'inertie : plus le diviseur est grand, plus le mouvement est lourd */
+    var vh = w.innerHeight, moving = false;
+    scenes.forEach(function (sc) {
+      if (!sc.near || sc.el.getClientRects().length === 0) { return; }
+      var t = goal(sc, vh);
+      for (var key in t) {
+        var c = sc.cur[key];
+        var n = c === undefined ? t[key] : c + (t[key] - c) * k;
+        if (Math.abs(t[key] - n) < 0.0008) { n = t[key]; } else { moving = true; }
+        if (n !== c) { sc.cur[key] = n; sc.el.style.setProperty('--' + key, n.toFixed(4)); }
+      }
+      if (sc.kind === 'hero') {
+        sc.el.classList.toggle('is-deep', sc.cur.p > 0.3);
+        sc.el.classList.toggle('is-rest', sc.cur.c >= 1);
+      }
+    });
+    if (moving) { kick(); }
+  }
+  var setCine = function () {
+    var next = on() && !!mqCine && mqCine.matches;
+    if (next === cineOn) { return; }
+    cineOn = next;
+    root.classList.toggle('cine', next);
+    if (!next) {
+      scenes.forEach(function (sc) {
+        for (var key in sc.cur) { sc.el.style.removeProperty('--' + key); }
+        sc.cur = {};
+        sc.el.classList.remove('is-deep', 'is-rest');
+      });
+    }
+    remeasure();
+    kick();
+  };
+  if (hasIO) {
+    var nearby = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        scenes.forEach(function (sc) { if (sc.el === e.target) { sc.near = e.isIntersecting; if (!sc.near) { sc.cur = sc.cur; } } });
+      });
+      kick();
+    }, { rootMargin: '30% 0px 30% 0px' });
+    scenes.forEach(function (sc) { if (sc.el !== hero) { nearby.observe(sc.el); } });
+  }
+  w.addEventListener('scroll', kick, { passive: true });   /* ne fait que réveiller la boucle */
+  w.addEventListener('resize', kick);
+  if (mqCine) {
+    if (mqCine.addEventListener) { mqCine.addEventListener('change', setCine); } else if (mqCine.addListener) { mqCine.addListener(setCine); }
+  }
+  setCine();
 
   /* ---------- Ouverture : fil de fer et maquette ---------- */
   var range = $('#split');
@@ -2477,6 +2620,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
     var stopped = false;
     range.addEventListener('input', function () { stopped = true; endOpening(); paint(parseFloat(range.value)); });
     w.addEventListener('resize', measure);
+    remeasure = measure;
     measure();
     hero.setAttribute('data-split', 'on');
     hero.classList.add('go');          /* les deux couches se mettent à flotter au même instant */
@@ -2696,6 +2840,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
         var next = !on();
         root.classList.toggle('anim', next);
         if (!next) { stopSplit(); }
+        setCine();
         try { localStorage.setItem('yb-motion', next ? 'on' : 'off'); } catch (e) { /* le choix vaut au moins pour cette visite */ }
         label();
       });
