@@ -187,6 +187,7 @@ h1, h2, h3 { text-wrap: balance; }
 .topbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 40; height: var(--bar-h);
   background: var(--canvas);
+  background: var(--canvas);    /* navigateurs sans color-mix : barre pleine */
   background: color-mix(in srgb, var(--canvas) 86%, transparent);
   -webkit-backdrop-filter: blur(14px) saturate(1.5); backdrop-filter: blur(14px) saturate(1.5);
   border-bottom: 1px solid var(--line);
@@ -521,7 +522,7 @@ h1, h2, h3 { text-wrap: balance; }
 .mini .ln { stroke: var(--ink); stroke-width: 2; }
 .mini .st { stroke: var(--ink); stroke-width: 2; fill: var(--paper); }
 .mini .dc { stroke: var(--ink); stroke-width: 2; fill: var(--yellow); }
-.mini .pl { fill: color-mix(in srgb, var(--c) 24%, var(--paper)); stroke: var(--c); stroke-width: 2; }
+.mini .pl { fill: var(--paper); fill: color-mix(in srgb, var(--c) 24%, var(--paper)); stroke: var(--c); stroke-width: 2; }
 /* chaque personne avance dans son parcours */
 .mini .walker { fill: var(--c); stroke: var(--paper); stroke-width: 2.5; opacity: 0; }
 .anim .mini .walker { animation: walk var(--dur, 9s) linear var(--dl, 0s) infinite paused; }
@@ -676,6 +677,7 @@ h1, h2, h3 { text-wrap: balance; }
 .map li { display: grid; grid-template-columns: minmax(0, 1fr) 46px minmax(0, 1fr); align-items: stretch; }
 .need {
   padding: 13px 16px; border-left: 5px solid var(--c); border-radius: 4px;
+  background: var(--paper);
   background: color-mix(in srgb, var(--c) 11%, var(--paper));
   font-weight: 600; line-height: 1.35;
 }
@@ -709,7 +711,7 @@ h1, h2, h3 { text-wrap: balance; }
 .fn + .fn { margin-top: 30px; }
 .fn + .fn::before { content: ""; position: absolute; left: 50%; top: -30px; width: 2px; height: 30px; margin-left: -1px; background: var(--ink); }
 .fn + .fn::after { content: ""; position: absolute; left: 50%; top: -8px; margin-left: -5px; border: 5px solid transparent; border-top: 8px solid var(--ink); border-bottom: 0; }
-.fn.cap-node { border: 2px solid var(--c); border-radius: 999px; background: color-mix(in srgb, var(--c) 15%, var(--paper)); font-weight: 700; }
+.fn.cap-node { border: 2px solid var(--c); border-radius: 999px; background: var(--paper); background: color-mix(in srgb, var(--c) 15%, var(--paper)); font-weight: 700; }
 .fn.step { border: 2px solid var(--ink); border-radius: 6px; background: var(--paper); }
 .fn.dec { min-height: 108px; padding: 0 30px; font-weight: 600; }
 .fn.dec .dia { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
@@ -1460,11 +1462,37 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   .work:hover .w-flyer .is-front { translate: -24% 3% !important; rotate: -5deg !important; }
   .motion, .viewwipe { display: none; }
 }
+/* ---------- Impression et « Enregistrer en PDF » ----------
+   Au moment d'imprimer, le script coupe les animations (tout ce qui attendait le défilement apparaît)
+   et charge les images encore en attente. Ici : papier blanc, encre noire, et rien de ce qui ne sert qu'à l'écran. */
 @media print {
-  .topbar, .split, .split-hint, .hero-clip, .ticker, .viewwipe, .motion, .manif, body::after { display: none !important; }
+  :root, :root:not([data-theme="light"]), :root[data-theme="dark"] {
+    --canvas: #fff; --paper: #fff; --soft: #F1ECE0; --ink: #17130D; --ink-2: #4F483D; --line: #CFC5AF;
+    --frame: #17130D; --guide: #1F5BFF; color-scheme: light;
+  }
+  @page { margin: 14mm 12mm; }
+  body { background: #fff; }
+  .topbar, .split, .split-hint, .hero-clip, .ticker, .viewwipe, .motion, .manif, body::after,
+  .skip, .actions, .filter, .seg, .ghost, .flowtabs, #copy, .copied, .back { display: none !important; }
   [data-reveal] { opacity: 1 !important; translate: none !important; }
   [data-reveal]::after, .wt::before, .wt::after { display: none !important; }
   .wt-t { clip-path: none !important; }
+  /* les bandes sombres et jaunes passent en noir sur blanc : sans fond imprimé, leur texte clair disparaîtrait */
+  .band.dark, .contact, .hero { --ink: #17130D; --ink-2: #4F483D; --line: #CFC5AF; --guide: #1F5BFF; background: none !important; color: #17130D !important; }
+  /* les trois parcours de l'escalade, l'un sous l'autre, au lieu d'un seul onglet */
+  .flows[data-active] .flowcol { display: block !important; }
+  .flows { grid-template-columns: minmax(0, 1fr) !important; }
+  h1, h2, h3, .sec > h2, .h2 { break-after: avoid; }
+  figure, .proj, .work, .other, .crop, .phone, .browser, .person, .flowcol, .clics li, .facts-list > div, table { break-inside: avoid; }
+}
+
+/* Très petits écrans : le menu garde ses quatre entrées sur une ligne.
+   En dessous de 370 px, la barre du haut laisse tomber le nom pour garder le menu entier. */
+@media (max-width: 389px) {
+  .site-nav, .topbar .site-nav { column-gap: 16px; }
+}
+@media (max-width: 369px) {
+  .topbar .brand { display: none; }
 }
 
 </style>
@@ -1478,7 +1506,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 <div class="wrap">
 <a class="brand" href="#haut">Yasser<span> Belouanas</span></a>
 <p class="bar-dispo">Stage UX/UI du 12 avril au 4 juin 2027</p>
-<div class="site-nav"><a href="#projets">Projets</a><a href="#a-propos">À propos</a><a href="#contact">Contact</a></div>
+<div class="site-nav"><a href="#projets">Projets</a><a href="#a-propos">À propos</a><a href="#contact">Contact</a><a href="cv-yasser-belouanas.pdf" download="CV_Yasser_Belouanas.pdf" type="application/pdf" aria-label="CV (PDF à télécharger)">CV</a></div>
 </div>
 <i class="bar-progress" aria-hidden="true"></i>
 </nav>
@@ -1494,6 +1522,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
           <a href="#projets">Projets</a>
           <a href="#a-propos">À propos</a>
           <a href="#contact">Contact</a>
+          <a href="cv-yasser-belouanas.pdf" download="CV_Yasser_Belouanas.pdf" type="application/pdf" aria-label="CV (PDF à télécharger)">CV</a>
         </nav>
       </div>
       <div class="hero-main">
@@ -3476,6 +3505,23 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   /* la vue affichée au chargement : ses titres sont découpés une fois les polices prêtes */
   if (d.fonts && d.fonts.ready) { d.fonts.ready.then(function () { splitView(current ? d.getElementById(current) : null); }); }
   else { splitView(current ? d.getElementById(current) : null); }
+
+  /* ---------- Impression et « Enregistrer en PDF » ----------
+     Sur papier, tout doit être là : on coupe les animations (ce qui attendait le défilement apparaît),
+     on charge les images encore en attente, et tout revient comme avant une fois l'impression finie. */
+  var printing = false, animBefore = false;
+  w.addEventListener('beforeprint', function () {
+    if (printing) { return; }
+    printing = true;
+    animBefore = on();
+    if (animBefore) { stopSplit(); root.classList.remove('anim'); setCine(); }
+    $$('img[loading="lazy"]').forEach(function (i) { i.loading = 'eager'; });
+  });
+  w.addEventListener('afterprint', function () {
+    if (!printing) { return; }
+    printing = false;
+    if (animBefore) { root.classList.add('anim'); setCine(); }
+  });
 
   /* ---------- Couper ou relancer les animations ---------- */
   var mt = $('#motion');
