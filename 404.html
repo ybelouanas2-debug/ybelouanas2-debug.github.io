@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page introuvable – Yasser Belouanas</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23FFE234'/%3E%3Cpath d='M0 7a7 7 0 0 1 7-7h9v32H7a7 7 0 0 1-7-7z' fill='%23fff'/%3E%3Cpath d='M5 10h7v4H5zM5 18h5v4H5z' fill='%23CDCDC6'/%3E%3Cpath d='M20 10h7v4h-7zM20 18h5v4h-5z'/%3E%3Cpath d='M15 0h2v32h-2z' fill='%231F5BFF'/%3E%3C/svg%3E">
+<link rel="preload" href="/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* Une page restée au stade du fil de fer : mêmes gris, mêmes étiquettes que la couche fil de fer de l'accueil */
+@font-face { font-family: "Archivo"; font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; src: url(/fonts/archivo-latin-wdth-normal.woff2) format("woff2"); }
+@font-face { font-family: "Instrument Sans"; font-weight: 400 700; font-display: swap; src: url(/fonts/instrument-sans-latin-wght-normal.woff2) format("woff2"); }
+* { box-sizing: border-box; }
+html { color-scheme: light; }
+body {
+  margin: 0; min-height: 100vh; display: grid; place-items: center; padding: clamp(16px, 4vw, 40px);
+  background: #FFFFFF; color: #17130D; font: 400 1.06rem/1.55 "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+}
+.sheet {
+  position: relative; width: min(100%, 1040px); padding: clamp(28px, 6vw, 72px);
+  border: 1.5px dashed #B4B4AD; border-radius: 12px;
+  display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 64px); align-items: center;
+}
+.label { margin: 0 0 14px; font-weight: 600; font-size: .78rem; letter-spacing: .05em; color: #5C5C56; }
+h1 {
+  margin: 0; font-family: "Archivo", "Arial Narrow", sans-serif; font-weight: 900; font-stretch: 62%;
+  text-transform: uppercase; letter-spacing: -.012em; line-height: .86; font-size: clamp(3rem, 7.4vw, 5.4rem);
+}
+p.text { margin: 22px 0 28px; max-width: 34ch; }
+.btn {
+  display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 999px;
+  background: #17130D; color: #FFFFFF; text-decoration: none; text-transform: uppercase;
+  font-family: "Archivo", "Arial Narrow", sans-serif; font-weight: 900; font-stretch: 84%; font-size: .92rem; letter-spacing: -.005em;
+}
+.btn:hover { background: #1F5BFF; }
+.btn:focus-visible { outline: 3px solid #1F5BFF; outline-offset: 3px; }
+/* l'image que cette page n'a jamais reçue : une case barrée */
+.ph {
+  aspect-ratio: 4 / 5; border: 1.5px solid #8C8C85; border-radius: 10px;
+  background:
+    linear-gradient(to top right, transparent calc(50% - 1px), #8C8C85 calc(50% - 1px), #8C8C85 calc(50% + 1px), transparent calc(50% + 1px)),
+    linear-gradient(to bottom right, transparent calc(50% - 1px), #8C8C85 calc(50% - 1px), #8C8C85 calc(50% + 1px), transparent calc(50% + 1px)),
+    #FFFFFF;
+}
+@media (max-width: 700px) {
+  .sheet { grid-template-columns: 1fr; }
+  .ph { aspect-ratio: 16 / 9; order: -1; }
+}
+</style>
+</head>
+<body>
+<main class="sheet">
+  <div>
+    <p class="label">Erreur 404</p>
+    <h1>Page introuvable</h1>
+    <p class="text">Cette page n’a jamais dépassé le stade du fil de fer. L’adresse est sans doute mal recopiée&#8239;: tout le portfolio tient sur une seule page.</p>
+    <a class="btn" href="/">Revenir au portfolio</a>
+  </div>
+  <div class="ph" role="img" aria-label="Emplacement d’image vide, dessiné comme dans un fil de fer"></div>
+</main>
+</body>
+</html>
