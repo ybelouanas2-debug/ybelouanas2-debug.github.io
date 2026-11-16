@@ -929,6 +929,9 @@ body::after {
 .actions { justify-content: center; }
 .btn { min-height: 46px; padding: 0 26px; font-size: .92rem; letter-spacing: .02em; }
 .dispo { font-size: .96rem; text-align: left; }
+/* dans l'ouverture, tout est centré : la ligne des dates aussi, même quand elle passe sur deux lignes (téléphone) */
+.hero .dispo { display: block; text-align: center; }
+.hero .dispo::before { display: inline-block; vertical-align: .02em; margin: 0 10px 0 0; }
 .hero-art { position: relative; width: min(100%, 940px); height: 46vw; max-height: 440px; margin-top: clamp(4px, 1.4vw, 18px); }
 .hero-wire [data-wire]::after { left: 50%; translate: -50% 0; }
 .hero-wire .site-head[data-wire]::after, .hero-wire .hero-art[data-wire]::after { translate: none; }
