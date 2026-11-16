@@ -1243,7 +1243,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 .cine .proj-stage { perspective: 1500px; }
 .cine .proj-visual {
   transform: translate3d(0, calc((.5 - var(--p, 0)) * 12vh), calc(-260px + var(--p, 0) * 260px))
-             rotateY(calc(var(--tx, 0) * 13deg)) rotateX(calc(var(--ty, 0) * -9deg)) skewY(calc(var(--sk, 0) * 1deg));
+             rotateY(calc(var(--tx, 0) * 13deg)) rotateX(calc(var(--ty, 0) * -9deg));
   filter: blur(calc((1 - var(--e, 1)) * 7px));
   opacity: clamp(.18, calc((1 - var(--p, 0)) * 7), 1);
 }
@@ -1259,19 +1259,15 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 .cine .proj:has(h3 a:focus-visible) .proj-stage { outline: 3px solid var(--guide); outline-offset: -3px; }
 
 /* les mots géants arrivent de loin, celui de la bande noire traverse l'écran */
-.cine .band-head .h2 { transform-origin: 50% 100%; transform: translateY(calc((1 - var(--e, 1)) * 9vh)) scale(calc(1.34 - var(--e, 1) * .34)) skewX(calc(var(--sk, 0) * -.9deg)); }
-.cine .band.dark .band-head .h2 { transform: translateX(calc((.5 - var(--v, .5)) * 26vw)) skewX(calc(var(--sk, 0) * -.9deg)); }
+.cine .band-head .h2 { transform-origin: 50% 100%; transform: translateY(calc((1 - var(--e, 1)) * 9vh)) scale(calc(1.34 - var(--e, 1) * .34)); }
+.cine .band.dark .band-head .h2 { transform: translateX(calc((.5 - var(--v, .5)) * 26vw)); }
 .cine .band-head p { transform: translateY(calc((1 - var(--e, 1)) * 5vh)); }
 /* contact : les deux lignes du titre viennent chacune d'un côté et se rejoignent */
 .cine .contact .h2 > span:first-child { transform: translateX(calc((1 - var(--e, 1)) * -22vw)); }
 .cine .contact .h2 > span:last-child { transform: translateX(calc((1 - var(--e, 1)) * 22vw)); }
 
 /* ---------- La vitesse ----------
-   Le défilement a une force : plus le geste est rapide, plus les images s'inclinent et les mots
-   géants se couchent. Dès qu'on relâche, un ressort raide remet tout d'équerre, d'un coup sec.
-   La valeur --sk (en degrés) est posée par la boucle des scènes, seulement près de l'écran. */
-.cine .work-visual { transform: skewY(calc(var(--sk, 0) * .9deg)); }
-.cine .case .stage { transform: skewY(calc(var(--sk, 0) * .6deg)); }
+   Le geste ne déforme rien : seuls les bandeaux suivent la molette (voir la boucle des scènes). */
 
 /* ---------- Le manifeste ----------
    La devise en très gros, sur deux lignes qui défilent à contre-sens. Au milieu, une fenêtre :
@@ -1331,7 +1327,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   --draw: clamp(0, calc((var(--p, 0) - .78) / .17), 1);
 }
 .cine .manif-stage { position: sticky; top: var(--bar-h); height: calc(100vh - var(--bar-h)); padding: 0; display: block; }
-.cine .mq { position: absolute; left: 0; transform: skewX(calc(var(--sk, 0) * -1.3deg)); }
+.cine .mq { position: absolute; left: 0; }
 .cine .mq-a { top: 21%; z-index: 1; }
 .cine .mq-b { top: 57%; }
 .cine .manif-win { position: absolute; left: 50%; top: 50%; margin: 0; translate: -50% -50%; }
@@ -2983,10 +2979,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   });
   var cineOn = false, looping = false, lastT = 0, lastY = w.scrollY, speed = 0;
   /* vitesse signée du défilement (px/ms), et ressort raide qui la transforme en inclinaison */
-  var vel = 0, sk = 0, skv = 0, skOut = 0;
-  /* ce qui se déforme avec la vitesse : seulement ce qui est près de l'écran reçoit la valeur */
-  var velEls = $$('.proj-visual, .work-visual, .case .stage, .band-head .h2, .mq');
-  var velNear = [];
+  var vel = 0;
   /* les bandeaux qui défilent : la vitesse du geste s'ajoute à leur vitesse de croisière */
   var marquees = [];
   $$('.mq').forEach(function (m) {
@@ -3133,20 +3126,6 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       m.tracks.forEach(function (t) { t.style.transform = tr; });
       moving = true;
     });
-    /* la déformation : proportionnelle à la vitesse, puis un ressort raide la ramène d'un coup sec */
-    /* intégré par pas fixes de 16 ms : un gros écart entre deux images ne fait pas exploser le ressort */
-    var target = Math.max(-3.2, Math.min(3.2, vel * 1.8));
-    for (var st = Math.min(8, Math.max(1, Math.round(dt / 16.67))); st > 0; st--) {
-      skv = skv * 0.45 + (target - sk) * 0.2;
-      sk += skv;
-    }
-    sk = Math.max(-4, Math.min(4, sk));
-    if (Math.abs(sk) < 0.01 && Math.abs(skv) < 0.01 && target === 0) { sk = 0; skv = 0; }
-    if (Math.abs(sk - skOut) > 0.01 || (sk === 0 && skOut !== 0)) {
-      skOut = sk;
-      velNear.forEach(function (el) { el.style.setProperty('--sk', sk.toFixed(3)); });
-    }
-    if (sk !== 0) { moving = true; }
     if (snd.on && snd.gain) {
       var v = Math.min(1, speed / 3.2), at = snd.ctx.currentTime;
       snd.gain.gain.setTargetAtTime(v * 0.2, at, 0.09);
@@ -3167,10 +3146,9 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
         sc.el.classList.remove('is-deep', 'is-rest', 'is-diving');
       });
       if (snd.on) { sndSet(false); }
-      /* sans scènes, les bandeaux repassent aux animations CSS, et plus rien n'est déformé */
+      /* sans scènes, les bandeaux repassent aux animations CSS */
       marquees.forEach(function (m) { m.tracks.forEach(function (t) { t.style.transform = ''; }); });
-      velEls.forEach(function (el) { el.style.removeProperty('--sk'); });
-      vel = 0; sk = 0; skv = 0; skOut = 0;
+      vel = 0;
     }
     measureMarquees();
     remeasure();
@@ -3184,14 +3162,6 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       kick();
     }, { rootMargin: '30% 0px 30% 0px' });
     scenes.forEach(function (sc) { if (sc.el !== hero) { nearby.observe(sc.el); } });
-    var velIO = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        var i = velNear.indexOf(e.target);
-        if (e.isIntersecting && i === -1) { velNear.push(e.target); }
-        if (!e.isIntersecting && i !== -1) { velNear.splice(i, 1); e.target.style.removeProperty('--sk'); }
-      });
-    }, { rootMargin: '20% 0px 20% 0px' });
-    velEls.forEach(function (el) { velIO.observe(el); });
     var mqIO = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         marquees.forEach(function (m) { if (m.el === e.target) { m.live = e.isIntersecting; } });
