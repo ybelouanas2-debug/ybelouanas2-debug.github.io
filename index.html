@@ -774,6 +774,14 @@ h1, h2, h3 { text-wrap: balance; }
 .anim .cmp-wire, .anim .cmp-wire img, .anim .cmp-line { transition: transform var(--dur-wipe) var(--ease-out); }
 .anim .cmp[data-moving] .cmp-line { opacity: 1; }
 .stage { padding: clamp(14px, 2.6vw, 32px); border-radius: 14px; background: var(--soft); }
+/* le chemin vers la page : deux captures, deux clics, numérotés dans le bleu des repères */
+.clics { list-style: none; display: grid; gap: clamp(20px, 3vw, 30px); }
+.clic-t { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-weight: 600; line-height: 1.3; }
+.clic-t b {
+  flex: none; display: inline-grid; place-items: center; width: 28px; height: 28px;
+  border-radius: 50%; background: var(--guide); color: #fff; font-size: .85rem;
+}
+.clics .browser { background: #fff; }
 .stage.dark { background: #0C0A0D; }
 .stage.dark .browser { border-color: #3A363D; }
 .stage.dark .browser::before { background-color: #3A363D; }
@@ -2221,7 +2229,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   <h2>Ranger la page avant de la colorer</h2>
 <div class="sec-body">
   <div class="prose">
-    <p>J’ai commencé par des fils de fer en gris, sur ordinateur puis sur téléphone, pour choisir l’ordre des parties avant de m’occuper des couleurs. La page suit les questions qu’un doctorant se pose, dans l’ordre où il se les pose.</p>
+    <p>J’ai commencé par des fils de fer en gris, sur ordinateur puis sur téléphone, pour choisir l’ordre des parties avant de m’occuper des couleurs. La page suit les questions qu’un doctorant se pose, dans l’ordre où il se les pose. Les fils de fer sont plus bas : le bouton « Fil de fer » les affiche à la place des maquettes.</p>
   </div>
   <ol class="qsteps" data-reveal="stagger">
     <li><b>C’est quoi ?</b><span>Le titre, les dates, le lieu et les trois arguments, tout en haut. Puis les défis et ceux qui les posent.</span></li>
@@ -2255,30 +2263,51 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   </ul>
   <div class="fig">
     <div class="tool">
+      <div class="seg" data-compare="eh-d eh-m" role="group" aria-label="Version de la page">
+        <button type="button" data-show="wire" aria-pressed="false">Fil de fer</button>
+        <button type="button" data-show="ui" aria-pressed="true">Maquette</button>
+      </div>
       <button class="ghost" type="button" data-expand="eh-d" data-more="Dérouler la page ordinateur" data-less="Replier la page ordinateur" aria-expanded="false">Dérouler la page ordinateur</button>
       <button class="ghost" type="button" data-expand="eh-m" data-more="Dérouler la page téléphone" data-less="Replier la page téléphone" aria-expanded="false">Dérouler la page téléphone</button>
     </div>
     <div class="stage" data-reveal="wipe">
       <div class="devices">
-        <div class="browser"><div class="crop" id="eh-d" style="--h:560px"><img src="img/eh-desktop-final.webp" width="1440" height="6004" loading="lazy" decoding="async" alt="Maquette ordinateur de la page École d'Hiver : en-tête sombre avec le titre, les dates, les trois arguments, le bouton S'inscrire et une photo de groupe floutée, puis les parties Rencontrer, Innover, les étapes, le programme des trois jours, les vidéos, une partie pour les encadrants, les valeurs, les témoignages, la FAQ et le pied de page du Pôle."></div></div>
-        <div class="phone"><div class="crop" id="eh-m" style="--h:560px"><img src="img/eh-mobile-final.webp" width="390" height="6192" loading="lazy" decoding="async" alt="Maquette téléphone de la même page : les parties empilées, le programme en accordéon, les témoignages en carrousel et le bouton S'inscrire fixé en bas, avec des notes grises qui expliquent ces choix."></div></div>
+        <div class="browser"><div class="crop cmp" id="eh-d" data-show="ui" style="--h:560px">
+          <span class="cmp-wire"><img class="is-wire" aria-hidden="true" src="img/eh-desktop-wire.webp" width="1440" height="5938" loading="lazy" decoding="async" alt="Fil de fer ordinateur de la même page, en gris : les mêmes parties dans le même ordre, des emplacements pour les photos et les vidéos, et des notes sur l'inscription, le programme et la FAQ en accordéon."></span>
+          <i class="cmp-line" aria-hidden="true"></i>
+          <img class="is-ui" src="img/eh-desktop-final.webp" width="1440" height="6004" loading="lazy" decoding="async" alt="Maquette ordinateur de la page École d'Hiver : en-tête sombre avec le titre, les dates, les trois arguments, le bouton S'inscrire et une photo de groupe floutée, puis les parties Rencontrer, Innover, les étapes, le programme des trois jours, les vidéos, une partie pour les encadrants, les valeurs, les témoignages, la FAQ et le pied de page du Pôle.">
+        </div></div>
+        <div class="phone"><div class="crop cmp" id="eh-m" data-show="ui" style="--h:560px">
+          <span class="cmp-wire"><img class="is-wire" aria-hidden="true" src="img/eh-mobile-wire.webp" width="390" height="5985" loading="lazy" decoding="async" alt="Fil de fer téléphone : les parties empilées, le menu en burger, le programme en accordéon et le bouton S'inscrire fixé en bas, avec des notes en gris."></span>
+          <i class="cmp-line" aria-hidden="true"></i>
+          <img class="is-ui" src="img/eh-mobile-final.webp" width="390" height="6192" loading="lazy" decoding="async" alt="Maquette téléphone de la même page : les parties empilées, le programme en accordéon, les témoignages en carrousel et le bouton S'inscrire fixé en bas, avec des notes grises qui expliquent ces choix.">
+        </div></div>
       </div>
     </div>
-    <p class="cap">Maquettes Figma finales, faites avec les retours du groupe. Les photos de groupe sont floutées ici. Les vidéos et les témoignages restent des emplacements en attendant les vrais : on n’a pas voulu en inventer. Sur la version téléphone, les notes grises expliquent ce qui change par rapport à l’ordinateur.</p>
+    <p class="cap">Maquettes Figma finales, faites avec les retours du groupe. Les photos de groupe sont floutées ici. Les vidéos et les témoignages restent des emplacements en attendant les vrais : on n’a pas voulu en inventer. Sur la version téléphone, les notes grises expliquent ce qui change par rapport à l’ordinateur. Le bouton « Fil de fer » montre la même page avant les couleurs.</p>
   </div>
 </div>
 </section>
 
 <section class="sec">
-  <h2>Trois accès depuis le site du Pôle</h2>
+  <h2>Deux clics depuis le site du Pôle</h2>
 <div class="sec-body">
   <div class="prose">
-    <p>Une bonne page ne sert à rien si personne n’y arrive. J’ai donc prévu trois entrées depuis l’accueil du Pôle : un lien dans le menu « Doctorant ou doctorante », la carte « M’informer et me former », et un bloc événement pendant la période d’inscription.</p>
+    <p>Une bonne page ne sert à rien si personne n’y arrive. Sur le site du Pôle, j’ai ajouté un lien « École d’Hiver » dans le menu « Doctorant ou doctorante », là où le doctorant cherche déjà ce qui le concerne. Il mène à la page, sur ordinateur comme sur téléphone.</p>
   </div>
   <div class="fig stage" data-reveal="wipe">
-    <div class="browser"><img src="img/eh-acces.webp" width="1200" height="760" loading="lazy" decoding="async" alt="Maquette de l'accueil du site du Pôle : le menu Doctorant ou doctorante ouvert avec un nouveau lien vers l'École d'Hiver, la carte M'informer et me former, et un bloc événement."></div>
+    <ol class="clics">
+      <li>
+        <p class="clic-t"><b>1</b>Il ouvre le menu « Doctorant ou doctorante ».</p>
+        <div class="browser"><picture><source media="(max-width: 700px)" srcset="img/eh-menu-1-s.webp" width="520" height="111"><img src="img/eh-menu-1.webp" width="1807" height="111" loading="lazy" decoding="async" alt="En-tête du site du Pôle universitaire d'innovation Alsace, menu fermé. Le lien Doctorant ou doctorante est entouré en bleu."></picture></div>
+      </li>
+      <li>
+        <p class="clic-t"><b>2</b>Il clique sur le nouveau lien « École d’Hiver ».</p>
+        <div class="browser"><picture><source media="(max-width: 700px)" srcset="img/eh-menu-2-s.webp" width="520" height="431"><img src="img/eh-menu-2.webp" width="1807" height="431" loading="lazy" decoding="async" alt="Le même en-tête, menu Doctorant ou doctorante ouvert : M'informer et me former, Financer ma thèse avec la Cifre, Valoriser le potentiel de ma thèse, Entreprendre à partir de ma thèse, puis le nouveau lien École d'Hiver, entouré en bleu. À droite, une photo floutée."></picture></div>
+      </li>
+    </ol>
   </div>
-  <p class="cap">En gris, ce qui existe déjà sur le site du Pôle et que je ne touche pas.</p>
+  <p class="cap">Captures du vrai site du Pôle, avec le lien ajouté. En bleu, là où on clique. La photo est floutée.</p>
 </div>
 </section>
 
@@ -3204,23 +3233,26 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   });
 
   /* ---------- Maquettes : la ligne bleue fait passer du fil de fer à la maquette ---------- */
+  /* une même bascule peut piloter plusieurs cadres (l'ordinateur et le téléphone) : ids séparés par des espaces */
   $$('.seg[data-compare]').forEach(function (seg) {
-    var box = d.getElementById(seg.getAttribute('data-compare'));
+    var boxes = seg.getAttribute('data-compare').split(/\s+/).map(function (id) { return d.getElementById(id); }).filter(Boolean);
     var btns = $$('button', seg);
     var timer = 0;
     btns.forEach(function (b) {
       b.addEventListener('click', function () {
         var to = b.getAttribute('data-show');
-        if (box.getAttribute('data-show') === to) { return; }
+        if (!boxes.length || boxes[0].getAttribute('data-show') === to) { return; }
         btns.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
-        box.setAttribute('data-show', to);
-        /* la version cachée ne doit pas être lue par un lecteur d'écran */
-        $$('.is-wire', box).forEach(function (i) { i.setAttribute('aria-hidden', to === 'wire' ? 'false' : 'true'); });
-        $$('.is-ui', box).forEach(function (i) { i.setAttribute('aria-hidden', to === 'ui' ? 'false' : 'true'); });
+        boxes.forEach(function (box) {
+          box.setAttribute('data-show', to);
+          /* la version cachée ne doit pas être lue par un lecteur d'écran */
+          $$('.is-wire', box).forEach(function (i) { i.setAttribute('aria-hidden', to === 'wire' ? 'false' : 'true'); });
+          $$('.is-ui', box).forEach(function (i) { i.setAttribute('aria-hidden', to === 'ui' ? 'false' : 'true'); });
+          if (on()) { box.setAttribute('data-moving', ''); }
+        });
         if (on()) {
-          box.setAttribute('data-moving', '');
           w.clearTimeout(timer);
-          timer = w.setTimeout(function () { box.removeAttribute('data-moving'); }, 950);
+          timer = w.setTimeout(function () { boxes.forEach(function (box) { box.removeAttribute('data-moving'); }); }, 950);
         }
       });
     });
