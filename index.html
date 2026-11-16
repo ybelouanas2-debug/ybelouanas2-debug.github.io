@@ -872,10 +872,10 @@ body::after {
   font-family: var(--display); font-weight: 900; font-stretch: 62%;
   text-transform: uppercase; letter-spacing: -.012em; line-height: .86;
 }
-.brand, .site-nav, .proj h3, .other h3, .sec > h2, .tk, .mail, .btn, .subhead, .kr h3, .branch h3, .person h3, .flowcol h3 {
+.brand, .site-nav, .proj h3, .other h3, .work h3, .sec > h2, .tk, .mail, .btn, .subhead, .kr h3, .branch h3, .person h3, .flowcol h3 {
   font-family: var(--display); font-weight: 900; font-stretch: 84%; text-transform: uppercase; letter-spacing: -.005em;
 }
-.kicker, .filter-label, .proj-meta dt, .facts dt, .facts-list dt, .other .where, .next span, .chip, .fbtn, .ghost, .seg button, .more, .bar-dispo, .motion, .back {
+.kicker, .filter-label, .proj-meta dt, .facts dt, .facts-list dt, .other .where, .work .where, .viewer .where, .viewer-close, .next span, .chip, .fbtn, .ghost, .seg button, .more, .bar-dispo, .motion, .back {
   font-family: var(--text); font-weight: 700; font-size: .74rem; line-height: 1.3;
   text-transform: uppercase; letter-spacing: .06em;
 }
@@ -963,6 +963,110 @@ body::after {
 .others { border-top-color: var(--ink); }
 .other { border-bottom-color: var(--ink); padding-block: 22px; align-items: center; }
 .other h3 { font-size: clamp(1.2rem, 2vw, 1.62rem); line-height: 1; }
+
+/* Et aussi : quatre planches posées sur la table, puis deux projets sans visuel */
+.works {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(40px, 5.4vw, 72px) clamp(22px, 3.6vw, 52px);
+  margin-bottom: clamp(44px, 6vw, 80px);
+}
+.work { position: relative; display: grid; align-content: start; gap: 10px; }
+.work-visual {
+  position: relative; aspect-ratio: 4 / 3; margin-bottom: 12px;
+  border: 1px solid var(--ink);
+  --vbg: var(--soft); --notch: clamp(10px, 1.4vw, 18px);
+}
+/* le même ticket que les projets, mais il découpe aussi ce qui est posé dessus */
+.wv {
+  position: absolute; inset: 7px; overflow: hidden;
+  display: grid; place-items: center; background: var(--vbg);
+  --c: #0000 var(--notch), #000 calc(var(--notch) + .6px);
+  -webkit-mask:
+    radial-gradient(circle at 0 0, var(--c)) 0 0 / 51% 51% no-repeat,
+    radial-gradient(circle at 100% 0, var(--c)) 100% 0 / 51% 51% no-repeat,
+    radial-gradient(circle at 0 100%, var(--c)) 0 100% / 51% 51% no-repeat,
+    radial-gradient(circle at 100% 100%, var(--c)) 100% 100% / 51% 51% no-repeat;
+  mask:
+    radial-gradient(circle at 0 0, var(--c)) 0 0 / 51% 51% no-repeat,
+    radial-gradient(circle at 100% 0, var(--c)) 100% 0 / 51% 51% no-repeat,
+    radial-gradient(circle at 0 100%, var(--c)) 0 100% / 51% 51% no-repeat,
+    radial-gradient(circle at 100% 100%, var(--c)) 100% 100% / 51% 51% no-repeat;
+}
+.wv > * { grid-area: 1 / 1; }
+.sheet {
+  display: block; background: #fff;
+  box-shadow: 0 1px 2px #0004, 0 16px 30px -16px #000b;
+  transition: translate var(--dur-slow) var(--ease-out), rotate var(--dur-slow) var(--ease-out);
+}
+.sheet img { width: 100%; }
+/* l'affiche A3 dépasse du cadre : au survol, elle remonte pour montrer le bas */
+.w-ia { --vbg: #17130D; }
+.w-ia .wv { place-items: start center; }
+.w-ia .sheet { width: 60%; margin-top: 9%; rotate: -2deg; transition: translate 1.6s var(--ease-in-out), rotate var(--dur-slow) var(--ease-out); }
+/* le flyer : le recto devant, le verso derrière */
+.w-flyer { --vbg: var(--yellow); }
+.w-flyer .sheet { width: 38%; }
+.w-flyer .is-back { translate: 24% -3%; rotate: 7deg; }
+.w-flyer .is-front { translate: -24% 3%; rotate: -5deg; }
+.w-hxh .browser { width: 84%; border-color: #000; transition: translate var(--dur-base) var(--ease-out); }
+.w-hxh .browser::before { background-color: #000; }
+.w-hxh .shot { display: block; aspect-ratio: 1100 / 687; overflow: hidden; }
+.w-ifsi { --vbg: #17130D; }
+.w-ifsi .screen {
+  display: block; width: 84%; border: 6px solid #000; border-radius: 6px; background: #000;
+  box-shadow: 0 0 0 1px #5A5140; transition: translate var(--dur-base) var(--ease-out);
+}
+.w-ifsi .screen img { width: 100%; }
+.work h3 { font-size: clamp(1.3rem, 2.2vw, 1.8rem); line-height: .98; font-stretch: 76%; }
+.work h3 a { text-decoration: none; }
+.work h3 a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.work h3 a:focus-visible { outline: none; }
+.work:has(h3 a:focus-visible) { outline: 3px solid var(--guide); outline-offset: 6px; border-radius: 4px; }
+.work p:not(.where) { max-width: 54ch; font-size: 1rem; line-height: 1.55; }
+.work .where { color: var(--ink-2); }
+.work .more { margin-top: 4px; justify-self: start; }
+.work:focus-within .more, .work:active .more { background-size: 100% 100%; color: #000; }
+
+/* La visionneuse : la planche d'un projet court, en grand, par-dessus la page */
+/* la page ne défile plus derrière la planche, et ne bouge pas de largeur quand sa barre de défilement disparaît */
+html.has-viewer { overflow: hidden; scrollbar-gutter: stable; }
+.viewer {
+  width: min(1180px, calc(100vw - 24px));
+  height: calc(100vh - 24px); height: calc(100dvh - 24px);
+  max-width: none; max-height: none; margin: auto; padding: 0;
+  border: 1px solid var(--ink); border-radius: 0;
+  background: var(--canvas); color: var(--ink); overflow: hidden;
+}
+.viewer::backdrop { background: rgb(21 18 13 / .8); }
+.viewer-in { display: flex; flex-direction: column; height: 100%; }
+.viewer-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  padding: 16px clamp(18px, 3vw, 34px); border-bottom: 1px solid var(--ink);
+}
+.viewer-head .where { margin-bottom: 8px; color: var(--ink-2); }
+.viewer-head h2 {
+  font-family: var(--display); font-weight: 900; font-stretch: 76%; text-transform: uppercase;
+  font-size: clamp(1.35rem, 3vw, 2.3rem); line-height: .96; letter-spacing: -.005em;
+}
+.viewer-close {
+  flex: none; min-height: 44px; padding: 0 18px; cursor: pointer;
+  border: 1px solid var(--ink); border-radius: 999px; background: none;
+  transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+.viewer-body { flex: 1; overflow: auto; overscroll-behavior: contain; padding: clamp(18px, 3vw, 34px); }
+.viewer-body:focus { outline: none; }
+.viewer-text { max-width: 62ch; margin-bottom: clamp(22px, 3vw, 34px); }
+.plates { display: grid; gap: clamp(26px, 3vw, 40px); justify-items: center; }
+.plates.two { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+.plate { width: 100%; max-width: 980px; }
+.plate-a3 { max-width: 860px; margin-inline: auto; }
+.plate > img, .plate .browser { box-shadow: 0 1px 2px #0004, 0 18px 36px -18px #000b; }
+.plate .browser { border-color: #000; }
+.plate .browser::before { background-color: #000; }
+.plate figcaption { margin-top: 10px; font-size: .92rem; line-height: 1.45; color: var(--ink-2); }
+.anim .viewer[open] { animation: planche var(--dur-base) var(--ease-out); }
+.anim .viewer[open]::backdrop { animation: fondu var(--dur-base) var(--ease-out); }
+@keyframes planche { from { opacity: 0; translate: 0 18px; } }
 
 /* À propos, contact */
 .band.dark { background: #17130D; }
@@ -1181,6 +1285,12 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   .fbtn:not([aria-pressed="true"]):hover, .ghost:hover, .seg button:not([aria-pressed="true"]):hover { background: var(--soft); }
   .proj:hover .more { background-size: 100% 100%; color: #000; }
   .proj:hover .proj-visual > * { translate: 0 -5px; }
+  .work:hover .more { background-size: 100% 100%; color: #000; }
+  .anim .work:hover .w-ia .sheet { translate: 0 -34%; rotate: 0deg; }
+  .anim .work:hover .w-flyer .is-back { translate: 40% -5%; rotate: 11deg; }
+  .anim .work:hover .w-flyer .is-front { translate: -40% 4%; rotate: -8deg; }
+  .anim .work:hover .w-hxh .browser, .anim .work:hover .w-ifsi .screen { translate: 0 -6px; }
+  .viewer-close:hover { background: var(--ink); color: var(--canvas); }
   .split-grab:hover .split-knob { scale: 1.08; }
   .anim .ticker:hover .ticker-track { animation-play-state: paused; }
   .next:hover b { translate: 10px 0; text-decoration: underline; text-decoration-thickness: .08em; text-underline-offset: .16em; }
@@ -1216,6 +1326,11 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 }
 
 /* ---------- Écrans étroits ---------- */
+@media (max-width: 760px) {
+  .works { grid-template-columns: minmax(0, 1fr); }
+  .plates.two { grid-template-columns: minmax(0, 1fr); }
+  .viewer-head { align-items: flex-start; }
+}
 @media (max-width: 960px) {
   .proj-stage { grid-template-columns: minmax(0, 1fr); }
   .about { grid-template-columns: minmax(0, 1fr); }
@@ -1252,6 +1367,9 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   }
   .view.is-entering { animation-duration: var(--dur-base) !important; }
   .btn:hover, .proj:hover .proj-visual > *, .next:hover b { translate: none; }
+  .work:hover .w-ia .sheet, .work:hover .w-hxh .browser, .work:hover .w-ifsi .screen { translate: none !important; }
+  .work:hover .w-flyer .is-back { translate: 24% -3% !important; rotate: 7deg !important; }
+  .work:hover .w-flyer .is-front { translate: -24% 3% !important; rotate: -5deg !important; }
   .motion, .viewwipe { display: none; }
 }
 @media print {
@@ -1319,7 +1437,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 
 <main data-main tabindex="-1">
 
-  <section class="band" id="projets">
+  <section class="band" id="projets" data-scene="zone">
     <div class="wrap">
       <div class="band-head" data-scene="pass">
         <h2 class="h2" data-reveal="bar"><span class="wt"><span class="wt-t">Projets</span></span></h2>
@@ -1436,12 +1554,61 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
     </div>
   </section>
 
-  <section class="band" id="autres">
+  <section class="band" id="autres" data-scene="zone">
     <div class="wrap">
       <div class="band-head" data-scene="pass">
         <h2 class="h2" data-reveal="bar"><span class="wt"><span class="wt-t">Et aussi</span></span></h2>
         <p>Des projets plus courts, qui m’ont fait toucher à d’autres supports.</p>
       </div>
+
+      <div class="works" data-reveal="stagger">
+        <article class="work">
+          <div class="work-visual w-ia" aria-hidden="true">
+            <div class="wv">
+            <span class="sheet"><img src="img/ia-s.webp" width="640" height="905" alt="" loading="lazy" decoding="async"></span>
+            </div>
+          </div>
+          <p class="where">2<sup>e</sup> année</p>
+          <h3><a href="img/ia.webp" data-view="voir-ia" aria-haspopup="dialog">Infographie sur l’intelligence artificielle</a></h3>
+          <p>Une affiche A3 pour un hebdomadaire fictif : dix jeux de données sur l’IA à rendre lisibles par tout le monde, sur un fond clair imposé.</p>
+          <span class="more" aria-hidden="true">Voir en grand</span>
+        </article>
+        <article class="work">
+          <div class="work-visual w-flyer" aria-hidden="true">
+            <div class="wv">
+            <span class="sheet is-back"><img src="img/af-verso-s.webp" width="480" height="681" alt="" loading="lazy" decoding="async"></span>
+            <span class="sheet is-front"><img src="img/af-recto-s.webp" width="480" height="681" alt="" loading="lazy" decoding="async"></span>
+            </div>
+          </div>
+          <p class="where">SAÉ 103, 1<sup>re</sup> année</p>
+          <h3><a href="img/af-recto.webp" data-view="voir-flyer" aria-haspopup="dialog">Flyer Jeux M’éclate</a></h3>
+          <p>Un flyer A5 recto verso pour une association de jeux de société, dessiné au trait sur Photoshop autour d’un slogan : le jeu nous oppose, puis nous rassemble.</p>
+          <span class="more" aria-hidden="true">Voir en grand</span>
+        </article>
+        <article class="work">
+          <div class="work-visual w-hxh" aria-hidden="true">
+            <div class="wv">
+            <div class="browser"><span class="shot"><img src="img/hxh-accueil.webp" width="1100" height="687" alt="" loading="lazy" decoding="async"></span></div>
+            </div>
+          </div>
+          <p class="where">SAÉ 105, 1<sup>re</sup> année</p>
+          <h3><a href="img/hxh-accueil.webp" data-view="voir-hxh" aria-haspopup="dialog">Site Hunter x Hunter</a></h3>
+          <p>Mon tout premier site, codé seul, en français et en anglais. Les données y étaient encore écrites à la main dans le code.</p>
+          <span class="more" aria-hidden="true">Voir en grand</span>
+        </article>
+        <article class="work">
+          <div class="work-visual w-ifsi" aria-hidden="true">
+            <div class="wv">
+            <span class="screen"><img src="img/ifsi.webp" width="1280" height="721" alt="" loading="lazy" decoding="async"></span>
+            </div>
+          </div>
+          <p class="where">SAÉ 104, en groupe de cinq, 1<sup>re</sup> année</p>
+          <h3><a href="img/ifsi.webp" data-view="voir-ifsi" aria-haspopup="dialog">Vidéo tournée dans un IFSI</a></h3>
+          <p>Une vidéo sur l’écoute d’une personne en détresse, tournée dans un institut de formation en soins infirmiers. J’étais au cadre, à l’image et au son.</p>
+          <span class="more" aria-hidden="true">Voir en grand</span>
+        </article>
+      </div>
+
       <div class="others" data-reveal="stagger">
         <article class="other">
           <h3>Horuz</h3>
@@ -1453,31 +1620,11 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
           <p>Un exercice de recommandation stratégique sur la marque Oasis Tropical : l’audit, puis une proposition de stratégie.</p>
           <p class="where">En groupe, 2<sup>e</sup> année, en cours</p>
         </article>
-        <article class="other">
-          <h3>Infographie sur l’intelligence artificielle</h3>
-          <p>Une affiche A3 pour un hebdomadaire fictif. Dix jeux de données à rendre lisibles par tout le monde, avec un fond clair imposé pour l’éco-conception.</p>
-          <p class="where">2<sup>e</sup> année</p>
-        </article>
-        <article class="other">
-          <h3>Flyer Jeux M’éclate</h3>
-          <p>Un flyer A5 pour une association de jeux de société, dessiné au trait en deux couleurs sur Photoshop, autour d’un slogan : le jeu nous oppose, puis nous rassemble.</p>
-          <p class="where">SAÉ 103, 1<sup>re</sup> année</p>
-        </article>
-        <article class="other">
-          <h3>Site Hunter x Hunter</h3>
-          <p>Mon tout premier site, codé seul. Les données y étaient encore écrites à la main dans le code.</p>
-          <p class="where">SAÉ 105, 1<sup>re</sup> année</p>
-        </article>
-        <article class="other">
-          <h3>Vidéo tournée dans un IFSI</h3>
-          <p>Une courte vidéo sur l’écoute, tournée dans un institut de formation en soins infirmiers. J’étais au cadre, à l’image et au son.</p>
-          <p class="where">SAÉ 104, en groupe de cinq, 1<sup>re</sup> année</p>
-        </article>
       </div>
     </div>
   </section>
 
-  <section class="band dark" id="a-propos" data-reveal="curtain">
+  <section class="band dark" id="a-propos" data-reveal="curtain" data-scene="zone">
     <div class="wrap">
       <div class="band-head" data-scene="pass"><h2 class="h2">À propos</h2></div>
       <div class="about">
@@ -1499,6 +1646,81 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   </section>
 
 </main>
+
+<!-- les planches des projets courts, ouvertes en grand par-dessus la page -->
+<dialog class="viewer" id="voir-ia" aria-labelledby="voir-ia-t">
+  <div class="viewer-in">
+    <header class="viewer-head">
+      <div><p class="where">2<sup>e</sup> année</p><h2 id="voir-ia-t">Infographie sur l’intelligence artificielle</h2></div>
+      <button class="viewer-close" type="button" data-close>Fermer</button>
+    </header>
+    <div class="viewer-body" tabindex="-1">
+      <p class="viewer-text">Une affiche A3 pour un hebdomadaire fictif, sur la place de l’intelligence artificielle en France et dans le monde. Il fallait rendre dix jeux de données lisibles par tout le monde, sur un fond clair imposé pour l’éco-conception. Chaque chiffre a la forme qui le rend le plus simple à lire : des barres pour comparer, des cercles pour les montants, une courbe pour l’évolution, une grille de points pour les parts.</p>
+      <figure class="plate plate-a3">
+        <img src="img/ia.webp" width="1600" height="2262" loading="lazy" decoding="async" alt="Infographie « L'intelligence artificielle : une révolution en marche » : une frise de 1950 à 2022, puis trois colonnes de graphiques sur l'usage de l'IA par les Français, le marché mondial et les entreprises françaises. Un perroquet sert de mascotte.">
+        <figcaption><a href="img/ia.webp" target="_blank" rel="noopener">Ouvrir l’affiche en pleine taille</a></figcaption>
+      </figure>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="viewer" id="voir-flyer" aria-labelledby="voir-flyer-t">
+  <div class="viewer-in">
+    <header class="viewer-head">
+      <div><p class="where">SAÉ 103, 1<sup>re</sup> année</p><h2 id="voir-flyer-t">Flyer Jeux M’éclate</h2></div>
+      <button class="viewer-close" type="button" data-close>Fermer</button>
+    </header>
+    <div class="viewer-body" tabindex="-1">
+      <p class="viewer-text">Un flyer A5 recto verso pour l’association Jeux m’éclate, qui annonce un après-midi jeux à l’IUT. Tout part d’un slogan : le jeu nous oppose, puis nous rassemble. J’ai coupé la page en deux couleurs, avec deux adversaires d’un côté, des joueurs réunis de l’autre, et une poignée de main au milieu. Les dessins sont faits au trait, sur Photoshop.</p>
+      <div class="plates two">
+        <figure class="plate">
+          <img src="img/af-recto.webp" width="1100" height="1561" loading="lazy" decoding="async" alt="Recto : « Après-midi jeux », le 4 février 2026 de 14 h à 18 h au bâtiment B de l'IUT de Haguenau. La page est coupée en deux, rouge et beige : deux adversaires dessinés au trait en haut, trois joueurs souriants en bas, une poignée de main au centre, et un QR code pour s'inscrire.">
+          <figcaption>Recto</figcaption>
+        </figure>
+        <figure class="plate">
+          <img src="img/af-verso.webp" width="1100" height="1561" loading="lazy" decoding="async" alt="Verso : le nom de l'association, ses tarifs, son histoire depuis 2019 et son festival à Ohlungen, puis les infos de l'après-midi : 80 à 100 jeux, tous niveaux.">
+          <figcaption>Verso. Le téléphone et l’adresse mail de l’association sont floutés ici.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="viewer" id="voir-hxh" aria-labelledby="voir-hxh-t">
+  <div class="viewer-in">
+    <header class="viewer-head">
+      <div><p class="where">SAÉ 105, 1<sup>re</sup> année</p><h2 id="voir-hxh-t">Site Hunter x Hunter</h2></div>
+      <button class="viewer-close" type="button" data-close>Fermer</button>
+    </header>
+    <div class="viewer-body" tabindex="-1">
+      <p class="viewer-text">Mon tout premier site, codé seul : l’univers de Hunter x Hunter, en français et en anglais. Les pages sont construites avec des gabarits Twig, mais les données étaient encore écrites à la main dans des fichiers PHP. Avec <a href="#kyoto">Découvrir Kyoto</a>, au semestre suivant, je suis passé à une vraie base de données.</p>
+      <div class="plates">
+        <figure class="plate"><div class="browser"><img src="img/hxh-accueil.webp" width="1100" height="687" loading="lazy" decoding="async" alt="Page d'accueil : un texte de présentation de l'univers sur un fond vert transparent, devant une illustration de l'animé."></div><figcaption>L’accueil</figcaption></figure>
+        <figure class="plate"><div class="browser"><img src="img/hxh-lieux.webp" width="1100" height="2196" loading="lazy" decoding="async" alt="Page des lieux : un menu latéral et cinq fiches, chacune avec un titre, une image, une description, une région et son importance."></div><figcaption>Les lieux : une boucle Twig parcourt un tableau PHP pour afficher chaque fiche.</figcaption></figure>
+        <figure class="plate"><div class="browser"><img src="img/hxh-nen.webp" width="1100" height="1557" loading="lazy" decoding="async" alt="Page des six catégories du Nen : une carte par catégorie, avec une image à gauche et le texte à droite."></div><figcaption>Les six catégories du Nen</figcaption></figure>
+        <figure class="plate"><div class="browser"><img src="img/hxh-inscription.webp" width="1100" height="814" loading="lazy" decoding="async" alt="Formulaire d'inscription : nom, prénom, adresse mail, téléphone et mot de passe, avec un bouton rouge Créer mon compte."></div><figcaption>Le formulaire d’inscription</figcaption></figure>
+        <figure class="plate"><div class="browser"><img src="img/hxh-apropos.webp" width="1100" height="1025" loading="lazy" decoding="async" alt="Page À propos, suivie des conditions générales d'utilisation en six articles."></div><figcaption>À propos et conditions d’utilisation</figcaption></figure>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="viewer" id="voir-ifsi" aria-labelledby="voir-ifsi-t">
+  <div class="viewer-in">
+    <header class="viewer-head">
+      <div><p class="where">SAÉ 104, en groupe de cinq, 1<sup>re</sup> année</p><h2 id="voir-ifsi-t">Vidéo tournée dans un IFSI</h2></div>
+      <button class="viewer-close" type="button" data-close>Fermer</button>
+    </header>
+    <div class="viewer-body" tabindex="-1">
+      <p class="viewer-text">Une vidéo pédagogique tournée dans un institut de formation en soins infirmiers : comment écouter une personne en grande détresse. Le sujet est sensible, alors on a gardé des plans posés et une lumière douce. Dans un groupe de cinq, j’étais au cadre, à l’image et au son.</p>
+      <figure class="plate">
+        <img src="img/ifsi.webp" width="1280" height="721" loading="lazy" decoding="async" alt="Image de la vidéo : dans une salle de l'institut, un homme assis dans un fauteuil, une bulle de pensée au-dessus de la tête, fait face à une infirmière qui prend des notes.">
+        <figcaption>Les visages sont floutés : les personnes filmées n’apparaissent pas sur ce site.</figcaption>
+      </figure>
+    </div>
+  </div>
+</dialog>
+
 </div>
 
 
@@ -2038,11 +2260,11 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
     </div>
     <div class="stage" data-reveal="wipe">
       <div class="devices">
-        <div class="browser"><div class="crop" id="eh-d" style="--h:560px"><img src="img/eh-desktop.webp" width="1440" height="6009" loading="lazy" decoding="async" alt="Maquette ordinateur de la page École d'Hiver : en-tête sombre avec le titre, les dates et le bouton S'inscrire, puis les parties Rencontrer, Innover, les étapes, le programme des trois jours, les vidéos, une partie pour les encadrants, les valeurs, les témoignages et la FAQ."></div></div>
-        <div class="phone"><div class="crop" id="eh-m" style="--h:560px"><img src="img/eh-mobile.webp" width="390" height="6400" loading="lazy" decoding="async" alt="Maquette téléphone de la même page : les parties empilées, le programme en accordéon et le bouton S'inscrire fixé en bas."></div></div>
+        <div class="browser"><div class="crop" id="eh-d" style="--h:560px"><img src="img/eh-desktop.webp" width="1440" height="6004" loading="lazy" decoding="async" alt="Maquette ordinateur de la page École d'Hiver : en-tête sombre avec le titre, les dates, les trois arguments, le bouton S'inscrire et une photo de groupe floutée, puis les parties Rencontrer, Innover, les étapes, le programme des trois jours, les vidéos, une partie pour les encadrants, les valeurs, les témoignages, la FAQ et le pied de page du Pôle."></div></div>
+        <div class="phone"><div class="crop" id="eh-m" style="--h:560px"><img src="img/eh-mobile.webp" width="390" height="6192" loading="lazy" decoding="async" alt="Maquette téléphone de la même page : les parties empilées, le programme en accordéon, les témoignages en carrousel et le bouton S'inscrire fixé en bas, avec des notes grises qui expliquent ces choix."></div></div>
       </div>
     </div>
-    <p class="cap">Maquettes Figma, faites avec les retours du groupe. Les blocs gris attendent les photos, les vidéos et les témoignages du Pôle : on n’a pas voulu en inventer.</p>
+    <p class="cap">Maquettes Figma finales, faites avec les retours du groupe. Les photos de groupe sont floutées ici. Les vidéos et les témoignages restent des emplacements en attendant les vrais : on n’a pas voulu en inventer. Sur la version téléphone, les notes grises expliquent ce qui change par rapport à l’ordinateur.</p>
   </div>
 </div>
 </section>
@@ -2450,6 +2672,8 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   }
 
   function route() {
+    /* changer de page referme une planche restée ouverte */
+    $$('dialog.viewer[open]').forEach(function (x) { x.close(); });
     var h = '';
     try { h = decodeURIComponent(location.hash.replace(/^#/, '')); } catch (e) { h = ''; }
     if (ids.indexOf(h) !== -1) {
@@ -2546,14 +2770,27 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
      Pour chaque scène à l'écran, on calcule où elle en est (entre 0 et 1) et on rattrape cette valeur
      avec de l'inertie. Le CSS fait le reste. Le même tour de boucle tient à jour les instruments. */
   var mqCine = w.matchMedia ? w.matchMedia('(min-width: 900px) and (min-height: 700px)') : null;
+  /* un nom court pour les instruments : coupé à un espace, jamais au milieu d'un mot */
+  var short = function (s, n) {
+    s = s.replace(/\s+/g, ' ').trim();
+    if (s.length <= n) { return s; }
+    var c = s.slice(0, n);
+    return c.slice(0, Math.max(c.lastIndexOf(' '), 12)) + '…';
+  };
+  var caseNames = {};
+  cases.forEach(function (c) { var t = $('h1', c); caseNames[c.id] = short(t ? t.textContent : c.id, 34); });
   var scenes = $$('[data-scene]').map(function (el, i) {
     var kind = el.getAttribute('data-scene');
     var name = 'Ouverture';
     if (kind === 'pin') {
       var n = $$('.proj').indexOf(el) + 1;
-      name = 'Projet 0' + n + ' / 05 · ' + $('h3', el).textContent.trim().slice(0, 30);
+      name = 'Projet 0' + n + ' / 05 · ' + short($('h3', el).textContent, 30);
     } else if (kind === 'pass') {
       name = el.id === 'contact' ? 'Contact' : $('.h2', el).textContent.trim();
+    } else if (kind === 'zone') {
+      /* une rubrique entière : elle ne bouge pas, elle donne seulement son nom aux instruments */
+      var hh = $('.h2', el);
+      name = el.getAttribute('data-scene-name') || (hh ? hh.textContent.trim() : '');
     }
     return { el: el, kind: kind, name: name, cur: {}, near: el === hero, tx: 0, ty: 0 };
   });
@@ -2643,7 +2880,9 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
         if (y < vh * 1.45) { here = sc; }
       } else {
         var r = sc.el.getBoundingClientRect();
-        if (sc.kind === 'pin') {
+        if (sc.kind === 'zone') {
+          t = {};
+        } else if (sc.kind === 'pin') {
           var room = r.height - (vh - 56);
           t = { p: room > 0 ? clamp((56 - r.top) / room) : 0, e: clamp((vh - r.top) / (vh * 0.9)), tx: sc.tx, ty: sc.ty };
         } else {
@@ -2664,7 +2903,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
     });
     /* les instruments : calque en cours, pointeur, zoom, hauteur */
     if (hud.layer) {
-      var name = current ? 'Étude de cas · ' + current : (here ? here.name : hud.name || 'Ouverture');
+      var name = current ? 'Étude de cas · ' + (caseNames[current] || current) : (here ? here.name : hud.name || 'Ouverture');
       if (name !== hud.name) { hud.name = name; scramble(hud.layer, name); tick(660); }
       if (here && here.kind === 'hero') { zoom = 100 + (here.cur.p || 0) * 46; }
       else if (here && here.kind === 'pin') { zoom = 85 + (here.cur.p || 0) * 15; }
@@ -2992,6 +3231,37 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
       b.setAttribute('aria-expanded', open ? 'true' : 'false');
       b.textContent = open ? b.getAttribute('data-less') : b.getAttribute('data-more');
       if (!open) { b.scrollIntoView({ block: 'center' }); }
+    });
+  });
+
+  /* ---------- Visionneuse : la planche d'un projet court, en grand ----------
+     Sans dialog ni script, le lien ouvre simplement l'image. */
+  var opener = null;
+  $$('[data-view]').forEach(function (a) {
+    var dlg = d.getElementById(a.getAttribute('data-view'));
+    if (!dlg || typeof dlg.showModal !== 'function') { return; }
+    a.addEventListener('click', function (e) {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) { return; }
+      e.preventDefault();
+      opener = a;
+      $$('img', dlg).forEach(function (i) { i.loading = 'eager'; });
+      root.classList.add('has-viewer');
+      dlg.showModal();
+      /* le focus va sur le contenu : les flèches le font défiler, Échap referme, Tab mène à Fermer */
+      var body = $('.viewer-body', dlg);
+      if (body) { body.scrollTop = 0; try { body.focus({ preventScroll: true }); } catch (err) { body.focus(); } }
+      tick(520);
+    });
+  });
+  $$('dialog.viewer').forEach(function (dlg) {
+    dlg.addEventListener('close', function () {
+      root.classList.remove('has-viewer');
+      if (opener) { try { opener.focus({ preventScroll: true }); } catch (e) { opener.focus(); } opener = null; }
+    });
+    dlg.addEventListener('click', function (e) {
+      var t = e.target;
+      /* un clic à côté de la planche, sur Fermer, ou sur un lien vers une autre partie du site la referme */
+      if (t === dlg || (t.closest && (t.closest('[data-close]') || t.closest('a[href^="#"]')))) { dlg.close(); }
     });
   });
 
