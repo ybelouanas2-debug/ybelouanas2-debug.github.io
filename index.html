@@ -2633,6 +2633,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   var homeY = 0;                       /* où en était la liste des projets quand on l'a quittée */
   var first = true;
   var diving = false;                  /* vrai le temps d'une plongée de la caméra dans un projet */
+  var viewerSync = function () {};     /* remplacée plus bas par la visionneuse */
 
   function show(id) {
     var changed = id !== current;
@@ -2674,6 +2675,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   function route() {
     /* changer de page referme une planche restée ouverte */
     $$('dialog.viewer[open]').forEach(function (x) { x.close(); });
+    viewerSync();
     var h = '';
     try { h = decodeURIComponent(location.hash.replace(/^#/, '')); } catch (e) { h = ''; }
     if (ids.indexOf(h) !== -1) {
@@ -3235,8 +3237,19 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   });
 
   /* ---------- Visionneuse : la planche d'un projet court, en grand ----------
-     Sans dialog ni script, le lien ouvre simplement l'image. */
+     Sans dialog ni script, le lien ouvre simplement l'image. Le nettoyage (la page qui redéfile,
+     le focus rendu au lien) ne dépend pas de l'événement « close » : certains navigateurs le retardent. */
   var opener = null;
+  viewerSync = function () {
+    var anyOpen = $$('dialog.viewer').some(function (x) { return x.open; });
+    root.classList.toggle('has-viewer', anyOpen);
+    if (!anyOpen && opener) {
+      var o = opener;
+      opener = null;
+      try { o.focus({ preventScroll: true }); } catch (e) { o.focus(); }
+    }
+  };
+  var shut = function (dlg) { if (dlg.open) { dlg.close(); } viewerSync(); };
   $$('[data-view]').forEach(function (a) {
     var dlg = d.getElementById(a.getAttribute('data-view'));
     if (!dlg || typeof dlg.showModal !== 'function') { return; }
@@ -3254,14 +3267,13 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
     });
   });
   $$('dialog.viewer').forEach(function (dlg) {
-    dlg.addEventListener('close', function () {
-      root.classList.remove('has-viewer');
-      if (opener) { try { opener.focus({ preventScroll: true }); } catch (e) { opener.focus(); } opener = null; }
-    });
+    dlg.addEventListener('close', viewerSync);
+    /* Échap : le navigateur referme la planche juste après cet événement */
+    dlg.addEventListener('cancel', function () { w.setTimeout(viewerSync, 0); });
     dlg.addEventListener('click', function (e) {
       var t = e.target;
       /* un clic à côté de la planche, sur Fermer, ou sur un lien vers une autre partie du site la referme */
-      if (t === dlg || (t.closest && (t.closest('[data-close]') || t.closest('a[href^="#"]')))) { dlg.close(); }
+      if (t === dlg || (t.closest && (t.closest('[data-close]') || t.closest('a[href^="#"]')))) { shut(dlg); }
     });
   });
 
