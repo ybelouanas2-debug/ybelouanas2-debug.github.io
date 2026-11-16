@@ -63,7 +63,7 @@ setTimeout(function(){if(!document.querySelector('.hero[data-split]')){r.classLi
   --dur-fast: 150ms;   /* réponse à un geste : survol, appui */
   --dur-base: 320ms;   /* changement d'état */
   --dur-slow: 640ms;   /* entrée d'un texte */
-  --dur-wipe: 900ms;   /* passage de la ligne bleue sur une grande surface */
+  --dur-wipe: 620ms;   /* passage de la ligne bleue sur une grande surface */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in: cubic-bezier(0.5, 0, 0.75, 0);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
@@ -1133,11 +1133,11 @@ html.vt .viewer[open], html.vt .viewer[open]::backdrop { animation: none; }
 /* en colonne flexible : les marges négatives des lignes ne fusionnent pas, l'interligne reste celui du titre */
 .anim [data-reveal="lines"] { display: flex; flex-direction: column; }
 .anim [data-reveal="lines"] .ln { display: block; overflow: hidden; padding-block: .16em; margin-block: -.16em; }
-.anim [data-reveal="lines"] .ln-i { display: block; translate: 0 135%; transition: translate 900ms cubic-bezier(.16, 1, .3, 1) calc(var(--li, 0) * 70ms); }
+.anim [data-reveal="lines"] .ln-i { display: block; translate: 0 135%; transition: translate 680ms cubic-bezier(.16, 1, .3, 1) calc(var(--li, 0) * 50ms); }
 .anim [data-reveal="lines"].is-in .ln-i { translate: none; }
 /* une figure : une fenêtre qui s'ouvre comme un volet, pendant que l'image recule */
-.anim [data-reveal="shutter"] { clip-path: inset(14% 30% 14% 30%); transition: clip-path 1000ms cubic-bezier(.16, 1, .3, 1); }
-.anim [data-reveal="shutter"] > * { scale: 1.14; transition: scale 1400ms cubic-bezier(.16, 1, .3, 1); }
+.anim [data-reveal="shutter"] { clip-path: inset(14% 30% 14% 30%); transition: clip-path 700ms cubic-bezier(.16, 1, .3, 1); }
+.anim [data-reveal="shutter"] > * { scale: 1.14; transition: scale 900ms cubic-bezier(.16, 1, .3, 1); }
 .anim [data-reveal="shutter"].is-in { clip-path: inset(0 0 0 0); }
 .anim [data-reveal="shutter"].is-in > * { scale: 1; }
 /* un titre de rubrique : la barre grise, puis le mot. La barre se replie, la ligne glisse, rien n'est remesuré. */
@@ -1200,7 +1200,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 .cine .hero { position: sticky; top: 0; height: 100vh; z-index: 0; }
 .cine .hero.is-rest { visibility: hidden; }
 .cine .hero.is-rest .card > * { animation-play-state: paused; }
-.cine #vue-accueil > .ticker { margin-top: 95vh; z-index: 1; }
+.cine #vue-accueil > .ticker { margin-top: 65vh; z-index: 1; }
 .cine #vue-accueil > main { position: relative; z-index: 1; background: var(--canvas); }
 .cine .hero .wrap { transform: translateY(calc(var(--c, 0) * -10vh)); }
 .cine .hero .kicker, .cine .hero-sub, .cine .split-hint {
@@ -1217,7 +1217,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 .cine .hero-art { perspective: 1100px; }
 .cine .card {
   transform: translate3d(calc(var(--px, 0) * var(--k, 10px)), calc(var(--py, 0) * var(--k, 10px)), calc(var(--k, 10px) * 2))
-             rotateY(calc(var(--px, 0) * 16deg)) rotateX(calc(var(--py, 0) * -11deg));
+             rotateY(calc(var(--px, 0) * 8deg)) rotateX(calc(var(--py, 0) * -5deg));
 }
 .cine .card .shot { position: relative; }
 .cine .hero-live:not(.hero-wire) .card .shot::after {
@@ -1226,7 +1226,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 }
 
 /* Scènes 2 à 6, les projets : chacun tient l'écran le temps d'un travelling */
-.cine .proj { height: 150vh; border-bottom: 0; }
+.cine .proj { height: 120vh; border-bottom: 0; }
 .cine .proj-stage {
   position: sticky; top: var(--bar-h); height: calc(100vh - var(--bar-h));
   z-index: 0; padding-block: 0; overflow: hidden; border-bottom: 1px solid var(--ink);
@@ -1239,19 +1239,18 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 }
 /* le texte ne bouge pas : le lien du titre couvre toute la scène, et doit rester au-dessus du visuel */
 .cine .proj h3 a::after { z-index: 2; }
-/* le visuel vit dans un vrai volume : il vient du fond, flou, se met au point, puis penche selon le pointeur */
+/* le visuel vit dans un vrai volume : il vient du fond, puis penche à peine selon le pointeur */
 .cine .proj-stage { perspective: 1500px; }
 .cine .proj-visual {
   transform: translate3d(0, calc((.5 - var(--p, 0)) * 12vh), calc(-260px + var(--p, 0) * 260px))
-             rotateY(calc(var(--tx, 0) * 13deg)) rotateX(calc(var(--ty, 0) * -9deg));
-  filter: blur(calc((1 - var(--e, 1)) * 7px));
+             rotateY(calc(var(--tx, 0) * 5deg)) rotateX(calc(var(--ty, 0) * -3.5deg));
   opacity: clamp(.18, calc((1 - var(--p, 0)) * 7), 1);
 }
 .cine .proj-stage::before { opacity: clamp(0, calc((1 - var(--p, 0)) * 7), 1); }
 /* cliquer sur un projet : la caméra plonge dans le visuel, puis l'étude de cas s'ouvre */
 .cine .proj.is-diving .proj-visual {
-  transition: transform 620ms var(--ease-in), opacity 260ms linear 360ms;
-  transform: translate3d(0, 0, 1180px); opacity: 0; filter: none;
+  transition: transform 340ms var(--ease-in), opacity 160ms linear 180ms;
+  transform: translate3d(0, 0, 1180px); opacity: 0;
 }
 .cine .proj.is-diving .proj-text, .cine .proj.is-diving .proj-stage::before { transition: opacity var(--dur-base) var(--ease-out); opacity: 0; }
 .view.is-arriving { animation: fondu var(--dur-base) var(--ease-out); }
@@ -1321,7 +1320,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 /* avec les scènes : l'intermède tient l'écran, la molette fait tout avancer (et les bandeaux suivent le geste) */
 .cine .mq-track, .cine .ticker-track { animation: none !important; }
 .cine .manif {
-  height: 260vh; --ww: min(46vw, 72vh);
+  height: 175vh; --ww: min(46vw, 72vh);
   --o: clamp(0, calc(var(--p, 0) / .26), 1);
   --s: clamp(0, calc((var(--p, 0) - .3) / .44), 1);
   --draw: clamp(0, calc((var(--p, 0) - .78) / .17), 1);
@@ -1338,35 +1337,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
    Un calque posé sur la page, comme les règles et l'inspecteur d'un outil de maquettage : le calque
    en cours, la position du pointeur, le zoom de la caméra, la hauteur dans la page. Il ne capte aucun
    clic et n'existe que lorsque les scènes tournent. */
-.hud, .hud-sound { display: none; }
-.cine .hud { display: block; position: fixed; inset: 0; z-index: 38; pointer-events: none; color: #fff; mix-blend-mode: difference; }
-.hud p, .hud-sound { font: 600 .68rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
-.hud p { position: absolute; bottom: 18px; display: flex; gap: 8px; align-items: baseline; margin: 0; white-space: nowrap; }
-.hud span { opacity: .55; }
-.hud b { font-weight: 600; margin-right: 10px; }
-.hud-a { left: 132px; }
-.hud-b { right: 44px; }
-.hud-c { position: absolute; width: 12px; height: 12px; border: 0 solid currentColor; }
-.hud-c.tl { left: 14px; top: calc(var(--bar-h) + 12px); border-width: 1.5px 0 0 1.5px; }
-.hud-c.tr { right: 14px; top: calc(var(--bar-h) + 12px); border-width: 1.5px 1.5px 0 0; }
-.hud-c.bl { left: 14px; bottom: 12px; border-width: 0 0 1.5px 1.5px; }
-.hud-c.br { right: 14px; bottom: 12px; border-width: 0 1.5px 1.5px 0; }
-/* la règle de droite : la hauteur dans la page */
-.hud-rule {
-  position: absolute; right: 18px; top: 28vh; height: 44vh; width: 9px;
-  background: repeating-linear-gradient(to bottom, currentColor 0 1px, transparent 1px 10%) right / 100% 100% no-repeat;
-  border-bottom: 1px solid currentColor; opacity: .8;
-}
-.hud-rule i { position: absolute; right: 100%; top: 0; width: 16px; height: 2px; margin-top: -1px; background: currentColor; transform: translateY(calc(var(--alt, 0) * 44vh)); }
-/* une valeur qui change se verrouille d'un coup sec, comme sur un appareil de mesure */
-.hud b.is-lock { animation: verrou 240ms steps(2, jump-none) 2; }
-@keyframes verrou { 50% { opacity: .2; } }
-.cine .hud-sound {
-  display: block; position: fixed; left: 30px; bottom: 9px; z-index: 39;
-  min-height: 30px; padding: 0 12px; border: 1px solid currentColor; border-radius: 999px; cursor: pointer;
-  background: none; color: #fff; mix-blend-mode: difference;
-}
-.cine .hud-sound[aria-pressed="true"] { background: #fff; color: #000; }
+
 
 /* le survol n'existe qu'avec une souris : au doigt, c'est l'appui qui répond */
 @media (hover: hover) and (pointer: fine) {
@@ -1440,7 +1411,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   .topbar .site-nav { margin-left: auto; }
 }
 @media (max-width: 620px) {
-  :root { --shift: 12px; --dur-wipe: 700ms; --stagger: 45ms; }
+  :root { --shift: 12px; --dur-wipe: 520ms; --stagger: 45ms; }
   /* sur téléphone, un mot par ligne : l'affiche garde sa taille */
   .hero h1 { font-size: clamp(3.4rem, 20.4vw, 7.6rem); }
   .hero h1 > span { white-space: normal; }
@@ -1469,7 +1440,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   .motion, .viewwipe { display: none; }
 }
 @media print {
-  .topbar, .split, .split-hint, .hero-clip, .ticker, .viewwipe, .motion, .hud, .hud-sound, .manif, body::after { display: none !important; }
+  .topbar, .split, .split-hint, .hero-clip, .ticker, .viewwipe, .motion, .manif, body::after { display: none !important; }
   [data-reveal] { opacity: 1 !important; translate: none !important; }
   [data-reveal]::after, .wt::before, .wt::after { display: none !important; }
   .wt-t { clip-path: none !important; }
@@ -1533,7 +1504,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 
 <main data-main tabindex="-1">
 
-  <section class="band" id="projets" data-scene="zone">
+  <section class="band" id="projets">
     <div class="wrap">
       <div class="band-head" data-scene="pass">
         <h2 class="h2" data-reveal="bar"><span class="wt"><span class="wt-t">Projets</span></span></h2>
@@ -1668,7 +1639,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     </div>
   </section>
 
-  <section class="band" id="autres" data-scene="zone">
+  <section class="band" id="autres">
     <div class="wrap">
       <div class="band-head" data-scene="pass">
         <h2 class="h2" data-reveal="bar"><span class="wt"><span class="wt-t">Et aussi</span></span></h2>
@@ -1738,7 +1709,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     </div>
   </section>
 
-  <section class="band dark" id="a-propos" data-reveal="curtain" data-scene="zone">
+  <section class="band dark" id="a-propos" data-reveal="curtain">
     <div class="wrap">
       <div class="band-head" data-scene="pass"><h2 class="h2">À propos</h2></div>
       <div class="about">
@@ -2738,8 +2709,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 <footer class="site-foot"><div class="wrap"><p>© 2026 Yasser Belouanas. Projets réalisés pendant mon BUT MMI à l’IUT de Haguenau.</p><button class="motion" id="motion" type="button">Couper les animations</button></div></footer>
 
 <div class="viewwipe" aria-hidden="true"></div>
-<div class="hud" aria-hidden="true"><i class="hud-c tl"></i><i class="hud-c tr"></i><i class="hud-c bl"></i><i class="hud-c br"></i><p class="hud-a"><span>Calque</span><b id="hud-layer">Ouverture</b></p><p class="hud-b"><span>X</span><b id="hud-x">0000</b><span>Y</span><b id="hud-y">0000</b><span>Zoom</span><b id="hud-z">100 %</b></p><div class="hud-rule"><i id="hud-mark"></i></div></div>
-<button class="hud-sound" id="sound" type="button" aria-pressed="false">Son coupé</button>
+
 
 <script>
 (function () {
@@ -2949,36 +2919,13 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 
   /* ---------- Scènes : le défilement fait avancer la caméra ----------
      Pour chaque scène à l'écran, on calcule où elle en est (entre 0 et 1) et on rattrape cette valeur
-     avec de l'inertie. Le CSS fait le reste. Le même tour de boucle tient à jour les instruments. */
+     avec de l'inertie. Le CSS fait le reste ; le même tour de boucle fait avancer les bandeaux. */
   var mqCine = w.matchMedia ? w.matchMedia('(min-width: 900px) and (min-height: 700px)') : null;
-  /* un nom court pour les instruments : coupé à un espace, jamais au milieu d'un mot */
-  var short = function (s, n) {
-    s = s.replace(/\s+/g, ' ').trim();
-    if (s.length <= n) { return s; }
-    var c = s.slice(0, n);
-    return c.slice(0, Math.max(c.lastIndexOf(' '), 12)) + '…';
-  };
-  var caseNames = {};
-  cases.forEach(function (c) { var t = $('h1', c); caseNames[c.id] = short(t ? t.textContent : c.id, 34); });
-  var scenes = $$('[data-scene]').map(function (el, i) {
-    var kind = el.getAttribute('data-scene');
-    var name = 'Ouverture';
-    if (kind === 'pin') {
-      var n = $$('.proj').indexOf(el) + 1;
-      name = 'Projet 0' + n + ' / 05 · ' + short($('h3', el).textContent, 30);
-    } else if (kind === 'pass') {
-      name = el.id === 'contact' ? 'Contact' : $('.h2', el).textContent.trim();
-    } else if (kind === 'manif') {
-      name = 'Manifeste';
-    } else if (kind === 'zone') {
-      /* une rubrique entière : elle ne bouge pas, elle donne seulement son nom aux instruments */
-      var hh = $('.h2', el);
-      name = el.getAttribute('data-scene-name') || (hh ? hh.textContent.trim() : '');
-    }
-    return { el: el, kind: kind, name: name, cur: {}, near: el === hero, tx: 0, ty: 0 };
+  var scenes = $$('[data-scene]').map(function (el) {
+    return { el: el, kind: el.getAttribute('data-scene'), cur: {}, near: el === hero, tx: 0, ty: 0 };
   });
-  var cineOn = false, looping = false, lastT = 0, lastY = w.scrollY, speed = 0;
-  /* vitesse signée du défilement (px/ms), et ressort raide qui la transforme en inclinaison */
+  var cineOn = false, looping = false, lastT = 0, lastY = w.scrollY;
+  /* vitesse signée du défilement (px/ms) */
   var vel = 0;
   /* les bandeaux qui défilent : la vitesse du geste s'ajoute à leur vitesse de croisière */
   var marquees = [];
@@ -2994,73 +2941,8 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     });
   };
   var remeasure = function () {};
+  var HERO = 0.65;   /* longueur de l'ouverture, en hauteurs d'écran (doit suivre le margin-top du bandeau) */
   var clamp = function (x) { return x < 0 ? 0 : (x > 1 ? 1 : x); };
-  var ptr = { x: 0, y: 0, moved: false };
-
-  /* les instruments */
-  var hud = { layer: $('#hud-layer'), x: $('#hud-x'), y: $('#hud-y'), z: $('#hud-z'), mark: $('#hud-mark'), name: '', zoom: -1 };
-  var GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/+=<>[]';
-  var scrambleId = 0;
-  var scramble = function (el, text) {       /* les caractères défilent, puis se verrouillent de gauche à droite */
-    var id = ++scrambleId, t0 = 0, dur = 320 + text.length * 16;
-    var run = function (now) {
-      if (id !== scrambleId) { return; }
-      if (!t0) { t0 = now; }
-      var k = Math.min(1, (now - t0) / dur), lock = Math.floor(k * text.length), out = text.slice(0, lock);
-      for (var i = lock; i < text.length; i++) { out += text.charAt(i) === ' ' ? ' ' : GLYPHS.charAt((Math.random() * GLYPHS.length) | 0); }
-      el.textContent = out;
-      if (k < 1) { raf(run); } else { el.classList.remove('is-lock'); void el.offsetWidth; el.classList.add('is-lock'); }
-    };
-    raf(run);
-  };
-  var pad = function (n) { n = String(Math.max(0, Math.round(n))); while (n.length < 4) { n = '0' + n; } return n; };
-
-  /* le son : coupé par défaut, synthétisé, et lié à la vitesse de la descente */
-  var snd = { on: false, want: false, ctx: null, gain: null, filt: null };
-  var sndStart = function () {
-    if (snd.ctx) { if (snd.ctx.state === 'suspended') { snd.ctx.resume(); } return; }
-    var AC = w.AudioContext || w.webkitAudioContext;
-    if (!AC) { return; }
-    try {
-      var ctx = new AC(), len = ctx.sampleRate * 2, buf = ctx.createBuffer(1, len, ctx.sampleRate), data = buf.getChannelData(0), last = 0;
-      for (var i = 0; i < len; i++) { last = (last + 0.02 * (Math.random() * 2 - 1)) / 1.02; data[i] = last * 3.5; }   /* un souffle grave */
-      var src = ctx.createBufferSource(); src.buffer = buf; src.loop = true;
-      snd.filt = ctx.createBiquadFilter(); snd.filt.type = 'lowpass'; snd.filt.frequency.value = 90;
-      snd.gain = ctx.createGain(); snd.gain.gain.value = 0;
-      src.connect(snd.filt); snd.filt.connect(snd.gain); snd.gain.connect(ctx.destination); src.start();
-      snd.ctx = ctx;
-    } catch (e) { snd.on = false; }
-  };
-  var tick = function (freq, long) {
-    if (!snd.on || !snd.ctx) { return; }
-    try {
-      var c = snd.ctx, o = c.createOscillator(), g = c.createGain(), t = c.currentTime, d = long ? 0.5 : 0.05;
-      o.type = 'sine'; o.frequency.setValueAtTime(freq, t);
-      if (long) { o.frequency.exponentialRampToValueAtTime(freq * 0.35, t + d); }
-      g.gain.setValueAtTime(long ? 0.09 : 0.035, t); g.gain.exponentialRampToValueAtTime(0.001, t + d);
-      o.connect(g); g.connect(c.destination); o.start(t); o.stop(t + d + 0.02);
-    } catch (e) { /* pas de son, rien de grave */ }
-  };
-  var sndBtn = $('#sound');
-  var sndSet = function (next) {
-    snd.on = next;
-    if (next) { sndStart(); } else if (snd.gain) { snd.gain.gain.value = 0; }
-    if (sndBtn) { sndBtn.setAttribute('aria-pressed', next ? 'true' : 'false'); sndBtn.textContent = next ? 'Son actif' : 'Son coupé'; }
-    try { localStorage.setItem('yb-sound', next ? 'on' : 'off'); } catch (e) { /* le choix vaut pour cette visite */ }
-    if (next) { tick(660); }
-  };
-  if (sndBtn) {
-    sndBtn.addEventListener('click', function () { sndSet(!snd.on); });
-    try { snd.want = localStorage.getItem('yb-sound') === 'on'; } catch (e) { snd.want = false; }
-    if (snd.want) {
-      /* un navigateur ne laisse jouer du son qu'après un geste : on attend le premier */
-      var wake = function () { w.removeEventListener('pointerdown', wake); if (cineOn && !snd.on) { sndSet(true); } };
-      w.addEventListener('pointerdown', wake);
-    }
-    d.addEventListener('pointerover', function (e) {
-      if (snd.on && e.target.closest && e.target.closest('a, button') && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('a, button') === e.target.closest('a, button'))) { tick(430); }
-    });
-  }
 
   var kick = function () { if (cineOn && !looping) { looping = true; raf(step); } };
   function step(now) {
@@ -3069,24 +2951,20 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     var dt = Math.min(64, (now - lastT) || 16);
     lastT = now;
     var k = 1 - Math.exp(-dt / 130);   /* l'inertie : plus le diviseur est grand, plus le mouvement est lourd */
-    var vh = w.innerHeight, y = w.scrollY, moving = false, here = null, zoom = 100;
+    var vh = w.innerHeight, y = w.scrollY, moving = false;
     scenes.forEach(function (sc) {
       if (!sc.near || sc.el.getClientRects().length === 0) { return; }
       var t;
       if (sc.kind === 'hero') {
-        t = { p: clamp(y / (vh * 0.95)), c: clamp((y - vh * 0.95) / vh) };
-        if (y < vh * 1.45) { here = sc; }
+        t = { p: clamp(y / (vh * HERO)), c: clamp((y - vh * HERO) / vh) };
       } else {
         var r = sc.el.getBoundingClientRect();
-        if (sc.kind === 'zone') {
-          t = {};
-        } else if (sc.kind === 'pin' || sc.kind === 'manif') {
+        if (sc.kind === 'pin' || sc.kind === 'manif') {
           var room = r.height - (vh - 56);
           t = { p: room > 0 ? clamp((56 - r.top) / room) : 0, e: clamp((vh - r.top) / (vh * 0.9)), tx: sc.tx, ty: sc.ty };
         } else {
           t = { e: clamp((vh - r.top) / (vh * 0.8)), v: clamp((vh - r.top) / (vh + r.height)) };
         }
-        if (r.top < vh * 0.5 && r.bottom > vh * 0.5) { here = sc; }
       }
       for (var key in t) {
         var c = sc.cur[key];
@@ -3099,21 +2977,8 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
         sc.el.classList.toggle('is-rest', sc.cur.c >= 1);
       }
     });
-    /* les instruments : calque en cours, pointeur, zoom, hauteur */
-    if (hud.layer) {
-      var name = current ? 'Étude de cas · ' + (caseNames[current] || current) : (here ? here.name : hud.name || 'Ouverture');
-      if (name !== hud.name) { hud.name = name; scramble(hud.layer, name); tick(660); }
-      if (here && here.kind === 'hero') { zoom = 100 + (here.cur.p || 0) * 46; }
-      else if (here && here.kind === 'pin') { zoom = 85 + (here.cur.p || 0) * 15; }
-      zoom = Math.round(zoom);
-      if (zoom !== hud.zoom) { hud.zoom = zoom; hud.z.textContent = zoom + ' %'; }
-      if (ptr.moved) { ptr.moved = false; hud.x.textContent = pad(ptr.x); hud.y.textContent = pad(ptr.y); }
-      var H = d.documentElement.scrollHeight - vh;
-      hud.mark.style.setProperty('--alt', (H > 0 ? clamp(y / H) : 0).toFixed(4));
-    }
-    /* le souffle monte avec la vitesse de la descente */
+    /* la vitesse du geste, pour les bandeaux */
     var raw = (y - lastY) / dt;
-    speed += (Math.abs(raw) - speed) * 0.2;
     vel += (raw - vel) * 0.3;
     if (Math.abs(vel) < 0.002) { vel = 0; }
     lastY = y;
@@ -3126,12 +2991,6 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       m.tracks.forEach(function (t) { t.style.transform = tr; });
       moving = true;
     });
-    if (snd.on && snd.gain) {
-      var v = Math.min(1, speed / 3.2), at = snd.ctx.currentTime;
-      snd.gain.gain.setTargetAtTime(v * 0.2, at, 0.09);
-      snd.filt.frequency.setTargetAtTime(90 + v * 560, at, 0.09);
-      if (speed > 0.01) { moving = true; }
-    }
     if (moving) { kick(); }
   }
   var setCine = function () {
@@ -3145,7 +3004,6 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
         sc.cur = {};
         sc.el.classList.remove('is-deep', 'is-rest', 'is-diving');
       });
-      if (snd.on) { sndSet(false); }
       /* sans scènes, les bandeaux repassent aux animations CSS */
       marquees.forEach(function (m) { m.tracks.forEach(function (t) { t.style.transform = ''; }); });
       vel = 0;
@@ -3174,10 +3032,9 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   if (d.fonts && d.fonts.ready) { d.fonts.ready.then(measureMarquees); }
   w.addEventListener('scroll', kick, { passive: true });   /* ne fait que réveiller la boucle */
   w.addEventListener('resize', kick);
-  /* le pointeur : il fait pencher le visuel du projet survolé, et alimente les instruments */
+  /* le pointeur : il fait pencher, à peine, le visuel du projet survolé */
   w.addEventListener('pointermove', function (e) {
     if (!cineOn) { return; }
-    ptr.x = e.clientX; ptr.y = e.clientY; ptr.moved = true;
     var stage = e.pointerType === 'mouse' && e.target.closest ? e.target.closest('.proj-stage') : null;
     scenes.forEach(function (sc) {
       if (sc.kind !== 'pin') { return; }
@@ -3197,8 +3054,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     e.preventDefault();
     if (row.classList.contains('is-diving')) { return; }
     row.classList.add('is-diving');
-    tick(240, true);
-    w.setTimeout(function () { diving = true; location.hash = a.getAttribute('href'); }, 560);
+    w.setTimeout(function () { diving = true; location.hash = a.getAttribute('href'); }, 300);
   });
   if (mqCine) {
     if (mqCine.addEventListener) { mqCine.addEventListener('change', setCine); } else if (mqCine.addListener) { mqCine.addListener(setCine); }
@@ -3495,7 +3351,6 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
         var body = $('.viewer-body', dlg);
         if (body) { body.scrollTop = 0; try { body.focus({ preventScroll: true }); } catch (err) { body.focus(); } }
       };
-      tick(520);
       if (!(on() && from && to && typeof d.startViewTransition === 'function')) { open(); return; }
       /* la vignette se verrouille, puis s'étire jusqu'à la planche : même image, sans fondu au noir */
       var ready = to.complete ? Promise.resolve() : Promise.race([
