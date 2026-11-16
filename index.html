@@ -23,6 +23,7 @@
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="D’abord ranger. Ensuite dessiner. Portfolio de Yasser Belouanas, UX/UI designer en formation, disponible pour un stage du 12 avril au 4 juin 2027.">
 <meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Person", "name": "Yasser Belouanas", "jobTitle": "UX/UI designer en formation", "url": "https://ybelouanas2-debug.github.io/", "sameAs": ["https://www.linkedin.com/in/yasser-belouanas-0732843b2"]}</script>
 <script>(function(){var r=document.documentElement,off=false;
 try{off=localStorage.getItem('yb-motion')==='off'}catch(e){}
 try{if(!off&&'IntersectionObserver'in window&&!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)){r.classList.add('anim');
@@ -567,6 +568,8 @@ h1, h2, h3 { text-wrap: balance; }
   display: inline-flex; align-items: center; min-height: 44px;
 }
 .copied { width: 100%; min-height: 1.6em; font-weight: 600; font-size: .95rem; }
+/* le CV et LinkedIn : secondaires, sous l'adresse qui reste l'action principale */
+.links-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 4px; }
 
 .site-foot { padding-block: 26px 40px; font-size: .9rem; color: var(--ink-2); }
 .site-foot .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 28px; }
@@ -1106,7 +1109,7 @@ html.vt .viewer[open], html.vt .viewer[open]::backdrop { animation: none; }
 .contact .h2 { font-size: clamp(2.8rem, 11vw, 9.6rem); max-width: none; }
 .contact .h2 > span { display: block; }
 .contact-text { margin-inline: auto; max-width: 46ch; }
-.mail-row { justify-content: center; }
+.mail-row, .links-row { justify-content: center; }
 .mail { font-size: clamp(1.15rem, 3.6vw, 2.5rem); text-transform: none; letter-spacing: -.01em; }
 
 /* études de cas */
@@ -1474,7 +1477,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 <nav class="topbar" id="topbar" data-off aria-label="Barre de navigation">
 <div class="wrap">
 <a class="brand" href="#haut">Yasser<span> Belouanas</span></a>
-<p class="bar-dispo">Stage UX/UI du 12 avril au 4 juin 2027</p>
+<p class="bar-dispo">Stage UX/UI du 12 avril au 4 juin 2027</p>
 <div class="site-nav"><a href="#projets">Projets</a><a href="#a-propos">À propos</a><a href="#contact">Contact</a></div>
 </div>
 <i class="bar-progress" aria-hidden="true"></i>
@@ -1502,7 +1505,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
           <a class="btn btn-solid" href="#projets" data-keep>Voir les projets</a>
           <a class="btn btn-line" href="#contact" data-keep>Me contacter</a>
         </div>
-          <p class="dispo" data-wire="INFO CLÉ - dates de stage"><span>Disponible pour un stage de 8 semaines, du 12 avril au 4 juin 2027</span></p>
+          <p class="dispo" data-wire="INFO CLÉ - dates de stage"><span>Disponible pour un stage de 8 semaines, du 12 avril au 4 juin 2027</span></p>
         </div>
         <div class="hero-art" data-wire="VISUELS - trois projets" aria-hidden="true">
           <div class="card c-a"><div class="browser"><span class="shot"><img src="img/cover-divein.webp" srcset="img/cover-divein-560.webp 560w, img/cover-divein.webp 1120w" sizes="(max-width: 1050px) 39vw, 408px" width="1120" height="700" alt="" loading="lazy" decoding="async"></span></div></div>
@@ -1733,17 +1736,17 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       <div class="band-head" data-scene="pass"><h2 class="h2">À propos</h2></div>
       <div class="about">
         <div class="about-text">
-          <p>J’ai 19 ans et je suis en 2<sup>e</sup> année de BUT Métiers du Multimédia et de l’Internet à l’IUT de Haguenau (Université de Strasbourg), dans le parcours Stratégie de communication et UX design.</p>
+          <p>J’ai 19 ans et je suis en 2<sup>e</sup> année de BUT Métiers du Multimédia et de l’Internet à l’IUT de Haguenau (Université de Strasbourg), dans le parcours Stratégie de communication et UX design.</p>
           <p>Ce qui me plaît dans l’UX, c’est le moment où on arrête de deviner et où on regarde vraiment ce que les gens essaient de faire. Je préfère passer du temps sur un benchmark, un parcours ou une arborescence avant d’ouvrir Figma : c’est là que les vrais problèmes se voient, et qu’ils coûtent le moins cher à corriger.</p>
           <p>En dehors des cours : jeux vidéo, animés et visual novels japonais. Côté jeux, j’ai neuf ans de stratégie Pokémon en compétitif derrière moi. Et je fais tourner des modèles d’IA sur mon ordinateur, avec Ollama, pour traduire des visual novels du japonais vers le français.</p>
         </div>
         <dl class="facts-list">
           <div><dt>Formation</dt><dd>BUT MMI, IUT de Haguenau, 2025 à 2028. Parcours Stratégie de communication et UX design.</dd></div>
-          <div><dt>Stage</dt><dd>Je cherche un stage en UX/UI design de 8 semaines, du 12 avril au 4 juin 2027.</dd></div>
+          <div><dt>Stage</dt><dd>Je cherche un stage en UX/UI design de 8 semaines, du 12 avril au 4 juin 2027.</dd></div>
           <div><dt>Expérience</dt><dd>Agent de propreté urbaine chez Emi-Creno à Strasbourg, job d’été, juillet 2026.</dd></div>
           <div><dt>Langues</dt><dd>Français, italien, anglais.</dd></div>
           <div><dt>Méthodes</dt><dd>Benchmark, personae, user flows, arborescence, fils de fer, maquettes, design system, audit SEO.</dd></div>
-          <div><dt>Outils</dt><dd>Figma, Miro, Photoshop, DaVinci Resolve. HTML, CSS, PHP, Twig et MySQL.</dd></div>
+          <div><dt>Outils</dt><dd>Figma, Miro, Photoshop, Illustrator, DaVinci Resolve. HTML, CSS, PHP, Twig et MySQL.</dd></div>
         </dl>
       </div>
     </div>
@@ -2443,7 +2446,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       <div class="serp-card">
         <p class="serp-url">pui-alsace.unistra.fr › fr › profil › doctorant › ecole-hiver-doctorants</p>
         <p class="serp-title">École d’Hiver doctorants Strasbourg : 27 h validées | PUIA</p>
-        <p class="serp-desc">Doctorants Unistra et UHA : 3 jours gratuits du 10 au 12 mars 2027, 27 h de formation doctorale validées. Inscriptions de novembre à mi-janvier.</p>
+        <p class="serp-desc">Doctorants Unistra et UHA : 3 jours gratuits du 10 au 12 mars 2027, 27 h de formation doctorale validées. Inscriptions de novembre à mi-janvier.</p>
       </div>
       <p class="serp-note"><b>Titre principal de la page :</b> École d’Hiver de la créativité et de l’innovation.</p>
     </figure>
@@ -2716,11 +2719,15 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 <section class="contact" id="contact" data-reveal="curtain" data-scene="pass" aria-labelledby="contact-t">
 <div class="wrap">
 <h2 class="h2" id="contact-t"><span>Un stage UX/UI</span> <span>au printemps ?</span></h2>
-<p class="contact-text">Je suis disponible 8 semaines, du 12 avril au 4 juin 2027, avec une convention de stage de l’IUT de Haguenau. Écrivez-moi et je vous envoie mon CV.</p>
+<p class="contact-text">Je suis disponible 8 semaines, du 12 avril au 4 juin 2027, avec une convention de stage de l’IUT de Haguenau. Écrivez-moi, ou téléchargez directement mon CV.</p>
 <div class="mail-row">
 <a class="mail" id="mail" href="mailto:ybelouanas2@gmail.com">ybelouanas2<wbr>@gmail.com</a>
 <button class="btn btn-solid" id="copy" type="button" data-mail="ybelouanas2@gmail.com">Copier l’adresse</button>
 <p class="copied" id="copied" role="status"></p>
+</div>
+<div class="links-row">
+<a class="btn btn-line" id="cv" href="cv-yasser-belouanas.pdf" download="CV_Yasser_Belouanas.pdf" type="application/pdf">Télécharger mon CV (PDF)</a>
+<a class="btn btn-line" id="linkedin" href="https://www.linkedin.com/in/yasser-belouanas-0732843b2" rel="me">Mon profil LinkedIn</a>
 </div>
 </div>
 </section>
