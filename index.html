@@ -1101,6 +1101,8 @@ html.has-viewer { overflow: hidden; scrollbar-gutter: stable; }
 }
 .viewer-body { flex: 1; overflow: auto; overscroll-behavior: contain; padding: clamp(18px, 3vw, 34px); }
 .viewer-body:focus { outline: none; }
+/* le contenu défile au clavier : Tab y revient depuis « Fermer », et l'anneau se voit quand on navigue au clavier */
+.viewer-body:focus-visible { outline: 3px solid var(--guide); outline-offset: -4px; }
 .viewer-text { max-width: 62ch; margin-bottom: clamp(22px, 3vw, 34px); }
 .plates { display: grid; gap: clamp(26px, 3vw, 40px); justify-items: center; }
 .plates.two { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
@@ -1110,6 +1112,29 @@ html.has-viewer { overflow: hidden; scrollbar-gutter: stable; }
 .plate .browser { border-color: #000; }
 .plate .browser::before { background-color: #000; }
 .plate figcaption { margin-top: 10px; font-size: .92rem; line-height: 1.45; color: var(--ink-2); }
+/* le plan de tournage de la vidéo de l'IFSI (decos.py) : la salle vue de dessus, et les places de la caméra */
+.plan { max-width: 640px; }
+.plan-svg { display: block; width: 100%; height: auto; }
+.plan .pl-floor { fill: var(--paper); stroke: var(--ink); stroke-width: 2.6; }
+.plan .pl-win { fill: var(--canvas); stroke: var(--ink); stroke-width: 1.2; }
+.plan .pl-gap { stroke: var(--paper); stroke-width: 4; }
+.plan .pl-thin { fill: none; stroke: var(--ink); stroke-width: 1.1; }
+.plan .pl-dash { stroke-dasharray: 3 4; }
+.plan .pl-desk { fill: var(--soft); stroke: var(--ink); stroke-width: 1.3; }
+.plan .pl-obj { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
+.plan .pl-chair { fill: #B23A55; stroke: var(--ink); stroke-width: 1.2; }
+.plan .pl-seat { fill: var(--soft); stroke: var(--ink); stroke-width: 1; }
+.plan .pl-patient > *, .plan .pl-nurse > * { stroke: var(--ink); stroke-width: 1.2; }
+.plan .pl-patient .pl-body { fill: #7C7A45; }
+.plan .pl-patient .pl-head { fill: #D9AE88; }
+.plan .pl-nurse .pl-body { fill: #FFFFFF; }
+.plan .pl-nurse .pl-head { fill: #9A6A43; }
+.plan .pl-fov { fill: var(--yellow); stroke: var(--ink); stroke-width: .8; stroke-opacity: .5; opacity: .45; }
+.plan .pl-cam { fill: var(--ink); }
+.plan .pl-badge { fill: var(--ink); }
+.plan .pl-num { fill: var(--canvas); font-family: var(--display); font-weight: 800; font-size: 12px; }
+.shots { margin: 6px 0 0; padding-left: 1.5em; display: grid; gap: 2px; list-style: decimal; }
+.shots li::marker { font-weight: 700; color: var(--ink); }
 .anim .viewer[open] { animation: planche var(--dur-base) var(--ease-out); }
 .anim .viewer[open]::backdrop { animation: fondu var(--dur-base) var(--ease-out); }
 @keyframes planche { from { opacity: 0; translate: 0 18px; } }
@@ -1613,6 +1638,14 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 }
 
 /* Dessins des études de cas : trajets et rythmes calculés par decos.py */
+@keyframes pl-on1 { 0.00% { opacity: .7 } 18.00% { opacity: .7 } 21.00% { opacity: .14 } 98.00% { opacity: .14 } 100.00% { opacity: .7 } }
+@keyframes pl-on2 { 0.00% { opacity: .14 } 19.00% { opacity: .14 } 22.00% { opacity: .7 } 38.00% { opacity: .7 } 41.00% { opacity: .14 } 59.00% { opacity: .14 } 62.00% { opacity: .7 } 78.00% { opacity: .7 } 81.00% { opacity: .14 } 100.00% { opacity: .14 } }
+@keyframes pl-on3 { 0.00% { opacity: .14 } 39.00% { opacity: .14 } 42.00% { opacity: .7 } 58.00% { opacity: .7 } 61.00% { opacity: .14 } 100.00% { opacity: .14 } }
+@keyframes pl-on4 { 0.00% { opacity: .14 } 79.00% { opacity: .14 } 82.00% { opacity: .7 } 97.00% { opacity: .7 } 100.00% { opacity: .14 } }
+.anim .viewer[open] .pl-c1 { animation: pl-on1 10s linear infinite; }
+.anim .viewer[open] .pl-c2 { animation: pl-on2 10s linear infinite; }
+.anim .viewer[open] .pl-c3 { animation: pl-on3 10s linear infinite; }
+.anim .viewer[open] .pl-c4 { animation: pl-on4 10s linear infinite; }
 @keyframes d-eh-lens { 0.00% { transform: translate(202px, 138px) } 7.69% { transform: translate(202px, 138px) } 17.95% { transform: translate(277px, 160px) } 25.64% { transform: translate(277px, 160px) } 35.90% { transform: translate(196px, 434px) } 43.59% { transform: translate(196px, 434px) } 53.85% { transform: translate(402px, 300px) } 71.79% { transform: translate(402px, 300px) } 82.05% { transform: translate(442px, 215px) } 89.74% { transform: translate(442px, 215px) } 100.00% { transform: translate(202px, 138px) } }
 @keyframes d-eh-mag { 0.00% { transform: translate(-404px, -276px) scale(2.0) } 7.69% { transform: translate(-404px, -276px) scale(2.0) } 17.95% { transform: translate(-554px, -320px) scale(2.0) } 25.64% { transform: translate(-554px, -320px) scale(2.0) } 35.90% { transform: translate(-392px, -868px) scale(2.0) } 43.59% { transform: translate(-392px, -868px) scale(2.0) } 53.85% { transform: translate(-804px, -600px) scale(2.0) } 71.79% { transform: translate(-804px, -600px) scale(2.0) } 82.05% { transform: translate(-884px, -430px) scale(2.0) } 89.74% { transform: translate(-884px, -430px) scale(2.0) } 100.00% { transform: translate(-404px, -276px) scale(2.0) } }
 @keyframes d-eh-found { 0.00% { opacity: 0 } 52.56% { opacity: 0 } 55.77% { opacity: 1 } 71.15% { opacity: 1 } 75.00% { opacity: 0 } 100.00% { opacity: 0 } }
@@ -1888,7 +1921,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
           </div>
           <p class="where">SAÉ 104, en groupe de cinq, 1<sup>re</sup> année</p>
           <h3><a href="img/ifsi.webp" data-view="voir-ifsi" aria-haspopup="dialog">Vidéo tournée dans un IFSI</a></h3>
-          <p>Une vidéo sur l’écoute d’une personne en détresse, tournée dans un institut de formation en soins infirmiers. J’étais au cadre, à l’image et au son.</p>
+          <p>Une vidéo pour un institut de formation en soins infirmiers : un entretien avec un patient en grande détresse, joué et filmé sur place. J’étais au cadre, à l’image et au son.</p>
           <span class="more" aria-hidden="true">Voir en grand</span>
         </article>
       </div>
@@ -1938,7 +1971,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       <div><p class="where">2<sup>e</sup> année</p><h2 id="voir-ia-t">Infographie sur l’intelligence artificielle</h2></div>
       <button class="viewer-close" type="button" data-close>Fermer</button>
     </header>
-    <div class="viewer-body" tabindex="-1">
+    <div class="viewer-body" tabindex="0" role="region" aria-labelledby="voir-ia-t">
       <p class="viewer-text">Une affiche A3 pour un hebdomadaire fictif, sur la place de l’intelligence artificielle en France et dans le monde. Il fallait rendre dix jeux de données lisibles par tout le monde, sur un fond clair imposé pour l’éco-conception. Chaque chiffre a la forme qui le rend le plus simple à lire : des barres pour comparer, des cercles pour les montants, une courbe pour l’évolution, une grille de points pour les parts.</p>
       <figure class="plate plate-a3">
         <img src="img/ia.webp" width="1600" height="2262" loading="lazy" decoding="async" alt="Infographie « L'intelligence artificielle : une révolution en marche » : une frise de 1950 à 2022, puis trois colonnes de graphiques sur l'usage de l'IA par les Français, le marché mondial et les entreprises françaises. Un perroquet sert de mascotte.">
@@ -1954,7 +1987,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       <div><p class="where">SAÉ 103, 1<sup>re</sup> année</p><h2 id="voir-flyer-t">Flyer Jeux M’éclate</h2></div>
       <button class="viewer-close" type="button" data-close>Fermer</button>
     </header>
-    <div class="viewer-body" tabindex="-1">
+    <div class="viewer-body" tabindex="0" role="region" aria-labelledby="voir-flyer-t">
       <p class="viewer-text">Un flyer A5 recto verso pour l’association Jeux m’éclate, qui annonce un après-midi jeux à l’IUT. Tout part d’un slogan : le jeu nous oppose, puis nous rassemble. J’ai coupé la page en deux couleurs, avec deux adversaires d’un côté, des joueurs réunis de l’autre, et une poignée de main au milieu. Les dessins sont faits au trait, sur Photoshop.</p>
       <div class="plates two">
         <figure class="plate">
@@ -1976,7 +2009,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       <div><p class="where">SAÉ 105, 1<sup>re</sup> année</p><h2 id="voir-hxh-t">Site Hunter x Hunter</h2></div>
       <button class="viewer-close" type="button" data-close>Fermer</button>
     </header>
-    <div class="viewer-body" tabindex="-1">
+    <div class="viewer-body" tabindex="0" role="region" aria-labelledby="voir-hxh-t">
       <p class="viewer-text">Mon tout premier site, codé seul : l’univers de Hunter x Hunter, en français et en anglais. Les pages sont construites avec des gabarits Twig, mais les données étaient encore écrites à la main dans des fichiers PHP. Avec <a href="#kyoto">Découvrir Kyoto</a>, au semestre suivant, je suis passé à une vraie base de données.</p>
       <div class="plates">
         <figure class="plate"><div class="browser"><img src="img/hxh-accueil.webp" width="1100" height="687" loading="lazy" decoding="async" alt="Page d'accueil : un texte de présentation de l'univers sur un fond vert transparent, devant une illustration de l'animé."></div><figcaption>L’accueil</figcaption></figure>
@@ -1995,11 +2028,23 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       <div><p class="where">SAÉ 104, en groupe de cinq, 1<sup>re</sup> année</p><h2 id="voir-ifsi-t">Vidéo tournée dans un IFSI</h2></div>
       <button class="viewer-close" type="button" data-close>Fermer</button>
     </header>
-    <div class="viewer-body" tabindex="-1">
-      <p class="viewer-text">Une vidéo pédagogique tournée dans un institut de formation en soins infirmiers : comment écouter une personne en grande détresse. Le sujet est sensible, alors on a gardé des plans posés et une lumière douce. Dans un groupe de cinq, j’étais au cadre, à l’image et au son.</p>
+    <div class="viewer-body" tabindex="0" role="region" aria-labelledby="voir-ifsi-t">
+      <p class="viewer-text">Pour cette SAÉ, l’IUT travaillait avec l’institut de formation en soins infirmiers (IFSI) : chaque groupe tournait sur place une vidéo d’un peu plus de deux minutes pour les étudiants infirmiers de 1<sup>re</sup> année, avec un référent de l’IFSI pour suivre le tournage. Notre scène : l’entretien d’une infirmière avec un patient venu de lui-même au centre médico-psychologique, en grande détresse. La vidéo sert ensuite d’exercice : les étudiants doivent évaluer le risque suicidaire et proposer une prise en soins.</p>
+      <p class="viewer-text">Pour un sujet pareil, on a gardé une mise en scène sobre : des plans posés, une lumière douce, et un champ-contrechamp qui laisse le temps d’écouter. Le texte de la situation s’affiche au début, les questions de l’exercice à la fin. Dans un groupe de cinq, j’étais au cadre, à l’image et au son, avec un cahier des charges précis : 25 images par seconde, un son mixé sur plusieurs pistes, une balance des blancs juste et des sous-titres en anglais.</p>
+      <figure class="plate plan">
+        <svg class="plan-svg" viewBox="0 0 560 360" role="img" aria-labelledby="plan-ifsi-t"><title id="plan-ifsi-t">Plan de la salle vu de dessus : le patient dans un fauteuil, l’infirmière derrière un bureau, et les quatre places de la caméra.</title><clipPath id="pl-room"><rect x="25" y="25" width="510" height="310"/></clipPath><rect class="pl-floor" x="24" y="24" width="512" height="312"/><rect class="pl-win" x="330" y="19" width="140" height="10"/><path class="pl-thin" d="M330 24H470"/><path class="pl-gap" d="M396 336H458"/><path class="pl-thin" d="M396 336V278"/><path class="pl-thin pl-dash" d="M396 278A58 58 0 0 1 454 336"/><g clip-path="url(#pl-room)"><path class="pl-fov pl-c1" d="M13 0L303 135.2L303 -135.2Z" transform="translate(92 306) rotate(-40.3)"/><path class="pl-fov pl-c2" d="M13 0L294.5 44.6L294.5 -44.6Z" transform="translate(136 246) rotate(-35.1)"/><path class="pl-fov pl-c3" d="M13 0L139.4 20L139.4 -20Z" transform="translate(290 156) rotate(-41.4)"/><path class="pl-fov pl-c4" d="M13 0L219.8 36.5L219.8 -36.5Z" transform="translate(330 66) rotate(135.7)"/></g><rect class="pl-seat" x="372" y="40" width="40" height="34" rx="8"/><rect class="pl-desk" x="318" y="98" width="180" height="58"/><path class="pl-thin" d="M408 98V156"/><rect class="pl-obj" x="348" y="110" width="22" height="30"/><path class="pl-thin" d="M353 118H365M353 125H365"/><rect class="pl-obj" x="440" y="110" width="30" height="21" transform="rotate(-8 455 120)"/><rect class="pl-chair" x="139" y="193" width="62" height="58" rx="14" transform="rotate(54.9 170 222)"/><g class="pl-patient"><ellipse class="pl-body" cx="170" cy="222" rx="21" ry="11" transform="rotate(54.9 170 222)"/><circle class="pl-head" cx="172.5" cy="220.3" r="8.5"/></g><g class="pl-nurse"><ellipse class="pl-body" cx="392" cy="66" rx="21" ry="11" transform="rotate(234.9 392 66)"/><circle class="pl-head" cx="389.5" cy="67.7" r="8.5"/></g><g transform="translate(92 306) rotate(-40.3)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="88" cy="332" r="10"/><text class="pl-num" x="88" y="336" text-anchor="middle">1</text><g transform="translate(136 246) rotate(-35.1)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="112" cy="252" r="10"/><text class="pl-num" x="112" y="256" text-anchor="middle">2</text><g transform="translate(290 156) rotate(-41.4)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="288" cy="180" r="10"/><text class="pl-num" x="288" y="184" text-anchor="middle">3</text><g transform="translate(330 66) rotate(135.7)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="332" cy="44" r="10"/><text class="pl-num" x="332" y="48" text-anchor="middle">4</text></svg>
+        <figcaption>Où était la caméra pour chaque plan de l’entretien, dans l’ordre où ils apparaissent :
+          <ol class="shots">
+            <li>un plan large sur les deux, de profil ;</li>
+            <li>par-dessus l’épaule du patient, sur l’infirmière ;</li>
+            <li>un gros plan sur l’infirmière ;</li>
+            <li>le contrechamp, en gros plan sur le patient.</li>
+          </ol>
+        </figcaption>
+      </figure>
       <figure class="plate">
         <img src="img/ifsi.webp" width="1280" height="721" loading="lazy" decoding="async" alt="Image de la vidéo : dans une salle de l'institut, un homme assis dans un fauteuil, une bulle de pensée au-dessus de la tête, fait face à une infirmière qui prend des notes.">
-        <figcaption>Les visages sont floutés : les personnes filmées n’apparaissent pas sur ce site.</figcaption>
+        <figcaption>Une image de l’entretien, visages floutés. La vidéo, elle, n’est pas en ligne : elle a été faite pour l’IFSI.</figcaption>
       </figure>
     </div>
   </div>
@@ -3590,7 +3635,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       var open = function () {
         root.classList.add('has-viewer');
         if (!dlg.open) { dlg.showModal(); }
-        /* le focus va sur le contenu : les flèches le font défiler, Échap referme, Tab mène à Fermer */
+        /* le focus va sur le contenu : les flèches le font défiler, Échap referme, Tab passe de lui à Fermer */
         var body = $('.viewer-body', dlg);
         if (body) { body.scrollTop = 0; try { body.focus({ preventScroll: true }); } catch (err) { body.focus(); } }
       };
