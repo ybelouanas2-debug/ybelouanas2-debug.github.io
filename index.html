@@ -56,6 +56,10 @@ setTimeout(function(){if(!document.querySelector('.hero[data-split]')){r.classLi
   --eh-pink: #D6307F;
   --torii: #C8361F;
   --petal: #F0A3B9;
+  --dv-cyan: #12B5BF;     /* les personas de DIVE IN, aux couleurs du spectacle */
+  --dv-magenta: #C2189F;
+  --dv-violet: #5B3FD9;
+  --dv-on: #fff;         /* texte posé sur ces couleurs */
 
   /* le fil de fer reste clair dans les deux thèmes */
   --w-bg: #FFFFFF;
@@ -112,6 +116,10 @@ setTimeout(function(){if(!document.querySelector('.hero[data-split]')){r.classLi
     --eh-pink: #FF78BC;
     --torii: #E5543A;
     --petal: #F7B6C8;
+    --dv-cyan: #2FD9E2;
+    --dv-magenta: #E04BC8;
+    --dv-violet: #8C78FF;
+    --dv-on: #000;
     --ph-bg: #242423;
     --ph-line: #5A5A54;
     --ph-bar: #3B3B38;
@@ -135,6 +143,10 @@ setTimeout(function(){if(!document.querySelector('.hero[data-split]')){r.classLi
   --eh-pink: #FF78BC;
   --torii: #E5543A;
   --petal: #F7B6C8;
+  --dv-cyan: #2FD9E2;
+  --dv-magenta: #E04BC8;
+  --dv-violet: #8C78FF;
+  --dv-on: #000;
   --ph-bg: #242423;
   --ph-line: #5A5A54;
   --ph-bar: #3B3B38;
@@ -663,6 +675,34 @@ h1, h2, h3 { text-wrap: balance; }
 .person h3 { font-weight: 700; font-size: 1.12rem; }
 .person p { margin-top: 4px; font-size: .98rem; }
 .person q { display: block; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); font-size: .93rem; font-style: italic; color: var(--ink-2); quotes: "«\00a0" "\00a0»"; }
+/* les personas de DIVE IN : plus d'informations par carte, et le moment pour leur parler aligné en bas des trois */
+.personas { display: grid; gap: 18px; margin-top: 24px; }
+@media (min-width: 960px) { .personas { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.persona { display: flex; flex-direction: column; padding: 18px 20px 20px; background: var(--paper); border: 1px solid var(--line); border-top: 6px solid var(--c); border-radius: 8px; }
+.persona h3 { font-weight: 700; font-size: 1.15rem; }
+.persona .who { margin-top: 6px; font-size: .95rem; line-height: 1.5; color: var(--ink-2); }
+.persona blockquote { margin: 14px 0 0; padding: 12px 0; border-block: 1px solid var(--line); }
+.persona blockquote p { font-size: 1.02rem; line-height: 1.45; font-style: italic; }
+.persona blockquote .tr { margin-top: 4px; font-size: .88rem; font-style: normal; color: var(--ink-2); }
+.persona dl { margin: 14px 0 0; display: grid; gap: 10px; }
+.persona dt { font-weight: 700; font-size: .92rem; }
+.persona dd { margin: 2px 0 0; font-size: .95rem; line-height: 1.5; }
+.persona .when { margin-top: auto; padding-top: 16px; font-size: .95rem; line-height: 1.5; }
+/* là où le navigateur sait le faire, les cartes partagent leurs rangées : nom, portrait, citation, détails et moment
+   sont alignés d'une carte à l'autre, comme dans un tableau qu'on lit en travers */
+@supports (grid-template-rows: subgrid) {
+  @media (min-width: 960px) {
+    .personas { grid-template-rows: repeat(8, auto); row-gap: 0; }
+    .persona { display: grid; grid-row: span 8; grid-template-rows: subgrid; row-gap: 0; }
+    .persona dl { grid-row: span 4; grid-template-rows: subgrid; row-gap: 0; }
+    .persona dl > div + div { padding-top: 12px; }
+    .persona .when { margin-top: 0; }
+  }
+}
+.persona .when b { display: block; width: fit-content; margin-bottom: 4px; padding: 1px 8px; border-radius: 4px; background: var(--c); color: var(--on-c, #000); }
+.dv-1 { --c: var(--dv-cyan); }
+.dv-2 { --c: var(--dv-magenta); --on-c: var(--dv-on); }
+.dv-3 { --c: var(--dv-violet); --on-c: var(--dv-on); }
 .p-camille { --c: var(--camille); }
 .p-ines { --c: var(--ines); }
 .p-marc { --c: var(--marc); }
@@ -2848,7 +2888,53 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 <div class="sec-body">
   <div class="prose">
     <p>Avant de parler du spectacle, il fallait savoir où il se situe. J’ai comparé les offres existantes et je les ai placées sur une carte. On y voit un trou : personne ne mélange théâtre, immersion sans paroles, réalité virtuelle et effets 4D. C’est là qu’on a placé DIVE IN.</p>
-    <p>J’ai aussi construit des personas avec leurs habitudes, pour choisir où communiquer au lieu de le deviner.</p>
+  </div>
+</div>
+</section>
+
+<section class="sec">
+  <h2>Pour qui, et quand leur parler</h2>
+<div class="sec-body">
+  <div class="prose">
+    <p>Pour choisir où communiquer au lieu de le deviner, j’ai construit trois personas à partir de leurs habitudes : où ils sortent, ce qu’ils lisent, ce qui les freine. Chacun a décidé de canaux, et surtout d’un moment différent pour lui parler.</p>
+  </div>
+  <div class="personas" data-reveal="stagger">
+    <article class="persona dv-1">
+      <h3>Sophie et Marc</h3>
+      <p class="who">Un couple de Lyonnais, 42 et 45 ans, infirmière et technicien. Trois ou quatre séjours par an, des restos, des escape games, l’Atelier des Lumières. Jamais le théâtre.</p>
+      <blockquote><p>« On cherche un truc dont on parlera en rentrant. Mais pas quelque chose d’ennuyeux, hein. »</p></blockquote>
+      <dl>
+        <div><dt>Pourquoi eux</dt><dd>Ils représentent les touristes français qui viennent souvent en week-end, et veulent vivre en Alsace quelque chose qu’ils n’ont jamais fait.</dd></div>
+        <div><dt>Ce qui les attire</dt><dd>Une expérience marquante, une histoire à raconter, un bon rapport qualité-prix.</dd></div>
+        <div><dt>Ce qui les freine</dt><dd>La peur de s’ennuyer, le prix, et la difficulté à se projeter.</dd></div>
+        <div><dt>Où leur parler</dt><dd>TripAdvisor, qu’ils consultent pour être sûrs d’une activité, et Instagram. De la vidéo, des témoignages, un prix visible, une réservation simple.</dd></div>
+      </dl>
+      <p class="when"><b>Quand :</b> juste avant leur séjour, puisqu’ils réservent au dernier moment.</p>
+    </article>
+    <article class="persona dv-2">
+      <h3>La famille Schneider</h3>
+      <p class="who">Des touristes allemands : Klaus et Petra, 48 et 46 ans, Lena, 16 ans, et Jonas, 14 ans. Deux ou trois week-ends en Alsace par an, déjà habitués du théâtre participatif et du ZKM de Karlsruhe.</p>
+      <blockquote><p lang="de">« Etwas, das die ganze Familie zusammenbringt und klar organisiert ist. »</p><p class="tr">Quelque chose qui réunit toute la famille, et qui soit bien organisé.</p></blockquote>
+      <dl>
+        <div><dt>Pourquoi eux d’abord</dt><dd>Les Allemands sont le premier public étranger en Alsace, et un ado de 14 ans est pile dans l’âge minimum du spectacle.</dd></div>
+        <div><dt>Ce qui les attire</dt><dd>Une sortie pour toutes les générations, l’innovation technique, la frontière toute proche.</dd></div>
+        <div><dt>Ce qui les freine</dt><dd>La langue, les sites mal traduits, et les contre-indications de la réalité virtuelle pour Jonas.</dd></div>
+        <div><dt>Où leur parler</dt><dd>Facebook et l’office de tourisme allemand, un site en bon allemand, la mention « ab 14 Jahren » et des témoignages en allemand.</dd></div>
+      </dl>
+      <p class="when"><b>Quand :</b> un mois avant au moins. Ils réservent 30 jours à l’avance, donc la campagne part tôt.</p>
+    </article>
+    <article class="persona dv-3">
+      <h3>Léa</h3>
+      <p class="who">32 ans, chargée de communication à Haguenau, en couple avec un enfant. Elle sort chaque semaine : cinéma, escape games, l’Atelier des Lumières, mais pas le théâtre classique.</p>
+      <blockquote><p>« À Haguenau, s’il y avait vraiment un truc original ici, je ramènerais tout le monde. »</p></blockquote>
+      <dl>
+        <div><dt>Pourquoi elle</dt><dd>Elle représente les habitants qui sortent ailleurs, faute d’offre locale : un public qu’on peut récupérer, et la preuve que le spectacle peut toucher les gens d’ici, pas seulement les touristes.</dd></div>
+        <div><dt>Ce qui l’attire</dt><dd>De la nouveauté près de chez elle, quelque chose à partager avec son entourage et à montrer sur Instagram.</dd></div>
+        <div><dt>Ce qui la freine</dt><dd>Elle doute de l’offre locale, doit faire garder son enfant, et a peur d’être déçue.</dd></div>
+        <div><dt>Où lui parler</dt><dd>Instagram, où elle passe une heure par jour, les groupes Facebook locaux, Pokaa et les DNA. Des visuels qui assument Haguenau, des offres pour venir à plusieurs.</dd></div>
+      </dl>
+      <p class="when"><b>Quand :</b> toute l’année. Elle revient facilement et amène ses amis : c’est le public le plus fidèle.</p>
+    </article>
   </div>
 </div>
 </section>
