@@ -474,8 +474,8 @@ h1, h2, h3 { text-wrap: balance; }
 .v-eh { background: #FBD9F3; }
 .v-divein { background: #0C0A0D; }
 .v-kyoto { background: #B3261E; }
-.proj-visual .shot { display: block; overflow: hidden; }
-.proj-visual .browser .shot { aspect-ratio: 16 / 10; }
+.proj-visual .shot, .case-art .shot { display: block; overflow: hidden; }
+.proj-visual .browser .shot, .case-art .browser .shot { aspect-ratio: 16 / 10; }
 .shot img { width: 100%; }
 /* la page défile toute seule dans son cadre tant que le projet est à l'écran */
 .anim .pan img { animation: pan var(--pan-d, 16s) var(--ease-in-out) infinite paused; }
@@ -965,11 +965,11 @@ body::after {
 .more { font-size: .78rem; }
 
 /* le cadre d'un visuel : un filet, puis un aplat aux coins entaillés, comme un ticket */
-.proj-visual, .stage {
+.proj-visual, .stage, .case-art {
   position: relative; border: 1px solid var(--ink); border-radius: 0; background: none;
   --vbg: var(--soft); --notch: clamp(10px, 1.4vw, 18px);
 }
-.proj-visual::before, .stage::before {
+.proj-visual::before, .stage::before, .case-art::before {
   content: ""; position: absolute; inset: 7px; background: var(--vbg);
   --c: #0000 var(--notch), #000 calc(var(--notch) + .6px);
   -webkit-mask:
@@ -983,7 +983,7 @@ body::after {
     radial-gradient(circle at 0 100%, var(--c)) 0 100% / 51% 51% no-repeat,
     radial-gradient(circle at 100% 100%, var(--c)) 100% 100% / 51% 51% no-repeat;
 }
-.proj-visual > *, .stage > * { position: relative; }
+.proj-visual > *, .stage > *, .case-art > * { position: relative; }
 .proj-visual { padding: clamp(24px, 3.4vw, 46px); }
 .stage { padding: clamp(20px, 3vw, 38px); }
 .v-webdoc, .v-divein { --vbg: var(--yellow); background: none; }
@@ -1118,7 +1118,30 @@ html.vt .viewer[open], html.vt .viewer[open]::backdrop { animation: none; }
 .mail { font-size: clamp(1.15rem, 3.6vw, 2.5rem); text-transform: none; letter-spacing: -.01em; }
 
 /* études de cas */
-.case h1 { font-size: clamp(2.1rem, 8.6vw, 7.4rem); max-width: 13ch; line-height: .94; }  /* un peu d'air : accents et apostrophes ne touchent plus la ligne du dessus */
+.case h1 { font-size: clamp(1.9rem, 9.4vw, 7.4rem); line-height: .94; max-width: none; }  /* un peu d'air : accents et apostrophes ne touchent plus la ligne du dessus */
+/* le titre prend toute la largeur, sans limite en caractères : la limite le coupait en cinq ou six lignes et laissait un vide à droite.
+   9,4vw : « Un webdocumentaire », le plus long début de titre, tient encore sur une ligne, même sur un écran de 320 px */
+/* sur grand écran, le titre ne reste plus seul : le visuel du projet se met à côté, le même que sur l'accueil,
+   pour qu'on retrouve en arrivant ce qu'on vient d'ouvrir. Sur téléphone et tablette, il n'est pas chargé */
+.case-art { display: none; }
+@media (min-width: 1000px) {
+  .case-top {
+    display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+    column-gap: clamp(40px, 5vw, 72px);
+  }
+  .case-top > .back { grid-column: 1; justify-self: start; }
+  /* le titre en haut, le chapeau en bas : le texte occupe toute la hauteur du visuel */
+  .case-intro { grid-column: 1; grid-row: 2; display: flex; flex-direction: column; }
+  .case-intro .lede { margin-top: auto; padding-top: 22px; }
+  .case-art {
+    grid-column: 2; grid-row: 2;
+    display: grid; place-items: center;
+    padding: clamp(24px, 3.4vw, 46px); overflow: hidden;
+  }
+  .case-top .facts { grid-column: 1 / -1; }
+  /* assez petit pour que « Un webdocumentaire », le plus long début de titre, tienne sur une ligne */
+  .case h1 { font-size: clamp(3rem, 4.78vw, 4.3rem); max-width: none; }
+}
 .sec { border-top-color: var(--ink); }
 .sec > h2 { font-size: clamp(1.3rem, 2.5vw, 1.9rem); line-height: 1; letter-spacing: 0; }
 .facts { border-block-color: var(--ink); }
@@ -1585,7 +1608,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
             <p class="proj-hook">Un vrai commanditaire, le Pôle universitaire d’innovation Alsace, et une page à concevoir pour donner envie aux doctorants de partir trois jours en résidence.</p>
             <dl class="proj-meta">
               <div><dt>Ma part</dt><dd>Dossier de stratégie, mots-clés et page optimisée, fils de fer et maquettes Figma pour ordinateur et téléphone.</dd></div>
-              <div><dt>Cadre</dt><dd>SAÉ 302 en groupe de quatre, 2<sup>e</sup> année.</dd></div>
+              <div><dt>Cadre</dt><dd>SAÉ 302 en groupe de quatre, 2<sup>e</sup> année.</dd></div>
             </dl>
             <ul class="chips" aria-label="Compétences"><li class="chip">Stratégie et SEO</li><li class="chip">Maquettes UI</li></ul>
             <span class="more" aria-hidden="true">Lire l’étude de cas</span>
@@ -1642,7 +1665,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
             <p class="proj-hook">Un spectacle immersif sans dialogue imaginé pour le Relais Culturel de Haguenau : une stratégie, puis une page de présentation et une landing page qui ne font pas le même travail.</p>
             <dl class="proj-meta">
               <div><dt>Ma part</dt><dd>Benchmark, personas, positionnement et mapping, puis fils de fer et maquettes web.</dd></div>
-              <div><dt>Cadre</dt><dd>SAÉ 202 en groupe de sept, 1<sup>re</sup> année.</dd></div>
+              <div><dt>Cadre</dt><dd>SAÉ 202 en groupe de sept, 1<sup>re</sup> année.</dd></div>
             </dl>
             <ul class="chips" aria-label="Compétences"><li class="chip">Recherche UX</li><li class="chip">Stratégie</li><li class="chip">Maquettes UI</li></ul>
             <span class="more" aria-hidden="true">Lire l’étude de cas</span>
@@ -1660,7 +1683,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
             <p class="proj-hook">Mon premier site relié à une base de données. Un travail individuel, de la maquette à la mise en ligne.</p>
             <dl class="proj-meta">
               <div><dt>Ma part</dt><dd>Conception, base de données, code PHP et Twig, intégration CSS et mise en ligne.</dd></div>
-              <div><dt>Cadre</dt><dd>SAÉ 203, travail individuel, 1<sup>re</sup> année.</dd></div>
+              <div><dt>Cadre</dt><dd>SAÉ 203, travail individuel, 1<sup>re</sup> année.</dd></div>
             </dl>
             <ul class="chips" aria-label="Compétences"><li class="chip">Intégration</li></ul>
             <span class="more" aria-hidden="true">Lire l’étude de cas</span>
@@ -1719,7 +1742,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
             <span class="sheet is-front"><img src="img/af-recto-s.webp" width="480" height="681" alt="" loading="lazy" decoding="async"></span>
             </div>
           </div>
-          <p class="where">SAÉ 103, 1<sup>re</sup> année</p>
+          <p class="where">SAÉ 103, 1<sup>re</sup> année</p>
           <h3><a href="img/af-recto.webp" data-view="voir-flyer" aria-haspopup="dialog">Flyer Jeux M’éclate</a></h3>
           <p>Un flyer A5 recto verso pour une association de jeux de société, dessiné au trait sur Photoshop autour d’un slogan : le jeu nous oppose, puis nous rassemble.</p>
           <span class="more" aria-hidden="true">Voir en grand</span>
@@ -1730,7 +1753,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
             <div class="browser"><span class="shot"><img src="img/hxh-accueil.webp" srcset="img/hxh-accueil-640.webp 640w, img/hxh-accueil.webp 1100w" sizes="(max-width: 600px) 72vw, (max-width: 1440px) 34vw, 484px" width="1100" height="687" alt="" loading="lazy" decoding="async"></span></div>
             </div>
           </div>
-          <p class="where">SAÉ 105, 1<sup>re</sup> année</p>
+          <p class="where">SAÉ 105, 1<sup>re</sup> année</p>
           <h3><a href="img/hxh-accueil.webp" data-view="voir-hxh" aria-haspopup="dialog">Site Hunter x Hunter</a></h3>
           <p>Mon tout premier site, codé seul, en français et en anglais. Les données y étaient encore écrites à la main dans le code.</p>
           <span class="more" aria-hidden="true">Voir en grand</span>
@@ -1741,7 +1764,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
             <span class="screen"><img src="img/ifsi.webp" srcset="img/ifsi-640.webp 640w, img/ifsi.webp 1280w" sizes="(max-width: 600px) 72vw, (max-width: 1440px) 34vw, 484px" width="1280" height="721" alt="" loading="lazy" decoding="async"></span>
             </div>
           </div>
-          <p class="where">SAÉ 104, en groupe de cinq, 1<sup>re</sup> année</p>
+          <p class="where">SAÉ 104, en groupe de cinq, 1<sup>re</sup> année</p>
           <h3><a href="img/ifsi.webp" data-view="voir-ifsi" aria-haspopup="dialog">Vidéo tournée dans un IFSI</a></h3>
           <p>Une vidéo sur l’écoute d’une personne en détresse, tournée dans un institut de formation en soins infirmiers. J’étais au cadre, à l’image et au son.</p>
           <span class="more" aria-hidden="true">Voir en grand</span>
@@ -1752,7 +1775,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
         <article class="other">
           <h3>Horuz</h3>
           <p>Un réseau social pour les créateurs de jeux vidéo, quelque part entre LinkedIn, Twitter et GitHub. J’ai dessiné les fils de fer, puis l’interface sur Figma.</p>
-          <p class="where">SAÉ 201, 1<sup>re</sup> année</p>
+          <p class="where">SAÉ 201, 1<sup>re</sup> année</p>
         </article>
         <article class="other">
           <h3>Com’X Challenge</h3>
@@ -1806,7 +1829,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 <dialog class="viewer" id="voir-flyer" aria-labelledby="voir-flyer-t">
   <div class="viewer-in">
     <header class="viewer-head">
-      <div><p class="where">SAÉ 103, 1<sup>re</sup> année</p><h2 id="voir-flyer-t">Flyer Jeux M’éclate</h2></div>
+      <div><p class="where">SAÉ 103, 1<sup>re</sup> année</p><h2 id="voir-flyer-t">Flyer Jeux M’éclate</h2></div>
       <button class="viewer-close" type="button" data-close>Fermer</button>
     </header>
     <div class="viewer-body" tabindex="-1">
@@ -1828,7 +1851,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 <dialog class="viewer" id="voir-hxh" aria-labelledby="voir-hxh-t">
   <div class="viewer-in">
     <header class="viewer-head">
-      <div><p class="where">SAÉ 105, 1<sup>re</sup> année</p><h2 id="voir-hxh-t">Site Hunter x Hunter</h2></div>
+      <div><p class="where">SAÉ 105, 1<sup>re</sup> année</p><h2 id="voir-hxh-t">Site Hunter x Hunter</h2></div>
       <button class="viewer-close" type="button" data-close>Fermer</button>
     </header>
     <div class="viewer-body" tabindex="-1">
@@ -1847,7 +1870,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 <dialog class="viewer" id="voir-ifsi" aria-labelledby="voir-ifsi-t">
   <div class="viewer-in">
     <header class="viewer-head">
-      <div><p class="where">SAÉ 104, en groupe de cinq, 1<sup>re</sup> année</p><h2 id="voir-ifsi-t">Vidéo tournée dans un IFSI</h2></div>
+      <div><p class="where">SAÉ 104, en groupe de cinq, 1<sup>re</sup> année</p><h2 id="voir-ifsi-t">Vidéo tournée dans un IFSI</h2></div>
       <button class="viewer-close" type="button" data-close>Fermer</button>
     </header>
     <div class="viewer-body" tabindex="-1">
@@ -1867,10 +1890,15 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 <main data-main tabindex="-1"><div class="wrap">
 <header class="case-top">
   <a class="back" href="#projets">Retour aux projets</a>
-  <h1 tabindex="-1">Faire connaître l’École d’Hiver aux doctorants</h1>
-  <p class="lede">Le Pôle universitaire d’innovation Alsace organise l’École d’Hiver de la créativité et de l’innovation : trois jours en résidence, où des doctorants de Strasbourg et de Mulhouse travaillent en équipe sur des défis posés par des entreprises, des associations et des institutions de la région. Pour la SAÉ 302, notre groupe de quatre a joué le rôle de l’agence chargée de faire connaître l’édition 2027.</p>
+<div class="case-intro">
+  <h1 tabindex="-1">Faire connaître l’École&nbsp;d’Hiver aux doctorants</h1>
+  <p class="lede">Le Pôle universitaire d’innovation Alsace organise l’École d’Hiver de la créativité et de l’innovation : trois jours en résidence, où des doctorants de Strasbourg et de Mulhouse travaillent en équipe sur des défis posés par des entreprises, des associations et des institutions de la région. Pour la SAÉ 302, notre groupe de quatre a joué le rôle de l’agence chargée de faire connaître l’édition 2027.</p>
+  </div>
+<div class="case-art v-eh" aria-hidden="true">
+            <div class="browser"><span class="shot pan" style="--pan:-70.0%;--pan-d:22s"><img src="img/cover-eh-long-final.webp" srcset="img/cover-eh-long-final-640.webp 640w, img/cover-eh-long-final.webp 960w" sizes="(max-width: 900px) 84vw, 590px" width="960" height="2000" alt="" loading="lazy" decoding="async"></span></div>
+          </div>
   <dl class="facts">
-    <div><dt>Cadre</dt><dd>SAÉ 302, BUT MMI 2<sup>e</sup> année, groupe de quatre. Rendu en novembre 2026.</dd></div>
+    <div><dt>Cadre</dt><dd>SAÉ 302, BUT MMI 2<sup>e</sup> année, groupe de quatre. Rendu en novembre 2026.</dd></div>
     <div><dt>Commanditaire</dt><dd>Pôle universitaire d’innovation Alsace.</dd></div>
     <div><dt>Ma part</dt><dd>Dossier de stratégie, mots-clés et page optimisée, fils de fer et maquettes Figma.</dd></div>
     <div><dt>Le reste du groupe</dt><dd>Vidéos, créations graphiques, posts LinkedIn et trophée fabriqué au Fablab.</dd></div>
@@ -2040,8 +2068,13 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 <main data-main tabindex="-1"><div class="wrap">
 <header class="case-top">
   <a class="back" href="#projets">Retour aux projets</a>
+<div class="case-intro">
   <h1 tabindex="-1">Le site d’une salle d’escalade associative</h1>
   <p class="lede">Une association du Bas-Rhin, installée dans une ancienne halle industrielle, veut que les familles inscrivent leurs enfants en ligne et que les adhérents déposent leur vieux matériel à l’atelier. J’ai cherché ce qui bloquait les gens sur les sites des autres salles, puis construit une arborescence où chaque page répond à une frustration précise.</p>
+  </div>
+<div class="case-art v-escalade" aria-hidden="true">
+            <svg class="mini" viewBox="0 0 520 344" aria-hidden="true" focusable="false"><g class="p-camille"><text x="96" y="22" text-anchor="middle">Camille</text><rect class="pl" x="48" y="40" width="96" height="16" rx="8"/><line class="ln" x1="96" y1="56" x2="96" y2="66"/><rect class="st" x="48" y="66" width="96" height="16" rx="2"/><line class="ln" x1="96" y1="82" x2="96" y2="92"/><polygon class="dc" points="96,92 130,105.0 96,118 62,105.0"/><line class="ln" x1="96" y1="118" x2="96" y2="128"/><rect class="st" x="48" y="128" width="96" height="16" rx="2"/><line class="ln" x1="96" y1="144" x2="96" y2="154"/><polygon class="dc" points="96,154 130,167.0 96,180 62,167.0"/><line class="ln" x1="96" y1="180" x2="96" y2="190"/><rect class="st" x="48" y="190" width="96" height="16" rx="2"/><line class="ln" x1="96" y1="206" x2="96" y2="216"/><polygon class="dc" points="96,216 130,229.0 96,242 62,229.0"/><line class="ln" x1="96" y1="242" x2="96" y2="252"/><rect class="st" x="48" y="252" width="96" height="16" rx="2"/><line class="ln" x1="96" y1="268" x2="96" y2="278"/><polygon class="dc" points="96,278 130,291.0 96,304 62,291.0"/><line class="ln" x1="96" y1="304" x2="96" y2="314"/><rect class="pl" x="48" y="314" width="96" height="16" rx="8"/><circle class="walker" cx="96" cy="48.0" r="6" style="--len:274px;--dur:9.1s;--dl:0.0s"/></g><g class="p-ines"><text x="260" y="22" text-anchor="middle">Ines</text><rect class="pl" x="212" y="40" width="96" height="16" rx="8"/><line class="ln" x1="260" y1="56" x2="260" y2="66"/><rect class="st" x="212" y="66" width="96" height="16" rx="2"/><line class="ln" x1="260" y1="82" x2="260" y2="92"/><rect class="st" x="212" y="92" width="96" height="16" rx="2"/><line class="ln" x1="260" y1="108" x2="260" y2="118"/><rect class="st" x="212" y="118" width="96" height="16" rx="2"/><line class="ln" x1="260" y1="134" x2="260" y2="144"/><rect class="st" x="212" y="144" width="96" height="16" rx="2"/><line class="ln" x1="260" y1="160" x2="260" y2="170"/><polygon class="dc" points="260,170 294,183.0 260,196 226,183.0"/><line class="ln" x1="260" y1="196" x2="260" y2="206"/><rect class="st" x="212" y="206" width="96" height="16" rx="2"/><line class="ln" x1="260" y1="222" x2="260" y2="232"/><polygon class="dc" points="260,232 294,245.0 260,258 226,245.0"/><line class="ln" x1="260" y1="258" x2="260" y2="268"/><rect class="pl" x="212" y="268" width="96" height="16" rx="8"/><circle class="walker" cx="260" cy="48.0" r="6" style="--len:228px;--dur:7.6s;--dl:-3.4s"/></g><g class="p-marc"><text x="424" y="22" text-anchor="middle">Marc</text><rect class="pl" x="376" y="40" width="96" height="16" rx="8"/><line class="ln" x1="424" y1="56" x2="424" y2="66"/><rect class="st" x="376" y="66" width="96" height="16" rx="2"/><line class="ln" x1="424" y1="82" x2="424" y2="92"/><polygon class="dc" points="424,92 458,105.0 424,118 390,105.0"/><line class="ln" x1="424" y1="118" x2="424" y2="128"/><rect class="st" x="376" y="128" width="96" height="16" rx="2"/><line class="ln" x1="424" y1="144" x2="424" y2="154"/><polygon class="dc" points="424,154 458,167.0 424,180 390,167.0"/><line class="ln" x1="424" y1="180" x2="424" y2="190"/><rect class="st" x="376" y="190" width="96" height="16" rx="2"/><line class="ln" x1="424" y1="206" x2="424" y2="216"/><polygon class="dc" points="424,216 458,229.0 424,242 390,229.0"/><line class="ln" x1="424" y1="242" x2="424" y2="252"/><rect class="st" x="376" y="252" width="96" height="16" rx="2"/><line class="ln" x1="424" y1="268" x2="424" y2="278"/><rect class="pl" x="376" y="278" width="96" height="16" rx="8"/><circle class="walker" cx="424" cy="48.0" r="6" style="--len:238px;--dur:7.9s;--dl:-6.8s"/></g></svg>
+          </div>
   <dl class="facts">
     <div><dt>Cadre</dt><dd>Projet de cours en groupe, module UX, BUT MMI 2<sup>e</sup> année. Le client est fictif.</dd></div>
     <div><dt>Ma part</dt><dd>Benchmark, user flows, arborescence et support de soutenance.</dd></div>
@@ -2352,8 +2385,16 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 <main data-main tabindex="-1"><div class="wrap">
 <header class="case-top">
   <a class="back" href="#projets">Retour aux projets</a>
+<div class="case-intro">
   <h1 tabindex="-1">Un webdocumentaire à maquetter avant son contenu</h1>
   <p class="lede">Les étudiants du Master Journalisme du CUEJ enquêtent cette année sur un thème de société : « Réformer (encore) la Justice ? ». En MMI, nous concevons le site mobile qui portera leurs articles. La difficulté : au moment de maquetter, ni les textes ni les photos n’existent.</p>
+  </div>
+<div class="case-art v-webdoc" aria-hidden="true">
+            <div class="duo">
+              <div class="phone"><span class="shot pan" style="--pan:-17.3%;--pan-d:13s"><img src="img/webdoc-wf-article.webp" width="390" height="846" alt="" loading="lazy" decoding="async"></span></div>
+              <div class="phone"><span class="shot pan" style="--pan:-62.0%;--pan-d:19s"><img src="img/webdoc-specimen.webp" width="390" height="1843" alt="" loading="lazy" decoding="async"></span></div>
+            </div>
+          </div>
   <dl class="facts">
     <div><dt>Cadre</dt><dd>Module CREA3, BUT MMI 2<sup>e</sup> année, en partenariat avec le CUEJ (Université de Strasbourg).</dd></div>
     <div><dt>Ma part</dt><dd>Maquette individuelle : analyse, arborescence, fils de fer et design system.</dd></div>
@@ -2508,10 +2549,15 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 <main data-main tabindex="-1"><div class="wrap">
 <header class="case-top">
   <a class="back" href="#projets">Retour aux projets</a>
+<div class="case-intro">
   <h1 tabindex="-1">DIVE IN, un théâtre qui se ressent</h1>
-  <p class="lede">Pour la SAÉ 202, notre groupe de sept a imaginé DIVE IN : un spectacle immersif sans dialogue au Relais Culturel de Haguenau, où le récit passe par le son, la lumière, les sensations et la réalité virtuelle. J’ai construit la stratégie, puis les maquettes du site.</p>
+  <p class="lede">Pour la SAÉ 202, notre groupe de sept a imaginé DIVE IN : un spectacle immersif sans dialogue au Relais Culturel de Haguenau, où le récit passe par le son, la lumière, les sensations et la réalité virtuelle. J’ai construit la stratégie, puis les maquettes du site.</p>
+  </div>
+<div class="case-art v-divein" aria-hidden="true">
+            <div class="browser"><span class="shot pan" style="--pan:-55.1%;--pan-d:17s"><img src="img/divein-landing.webp" srcset="img/divein-landing-720.webp 720w, img/divein-landing.webp 1440w" sizes="(max-width: 900px) 84vw, 590px" width="1440" height="2003" alt="" loading="lazy" decoding="async"></span></div>
+          </div>
   <dl class="facts">
-    <div><dt>Cadre</dt><dd>SAÉ 202, BUT MMI 1<sup>re</sup> année, groupe de sept.</dd></div>
+    <div><dt>Cadre</dt><dd>SAÉ 202, BUT MMI 1<sup>re</sup> année, groupe de sept.</dd></div>
     <div><dt>Projet</dt><dd>Un spectacle inventé pour le cours, autour d’un lieu réel.</dd></div>
     <div><dt>Ma part</dt><dd>Benchmark, personas, positionnement et mapping, puis fils de fer et maquettes web.</dd></div>
     <div><dt>Outil</dt><dd>Figma.</dd></div>
@@ -2608,13 +2654,18 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 <main data-main tabindex="-1"><div class="wrap">
 <header class="case-top">
   <a class="back" href="#projets">Retour aux projets</a>
+<div class="case-intro">
   <div class="kyoto-head">
     <h1 tabindex="-1">Découvrir Kyoto</h1>
     <svg class="kanji" viewBox="0 0 2000 1000" aria-hidden="true" focusable="false"><path transform="translate(0,880) scale(1,-1)" d="M788 745Q794 752 803.0 764.5Q812 777 817.5 783.0Q823 789 827 789Q833 789 862.5 766.5Q892 744 918.0 719.5Q944 695 944 688Q940 672 916 672H231Q160 671 81 658L55 709Q110 703 188 701H440Q440 792 431 853Q516 835 548.5 824.5Q581 814 581 807Q581 803 573 798L556 787V701H757ZM687 599Q690 603 697.5 611.5Q705 620 710.0 624.5Q715 629 719 629Q725 629 752.5 609.5Q780 590 804.5 569.0Q829 548 829 541Q819 527 790 520V449Q792 363 796 313Q790 303 755.0 289.5Q720 276 692 276Q669 276 669 296Q670 299 670.5 302.5Q671 306 672 310V328H558V52Q558 8 547.0 -20.5Q536 -49 503.0 -67.0Q470 -85 408 -90Q405 -31 386 -7Q376 7 355.5 16.5Q335 26 299 32V45Q401 38 421 38Q433 38 437.5 42.0Q442 46 442 55V328H326V298Q326 292 311.0 283.5Q296 275 273.0 268.5Q250 262 228 262Q217 262 211.5 268.0Q206 274 206 282Q210 320 212 380V440Q212 556 201 623L333 569H662ZM326 540V357H672V540ZM335 208Q389 180 389 168Q389 164 379 162L362 159Q309 104 226.0 51.5Q143 -1 55 -33L46 -21Q103 21 162 88Q195 125 222.5 170.5Q250 216 263 256ZM629 221Q725 205 787.0 173.0Q849 141 876.5 103.5Q904 66 904 32Q904 6 889.0 -11.0Q874 -28 849 -28Q831 -28 811 -18Q786 36 732.5 98.5Q679 161 621 214Z"/><path transform="translate(1000,880) scale(1,-1)" d="M405 402Q408 406 415.0 414.0Q422 422 426.5 426.0Q431 430 435 430Q441 430 466.5 412.5Q492 395 514.0 375.5Q536 356 536 349Q524 335 498 329V198Q500 74 506 -37Q499 -47 467.0 -59.0Q435 -71 410 -71Q388 -71 388 -51Q388 -49 392 -16V12H248V-9Q249 -21 249.5 -31.0Q250 -41 251 -46Q248 -58 223.0 -70.5Q198 -83 163 -83Q150 -83 143.0 -77.0Q136 -71 136 -63Q143 32 145 149V266Q86 229 43 207L34 219Q95 263 145 310V364Q145 396 142 423L220 389Q266 442 294 481H210Q139 480 60 467L34 517Q83 511 152 509H207V657H162Q125 656 86 643L60 694Q101 688 160 686H207Q207 784 197 847Q279 829 309.0 819.0Q339 809 339 801Q339 797 331 792L314 781V686H331L378 757Q404 733 428 709Q441 736 452.0 767.5Q463 799 467 822L591 754Q591 798 587 826L711 762H797L823 791Q827 795 835.0 803.5Q843 812 848.0 816.5Q853 821 857 821Q863 821 889.5 797.5Q916 774 940.0 748.5Q964 723 964 716Q958 709 948.5 706.0Q939 703 920 702Q878 625 842.0 564.0Q806 503 771 459Q853 408 893.5 337.5Q934 267 934 197Q934 120 897.5 79.0Q861 38 778 37Q778 66 775.0 92.5Q772 119 766 129Q752 147 716 154V168H786Q798 168 808 173Q831 187 831 233Q831 291 811.0 348.5Q791 406 747 457Q761 509 777.5 590.5Q794 672 804 734H698V188Q700 64 706 -47Q698 -61 672.5 -74.5Q647 -88 610 -88Q596 -88 588.0 -82.0Q580 -76 580 -68Q584 -9 587.0 46.5Q590 102 591 192V494Q585 481 566 481H386Q335 422 284 375H382ZM591 746Q583 738 571 738Q568 738 556 740Q495 619 409 509H450L501 581Q560 530 591 498ZM314 510Q362 580 403 657H314ZM392 208V346H251L248 342V208ZM248 179V41H392V179Z"/></svg>
   </div>
   <p class="lede">Un site pour préparer un séjour à Kyoto : des temples, des quartiers, des adresses, et l’avis des visiteurs sur chaque lieu. Je l’ai maquetté sur Figma, codé avec une base de données, puis mis en ligne sur le serveur de l’IUT.</p>
+  </div>
+<div class="case-art v-kyoto" aria-hidden="true">
+            <div class="browser"><span class="shot pan" style="--pan:-55.1%;--pan-d:16s"><img src="img/kyoto-accueil.webp" srcset="img/kyoto-accueil-720.webp 720w, img/kyoto-accueil.webp 1280w" sizes="(max-width: 900px) 84vw, 590px" width="1280" height="1782" alt="" loading="lazy" decoding="async"></span></div>
+          </div>
   <dl class="facts">
-    <div><dt>Cadre</dt><dd>SAÉ 203, BUT MMI 1<sup>re</sup> année, travail individuel.</dd></div>
+    <div><dt>Cadre</dt><dd>SAÉ 203, BUT MMI 1<sup>re</sup> année, travail individuel.</dd></div>
     <div><dt>Ma part</dt><dd>Maquette, base de données, code et mise en ligne.</dd></div>
     <div><dt>Outils</dt><dd>Figma, PHP, Twig, MySQL, HTML et CSS.</dd></div>
     <div><dt>Contrainte</dt><dd>Aucun JavaScript, et un code que je sais expliquer ligne par ligne à l’oral.</dd></div>
@@ -3320,7 +3371,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       }, { threshold: threshold });
     };
     var covers = watch(0.3);
-    $$('.proj-visual').forEach(function (el) { covers.observe(el); });
+    $$('.proj-visual, .case-art').forEach(function (el) { covers.observe(el); });
     var bands = watch(0);
     $$('.hero, .ticker, .mq').forEach(function (el) { bands.observe(el); });
   }
