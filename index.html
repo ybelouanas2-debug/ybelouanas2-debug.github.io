@@ -1113,28 +1113,47 @@ html.has-viewer { overflow: hidden; scrollbar-gutter: stable; }
 .plate .browser::before { background-color: #000; }
 .plate figcaption { margin-top: 10px; font-size: .92rem; line-height: 1.45; color: var(--ink-2); }
 /* le plan de tournage de la vidéo de l'IFSI (decos.py) : la salle vue de dessus, et les places de la caméra */
-.plan { max-width: 640px; }
 .plan-svg { display: block; width: 100%; height: auto; }
-.plan .pl-floor { fill: var(--paper); stroke: var(--ink); stroke-width: 2.6; }
-.plan .pl-win { fill: var(--canvas); stroke: var(--ink); stroke-width: 1.2; }
-.plan .pl-gap { stroke: var(--paper); stroke-width: 4; }
-.plan .pl-thin { fill: none; stroke: var(--ink); stroke-width: 1.1; }
-.plan .pl-dash { stroke-dasharray: 3 4; }
-.plan .pl-desk { fill: var(--soft); stroke: var(--ink); stroke-width: 1.3; }
-.plan .pl-obj { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
-.plan .pl-chair { fill: #B23A55; stroke: var(--ink); stroke-width: 1.2; }
-.plan .pl-seat { fill: var(--soft); stroke: var(--ink); stroke-width: 1; }
-.plan .pl-patient > *, .plan .pl-nurse > * { stroke: var(--ink); stroke-width: 1.2; }
-.plan .pl-patient .pl-body { fill: #7C7A45; }
-.plan .pl-patient .pl-head { fill: #D9AE88; }
-.plan .pl-nurse .pl-body { fill: #FFFFFF; }
-.plan .pl-nurse .pl-head { fill: #9A6A43; }
-.plan .pl-fov { fill: var(--yellow); stroke: var(--ink); stroke-width: .8; stroke-opacity: .5; opacity: .45; }
-.plan .pl-cam { fill: var(--ink); }
-.plan .pl-badge { fill: var(--ink); }
-.plan .pl-num { fill: var(--canvas); font-family: var(--display); font-weight: 800; font-size: 12px; }
-.shots { margin: 6px 0 0; padding-left: 1.5em; display: grid; gap: 2px; list-style: decimal; }
-.shots li::marker { font-weight: 700; color: var(--ink); }
+.plan-svg .pl-floor { fill: var(--paper); stroke: var(--ink); stroke-width: 2.6; }
+.plan-svg .pl-win { fill: var(--canvas); stroke: var(--ink); stroke-width: 1.2; }
+.plan-svg .pl-gap { stroke: var(--paper); stroke-width: 4; }
+.plan-svg .pl-thin { fill: none; stroke: var(--ink); stroke-width: 1.1; }
+.plan-svg .pl-dash { stroke-dasharray: 3 4; }
+.plan-svg .pl-desk { fill: var(--soft); stroke: var(--ink); stroke-width: 1.3; }
+.plan-svg .pl-obj { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
+.plan-svg .pl-chair { fill: #B23A55; stroke: var(--ink); stroke-width: 1.2; }
+.plan-svg .pl-seat { fill: var(--soft); stroke: var(--ink); stroke-width: 1; }
+.plan-svg .pl-patient > *, .plan-svg .pl-nurse > * { stroke: var(--ink); stroke-width: 1.2; }
+.plan-svg .pl-patient .pl-body { fill: #7C7A45; }
+.plan-svg .pl-patient .pl-head { fill: #D9AE88; }
+.plan-svg .pl-nurse .pl-body { fill: #FFFFFF; }
+.plan-svg .pl-nurse .pl-head { fill: #9A6A43; }
+.plan-svg .pl-fov { fill: var(--yellow); stroke: var(--ink); stroke-width: .8; stroke-opacity: .5; opacity: .45; }
+.plan-svg .pl-cam { fill: var(--ink); }
+.plan-svg .pl-badge { fill: var(--ink); }
+.plan-svg .pl-num { fill: var(--canvas); font-family: var(--display); font-weight: 800; font-size: 12px; }
+
+/* la fiche de la vidéo de l'IFSI : les deux textes côte à côte, puis, au centre, le plan de la salle
+   et l'image du plan 1 à la même hauteur, et la liste des plans dessous */
+.ifsi-text { display: grid; column-gap: clamp(28px, 4vw, 56px); margin-bottom: clamp(6px, 1.4vw, 16px); }
+@media (min-width: 900px) { .ifsi-text { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.ifsi-plan { max-width: 1060px; margin-inline: auto; }
+.ifsi-pair { display: grid; gap: clamp(16px, 2.4vw, 30px); align-items: center; }
+/* largeurs dans le rapport des deux formats (516 × 321 et 1280 × 721) : les deux images ont la même hauteur */
+@media (min-width: 760px) { .ifsi-pair { grid-template-columns: minmax(0, 1.6075fr) minmax(0, 1.775fr); } }
+.ifsi-cam { position: relative; }
+.ifsi-cam img { display: block; width: 100%; height: auto; box-shadow: 0 1px 2px #0004, 0 18px 36px -18px #000b; }
+.cam-badge, .shots li::before {
+  display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%;
+  background: var(--ink); color: var(--canvas); font-family: var(--display); font-weight: 800; font-size: 12px; line-height: 1;
+}
+.cam-badge { position: absolute; left: 12px; top: 12px; }
+.ifsi-plan figcaption { max-width: 920px; margin: clamp(18px, 2.4vw, 28px) auto 0; }
+.ifsi-plan figcaption p { max-width: 68ch; margin: 0 auto; text-align: center; }
+.shots { list-style: none; counter-reset: plan; margin: 0 0 14px; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px 22px; }
+@media (max-width: 759px) { .shots { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.shots li { counter-increment: plan; display: flex; align-items: center; gap: 9px; line-height: 1.3; color: var(--ink); }
+.shots li::before { content: counter(plan); flex: none; }
 .anim .viewer[open] { animation: planche var(--dur-base) var(--ease-out); }
 .anim .viewer[open]::backdrop { animation: fondu var(--dur-base) var(--ease-out); }
 @keyframes planche { from { opacity: 0; translate: 0 18px; } }
@@ -1638,14 +1657,23 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 }
 
 /* Dessins des études de cas : trajets et rythmes calculés par decos.py */
-@keyframes pl-on1 { 0.00% { opacity: .7 } 18.00% { opacity: .7 } 21.00% { opacity: .14 } 98.00% { opacity: .14 } 100.00% { opacity: .7 } }
-@keyframes pl-on2 { 0.00% { opacity: .14 } 19.00% { opacity: .14 } 22.00% { opacity: .7 } 38.00% { opacity: .7 } 41.00% { opacity: .14 } 59.00% { opacity: .14 } 62.00% { opacity: .7 } 78.00% { opacity: .7 } 81.00% { opacity: .14 } 100.00% { opacity: .14 } }
-@keyframes pl-on3 { 0.00% { opacity: .14 } 39.00% { opacity: .14 } 42.00% { opacity: .7 } 58.00% { opacity: .7 } 61.00% { opacity: .14 } 100.00% { opacity: .14 } }
-@keyframes pl-on4 { 0.00% { opacity: .14 } 79.00% { opacity: .14 } 82.00% { opacity: .7 } 97.00% { opacity: .7 } 100.00% { opacity: .14 } }
+@keyframes pl-on1 { 0.00% { opacity: .7 } 18.00% { opacity: .7 } 21.00% { opacity: .14 } 97.00% { opacity: .14 } 100.00% { opacity: .7 } }
+@keyframes pl-tag1 { 0.00% { background-color: var(--yellow); color: #000 } 18.00% { background-color: var(--yellow); color: #000 } 21.00% { background-color: var(--ink); color: var(--canvas) } 97.00% { background-color: var(--ink); color: var(--canvas) } 100.00% { background-color: var(--yellow); color: #000 } }
 .anim .viewer[open] .pl-c1 { animation: pl-on1 10s linear infinite; }
+.anim .viewer[open] .shots li:nth-child(1)::before { animation: pl-tag1 10s linear infinite; }
+@keyframes pl-on2 { 19.00% { opacity: .14 } 22.00% { opacity: .7 } 38.00% { opacity: .7 } 41.00% { opacity: .14 } 59.00% { opacity: .14 } 62.00% { opacity: .7 } 78.00% { opacity: .7 } 81.00% { opacity: .14 } 100.00% { opacity: .14 } }
+@keyframes pl-tag2 { 19.00% { background-color: var(--ink); color: var(--canvas) } 22.00% { background-color: var(--yellow); color: #000 } 38.00% { background-color: var(--yellow); color: #000 } 41.00% { background-color: var(--ink); color: var(--canvas) } 59.00% { background-color: var(--ink); color: var(--canvas) } 62.00% { background-color: var(--yellow); color: #000 } 78.00% { background-color: var(--yellow); color: #000 } 81.00% { background-color: var(--ink); color: var(--canvas) } 100.00% { background-color: var(--ink); color: var(--canvas) } }
 .anim .viewer[open] .pl-c2 { animation: pl-on2 10s linear infinite; }
+.anim .viewer[open] .shots li:nth-child(2)::before { animation: pl-tag2 10s linear infinite; }
+@keyframes pl-on3 { 39.00% { opacity: .14 } 42.00% { opacity: .7 } 58.00% { opacity: .7 } 61.00% { opacity: .14 } 100.00% { opacity: .14 } }
+@keyframes pl-tag3 { 39.00% { background-color: var(--ink); color: var(--canvas) } 42.00% { background-color: var(--yellow); color: #000 } 58.00% { background-color: var(--yellow); color: #000 } 61.00% { background-color: var(--ink); color: var(--canvas) } 100.00% { background-color: var(--ink); color: var(--canvas) } }
 .anim .viewer[open] .pl-c3 { animation: pl-on3 10s linear infinite; }
+.anim .viewer[open] .shots li:nth-child(3)::before { animation: pl-tag3 10s linear infinite; }
+@keyframes pl-on4 { 79.00% { opacity: .14 } 82.00% { opacity: .7 } 97.00% { opacity: .7 } 100.00% { opacity: .14 } }
+@keyframes pl-tag4 { 79.00% { background-color: var(--ink); color: var(--canvas) } 82.00% { background-color: var(--yellow); color: #000 } 97.00% { background-color: var(--yellow); color: #000 } 100.00% { background-color: var(--ink); color: var(--canvas) } }
 .anim .viewer[open] .pl-c4 { animation: pl-on4 10s linear infinite; }
+.anim .viewer[open] .shots li:nth-child(4)::before { animation: pl-tag4 10s linear infinite; }
+.anim .viewer[open] .cam-badge { animation: pl-tag1 10s linear infinite; }
 @keyframes d-eh-lens { 0.00% { transform: translate(202px, 138px) } 7.69% { transform: translate(202px, 138px) } 17.95% { transform: translate(277px, 160px) } 25.64% { transform: translate(277px, 160px) } 35.90% { transform: translate(196px, 434px) } 43.59% { transform: translate(196px, 434px) } 53.85% { transform: translate(402px, 300px) } 71.79% { transform: translate(402px, 300px) } 82.05% { transform: translate(442px, 215px) } 89.74% { transform: translate(442px, 215px) } 100.00% { transform: translate(202px, 138px) } }
 @keyframes d-eh-mag { 0.00% { transform: translate(-404px, -276px) scale(2.0) } 7.69% { transform: translate(-404px, -276px) scale(2.0) } 17.95% { transform: translate(-554px, -320px) scale(2.0) } 25.64% { transform: translate(-554px, -320px) scale(2.0) } 35.90% { transform: translate(-392px, -868px) scale(2.0) } 43.59% { transform: translate(-392px, -868px) scale(2.0) } 53.85% { transform: translate(-804px, -600px) scale(2.0) } 71.79% { transform: translate(-804px, -600px) scale(2.0) } 82.05% { transform: translate(-884px, -430px) scale(2.0) } 89.74% { transform: translate(-884px, -430px) scale(2.0) } 100.00% { transform: translate(-404px, -276px) scale(2.0) } }
 @keyframes d-eh-found { 0.00% { opacity: 0 } 52.56% { opacity: 0 } 55.77% { opacity: 1 } 71.15% { opacity: 1 } 75.00% { opacity: 0 } 100.00% { opacity: 0 } }
@@ -2028,23 +2056,25 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       <div><p class="where">SAÉ 104, en groupe de cinq, 1<sup>re</sup> année</p><h2 id="voir-ifsi-t">Vidéo tournée dans un IFSI</h2></div>
       <button class="viewer-close" type="button" data-close>Fermer</button>
     </header>
-    <div class="viewer-body" tabindex="0" role="region" aria-labelledby="voir-ifsi-t">
-      <p class="viewer-text">Pour cette SAÉ, l’IUT travaillait avec l’institut de formation en soins infirmiers (IFSI) : chaque groupe tournait sur place une vidéo d’un peu plus de deux minutes pour les étudiants infirmiers de 1<sup>re</sup> année, avec un référent de l’IFSI pour suivre le tournage. Notre scène : l’entretien d’une infirmière avec un patient venu de lui-même au centre médico-psychologique, en grande détresse. La vidéo sert ensuite d’exercice : les étudiants doivent évaluer le risque suicidaire et proposer une prise en soins.</p>
-      <p class="viewer-text">Pour un sujet pareil, on a gardé une mise en scène sobre : des plans posés, une lumière douce, et un champ-contrechamp qui laisse le temps d’écouter. Le texte de la situation s’affiche au début, les questions de l’exercice à la fin. Dans un groupe de cinq, j’étais au cadre, à l’image et au son, avec un cahier des charges précis : 25 images par seconde, un son mixé sur plusieurs pistes, une balance des blancs juste et des sous-titres en anglais.</p>
-      <figure class="plate plan">
-        <svg class="plan-svg" viewBox="0 0 560 360" role="img" aria-labelledby="plan-ifsi-t"><title id="plan-ifsi-t">Plan de la salle vu de dessus : le patient dans un fauteuil, l’infirmière derrière un bureau, et les quatre places de la caméra.</title><clipPath id="pl-room"><rect x="25" y="25" width="510" height="310"/></clipPath><rect class="pl-floor" x="24" y="24" width="512" height="312"/><rect class="pl-win" x="330" y="19" width="140" height="10"/><path class="pl-thin" d="M330 24H470"/><path class="pl-gap" d="M396 336H458"/><path class="pl-thin" d="M396 336V278"/><path class="pl-thin pl-dash" d="M396 278A58 58 0 0 1 454 336"/><g clip-path="url(#pl-room)"><path class="pl-fov pl-c1" d="M13 0L303 135.2L303 -135.2Z" transform="translate(92 306) rotate(-40.3)"/><path class="pl-fov pl-c2" d="M13 0L294.5 44.6L294.5 -44.6Z" transform="translate(136 246) rotate(-35.1)"/><path class="pl-fov pl-c3" d="M13 0L139.4 20L139.4 -20Z" transform="translate(290 156) rotate(-41.4)"/><path class="pl-fov pl-c4" d="M13 0L219.8 36.5L219.8 -36.5Z" transform="translate(330 66) rotate(135.7)"/></g><rect class="pl-seat" x="372" y="40" width="40" height="34" rx="8"/><rect class="pl-desk" x="318" y="98" width="180" height="58"/><path class="pl-thin" d="M408 98V156"/><rect class="pl-obj" x="348" y="110" width="22" height="30"/><path class="pl-thin" d="M353 118H365M353 125H365"/><rect class="pl-obj" x="440" y="110" width="30" height="21" transform="rotate(-8 455 120)"/><rect class="pl-chair" x="139" y="193" width="62" height="58" rx="14" transform="rotate(54.9 170 222)"/><g class="pl-patient"><ellipse class="pl-body" cx="170" cy="222" rx="21" ry="11" transform="rotate(54.9 170 222)"/><circle class="pl-head" cx="172.5" cy="220.3" r="8.5"/></g><g class="pl-nurse"><ellipse class="pl-body" cx="392" cy="66" rx="21" ry="11" transform="rotate(234.9 392 66)"/><circle class="pl-head" cx="389.5" cy="67.7" r="8.5"/></g><g transform="translate(92 306) rotate(-40.3)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="88" cy="332" r="10"/><text class="pl-num" x="88" y="336" text-anchor="middle">1</text><g transform="translate(136 246) rotate(-35.1)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="112" cy="252" r="10"/><text class="pl-num" x="112" y="256" text-anchor="middle">2</text><g transform="translate(290 156) rotate(-41.4)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="288" cy="180" r="10"/><text class="pl-num" x="288" y="184" text-anchor="middle">3</text><g transform="translate(330 66) rotate(135.7)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="332" cy="44" r="10"/><text class="pl-num" x="332" y="48" text-anchor="middle">4</text></svg>
-        <figcaption>Où était la caméra pour chaque plan de l’entretien, dans l’ordre où ils apparaissent :
-          <ol class="shots">
-            <li>un plan large sur les deux, de profil ;</li>
-            <li>par-dessus l’épaule du patient, sur l’infirmière ;</li>
-            <li>un gros plan sur l’infirmière ;</li>
-            <li>le contrechamp, en gros plan sur le patient.</li>
+    <div class="viewer-body ifsi-body" tabindex="0" role="region" aria-labelledby="voir-ifsi-t">
+      <div class="ifsi-text">
+        <p class="viewer-text">Pour cette SAÉ, l’IUT travaillait avec l’institut de formation en soins infirmiers (IFSI) : chaque groupe tournait sur place une vidéo d’un peu plus de deux minutes pour les étudiants infirmiers de 1<sup>re</sup> année, avec un référent de l’IFSI pour suivre le tournage. Notre scène : l’entretien d’une infirmière avec un patient venu de lui-même au centre médico-psychologique, en grande détresse. La vidéo sert ensuite d’exercice : les étudiants doivent évaluer le risque suicidaire et proposer une prise en soins.</p>
+        <p class="viewer-text">Pour un sujet pareil, on a gardé une mise en scène sobre : des plans posés, une lumière douce, et un champ-contrechamp qui laisse le temps d’écouter. Le texte de la situation s’affiche au début, les questions de l’exercice à la fin. Dans un groupe de cinq, j’étais au cadre, à l’image et au son, avec un cahier des charges précis : 25 images par seconde, un son mixé sur plusieurs pistes, une balance des blancs juste et des sous-titres en anglais.</p>
+      </div>
+      <figure class="plate ifsi-plan">
+        <div class="ifsi-pair">
+          <svg class="plan-svg" viewBox="22 18 516 321" role="img" aria-labelledby="plan-ifsi-t"><title id="plan-ifsi-t">Plan de la salle vu de dessus : le patient dans un fauteuil, l’infirmière derrière un bureau, et les quatre places de la caméra.</title><clipPath id="pl-room"><rect x="25" y="25" width="510" height="310"/></clipPath><rect class="pl-floor" x="24" y="24" width="512" height="312"/><rect class="pl-win" x="330" y="19" width="140" height="10"/><path class="pl-thin" d="M330 24H470"/><path class="pl-gap" d="M396 336H458"/><path class="pl-thin" d="M396 336V278"/><path class="pl-thin pl-dash" d="M396 278A58 58 0 0 1 454 336"/><g clip-path="url(#pl-room)"><path class="pl-fov pl-c1" d="M13 0L303 135.2L303 -135.2Z" transform="translate(92 306) rotate(-40.3)"/><path class="pl-fov pl-c2" d="M13 0L294.5 44.6L294.5 -44.6Z" transform="translate(136 246) rotate(-35.1)"/><path class="pl-fov pl-c3" d="M13 0L139.4 20L139.4 -20Z" transform="translate(290 156) rotate(-41.4)"/><path class="pl-fov pl-c4" d="M13 0L219.8 36.5L219.8 -36.5Z" transform="translate(330 66) rotate(135.7)"/></g><rect class="pl-seat" x="372" y="40" width="40" height="34" rx="8"/><rect class="pl-desk" x="318" y="98" width="180" height="58"/><path class="pl-thin" d="M408 98V156"/><rect class="pl-obj" x="348" y="110" width="22" height="30"/><path class="pl-thin" d="M353 118H365M353 125H365"/><rect class="pl-obj" x="440" y="110" width="30" height="21" transform="rotate(-8 455 120)"/><rect class="pl-chair" x="139" y="193" width="62" height="58" rx="14" transform="rotate(54.9 170 222)"/><g class="pl-patient"><ellipse class="pl-body" cx="170" cy="222" rx="21" ry="11" transform="rotate(54.9 170 222)"/><circle class="pl-head" cx="172.5" cy="220.3" r="8.5"/></g><g class="pl-nurse"><ellipse class="pl-body" cx="392" cy="66" rx="21" ry="11" transform="rotate(234.9 392 66)"/><circle class="pl-head" cx="389.5" cy="67.7" r="8.5"/></g><g transform="translate(92 306) rotate(-40.3)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="65" cy="297" r="10"/><text class="pl-num" x="65" y="301" text-anchor="middle">1</text><g transform="translate(136 246) rotate(-35.1)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="112" cy="252" r="10"/><text class="pl-num" x="112" y="256" text-anchor="middle">2</text><g transform="translate(290 156) rotate(-41.4)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="288" cy="180" r="10"/><text class="pl-num" x="288" y="184" text-anchor="middle">3</text><g transform="translate(330 66) rotate(135.7)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="332" cy="44" r="10"/><text class="pl-num" x="332" y="48" text-anchor="middle">4</text></svg>
+          <div class="ifsi-cam"><img src="img/ifsi.webp" width="1280" height="721" loading="lazy" decoding="async" alt="Image de la vidéo : dans une salle de l'institut, un homme assis dans un fauteuil, une bulle de pensée au-dessus de la tête, fait face à une infirmière qui prend des notes."><span class="cam-badge" aria-hidden="true">1</span></div>
+        </div>
+        <figcaption>
+          <ol class="shots" role="list">
+            <li>Plan large sur les deux</li>
+            <li>Par-dessus l’épaule du patient</li>
+            <li>Gros plan sur l’infirmière</li>
+            <li>Contrechamp sur le patient</li>
           </ol>
+          <p>Le plan de la salle montre où était la caméra pour chaque plan de l’entretien, dans l’ordre du montage. L’image est le plan 1 tel qu’on le voit dans la vidéo, visages floutés. La vidéo, elle, n’est pas en ligne : elle a été faite pour l’IFSI.</p>
         </figcaption>
-      </figure>
-      <figure class="plate">
-        <img src="img/ifsi.webp" width="1280" height="721" loading="lazy" decoding="async" alt="Image de la vidéo : dans une salle de l'institut, un homme assis dans un fauteuil, une bulle de pensée au-dessus de la tête, fait face à une infirmière qui prend des notes.">
-        <figcaption>Une image de l’entretien, visages floutés. La vidéo, elle, n’est pas en ligne : elle a été faite pour l’IFSI.</figcaption>
       </figure>
     </div>
   </div>
