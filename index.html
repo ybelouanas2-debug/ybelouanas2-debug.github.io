@@ -2971,6 +2971,10 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       el.setAttribute('data-src', src);
     }
     if (!el.getClientRects().length) { return; }
+    /* déjà découpé, le titre est une colonne (voir [data-reveal="lines"]) : chaque mot y irait seul sur sa ligne.
+       Le temps de la mesure, on le remet en bloc ordinaire, sinon une deuxième visite ou un redimensionnement
+       le découperait mot par mot */
+    el.style.display = 'block';
     var words = src.split(' ');
     el.innerHTML = words.map(function (x) { return '<span class="lw">' + esc(x) + '</span>'; }).join(' ');
     var lines = [], top = null;
@@ -2981,6 +2985,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     el.innerHTML = lines.map(function (l, i) {
       return '<span class="ln"><span class="ln-i" style="--li:' + i + '">' + esc(l.join(' ')) + '</span></span>';
     }).join(' ');
+    el.style.display = '';
   };
   var splitView = function (view) {
     if (!view || !on() || !hasIO || typeof seen === 'undefined') { return; }
