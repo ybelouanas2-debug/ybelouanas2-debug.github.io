@@ -1253,7 +1253,12 @@ html.has-viewer { overflow: hidden; scrollbar-gutter: stable; }
 ::view-transition-group(planche) { animation-duration: 520ms; animation-timing-function: cubic-bezier(.16, 1, .3, 1); }
 ::view-transition-old(planche), ::view-transition-new(planche) { animation-duration: 520ms; }
 ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 280ms; }
-html.vt .viewer[open], html.vt .viewer[open]::backdrop { animation: none; }
+/* l'image qui s'étire est coupée comme elle le sera à l'arrivée, par le bord de la planche */
+::view-transition-new(planche) { clip-path: inset(calc(var(--vt-t, 0) * 100%) 0 calc(var(--vt-b, 0) * 100%) 0); }
+/* pas de cible à l'écran : la vignette s'efface avec la page */
+html.vt-solo::view-transition-old(planche) { animation-duration: 280ms; }
+/* entrée avec la transition, la planche est déjà en place : elle ne rejoue pas son apparition, ni pendant ni après */
+.anim .viewer.vt-in[open], .anim .viewer.vt-in[open]::backdrop { animation: none; }
 
 /* À propos, contact */
 .band.dark { background: #17130D; }
@@ -2169,7 +2174,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       <figure class="plate v-fig">
         <div class="v-pair" style="--cols: minmax(0, 1.1fr) minmax(0, 1fr)">
           <div><svg class="hx-svg is-wide" viewBox="8 16 592 368" role="img" aria-labelledby="hx-loop-t"><title id="hx-loop-t">Schéma : le tableau des lieux de data-fr.php passe dans la boucle de categorie1.twig, qui hérite du gabarit commun base.twig, et chaque tour de boucle crée une fiche de la page.</title><rect class="hx-box" x="14" y="22" width="216" height="312" rx="8"/><text class="hx-file" x="30" y="50">data-fr.php</text><text class="hx-code" x="30" y="78">$categorieA = [</text><rect class="hx-hi hx-r1" x="30" y="92" width="186" height="30" rx="4"/><text class="hx-item hx-t1" x="44" y="112">Whale Island</text><rect class="hx-hi hx-r2" x="30" y="128" width="186" height="30" rx="4"/><text class="hx-item hx-t2" x="44" y="148">Heavens Arena</text><rect class="hx-hi hx-r3" x="30" y="164" width="186" height="30" rx="4"/><text class="hx-item hx-t3" x="44" y="184">Yorknew City</text><rect class="hx-hi hx-r4" x="30" y="200" width="186" height="30" rx="4"/><text class="hx-item hx-t4" x="44" y="220">Greed Island</text><rect class="hx-hi hx-r5" x="30" y="236" width="186" height="30" rx="4"/><text class="hx-item hx-t5" x="44" y="256">NGL</text><text class="hx-code" x="30" y="300">];</text><path class="hx-arrow" d="M232 172H284"/><path class="hx-head" d="M284 166L294 172L284 178Z"/><text class="hx-note" x="263" y="160" text-anchor="middle">articles</text><g class="hx-token"><rect x="234" y="182" width="24" height="18" rx="3"/><path d="M238 188H254M238 194H250"/></g><rect class="hx-box" x="298" y="22" width="268" height="234" rx="8"/><text class="hx-file" x="314" y="50">categorie1.twig</text><text class="hx-code" x="314" y="80">{% for article in articles %}</text><g class="hx-card"><rect x="330" y="96" width="204" height="118" rx="5"/><rect class="hx-bar" x="344" y="108" width="96" height="9" rx="2"/><rect class="hx-img" x="344" y="124" width="176" height="48"/><path class="hx-x" d="M344 124L520 172M520 124L344 172"/><rect class="hx-bar" x="344" y="182" width="149" height="6" rx="2"/><rect class="hx-bar" x="344" y="194" width="117" height="6" rx="2"/></g><text class="hx-code" x="314" y="240">{% endfor %}</text><path class="hx-arrow" d="M566 140H584"/><path class="hx-head" d="M584 134L594 140L584 146Z"/><path class="hx-arrow hx-dash" d="M432 256V286"/><text class="hx-note" x="442" y="276">hérite de</text><rect class="hx-box" x="298" y="290" width="268" height="88" rx="8"/><text class="hx-file" x="314" y="316">base.twig</text><rect class="hx-wire" x="314" y="326" width="236" height="40" rx="3"/><rect class="hx-dark" x="314" y="326" width="236" height="9" rx="2"/><rect class="hx-dark" x="314" y="358" width="236" height="8" rx="2"/><text class="hx-tiny" x="432" y="352" text-anchor="middle">en-tête, menu, page, pied</text></svg><svg class="hx-svg is-tall" viewBox="8 8 336 624" role="img" aria-labelledby="hx-loop-t2"><title id="hx-loop-t2">Schéma : le tableau des lieux de data-fr.php passe dans la boucle de categorie1.twig, qui hérite du gabarit commun base.twig, et chaque tour de boucle crée une fiche de la page.</title><rect class="hx-box" x="14" y="14" width="312" height="252" rx="8"/><text class="hx-file" x="30" y="42">data-fr.php</text><text class="hx-code" x="30" y="68">$categorieA = [</text><rect class="hx-hi hx-r1" x="30" y="80" width="280" height="24" rx="4"/><text class="hx-item hx-t1" x="44" y="97">Whale Island</text><rect class="hx-hi hx-r2" x="30" y="110" width="280" height="24" rx="4"/><text class="hx-item hx-t2" x="44" y="127">Heavens Arena</text><rect class="hx-hi hx-r3" x="30" y="140" width="280" height="24" rx="4"/><text class="hx-item hx-t3" x="44" y="157">Yorknew City</text><rect class="hx-hi hx-r4" x="30" y="170" width="280" height="24" rx="4"/><text class="hx-item hx-t4" x="44" y="187">Greed Island</text><rect class="hx-hi hx-r5" x="30" y="200" width="280" height="24" rx="4"/><text class="hx-item hx-t5" x="44" y="217">NGL</text><text class="hx-code" x="30" y="254">];</text><path class="hx-arrow" d="M170 266V290"/><path class="hx-head" d="M164 290L170 300L176 290Z"/><text class="hx-note" x="184" y="286">articles</text><g class="hx-token-v"><rect x="128" y="270" width="24" height="18" rx="3"/><path d="M132 276H148M132 282H144"/></g><rect class="hx-box" x="14" y="302" width="312" height="212" rx="8"/><text class="hx-file" x="30" y="330">categorie1.twig</text><text class="hx-code" x="30" y="354">{% for article in articles %}</text><g class="hx-card"><rect x="46" y="364" width="248" height="118" rx="5"/><rect class="hx-bar" x="60" y="376" width="96" height="9" rx="2"/><rect class="hx-img" x="60" y="392" width="220" height="48"/><path class="hx-x" d="M60 392L280 440M280 392L60 440"/><rect class="hx-bar" x="60" y="450" width="187" height="6" rx="2"/><rect class="hx-bar" x="60" y="462" width="147" height="6" rx="2"/></g><text class="hx-code" x="30" y="503">{% endfor %}</text><path class="hx-arrow" d="M326 400H334V618"/><path class="hx-head" d="M328 618L334 628L340 618Z"/><path class="hx-arrow hx-dash" d="M170 514V536"/><text class="hx-note" x="184" y="530">hérite de</text><rect class="hx-box" x="14" y="538" width="312" height="88" rx="8"/><text class="hx-file" x="30" y="564">base.twig</text><rect class="hx-wire" x="30" y="574" width="280" height="40" rx="3"/><rect class="hx-dark" x="30" y="574" width="280" height="9" rx="2"/><rect class="hx-dark" x="30" y="606" width="280" height="8" rx="2"/><text class="hx-tiny" x="170" y="600" text-anchor="middle">en-tête, menu, page, pied</text></svg></div>
-          <div class="browser"><span class="shot hx-page"><img src="img/hxh-lieux.webp" width="1100" height="2196" loading="lazy" decoding="async" alt="Page des lieux : un menu latéral et cinq fiches, chacune avec un titre, une image, une description, une région et son importance."></span></div>
+          <div class="browser" data-morph><span class="shot hx-page"><img src="img/hxh-lieux.webp" width="1100" height="2196" loading="lazy" decoding="async" alt="Page des lieux : un menu latéral et cinq fiches, chacune avec un titre, une image, une description, une région et son importance."></span></div>
         </div>
         <figcaption><p>Le schéma montre comment la page des lieux est fabriquée : elle hérite du gabarit commun, et la boucle crée une fiche pour chaque lieu du tableau. À côté, la page obtenue défile d’une fiche à l’autre.</p></figcaption>
       </figure>
@@ -2197,7 +2202,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       <figure class="plate v-fig">
         <div class="v-pair" style="--cols: minmax(0, 1.6075fr) minmax(0, 1.775fr)">
           <svg class="plan-svg" viewBox="22 18 516 321" role="img" aria-labelledby="plan-ifsi-t"><title id="plan-ifsi-t">Plan de la salle vu de dessus : le patient dans un fauteuil, l’infirmière derrière un bureau, et les quatre places de la caméra.</title><clipPath id="pl-room"><rect x="25" y="25" width="510" height="310"/></clipPath><rect class="pl-floor" x="24" y="24" width="512" height="312"/><rect class="pl-win" x="330" y="19" width="140" height="10"/><path class="pl-thin" d="M330 24H470"/><path class="pl-gap" d="M396 336H458"/><path class="pl-thin" d="M396 336V278"/><path class="pl-thin pl-dash" d="M396 278A58 58 0 0 1 454 336"/><g clip-path="url(#pl-room)"><path class="pl-fov pl-c1" d="M13 0L303 135.2L303 -135.2Z" transform="translate(92 306) rotate(-40.3)"/><path class="pl-fov pl-c2" d="M13 0L294.5 44.6L294.5 -44.6Z" transform="translate(136 246) rotate(-35.1)"/><path class="pl-fov pl-c3" d="M13 0L139.4 20L139.4 -20Z" transform="translate(290 156) rotate(-41.4)"/><path class="pl-fov pl-c4" d="M13 0L219.8 36.5L219.8 -36.5Z" transform="translate(330 66) rotate(135.7)"/></g><rect class="pl-seat" x="372" y="40" width="40" height="34" rx="8"/><rect class="pl-desk" x="318" y="98" width="180" height="58"/><path class="pl-thin" d="M408 98V156"/><rect class="pl-obj" x="348" y="110" width="22" height="30"/><path class="pl-thin" d="M353 118H365M353 125H365"/><rect class="pl-obj" x="440" y="110" width="30" height="21" transform="rotate(-8 455 120)"/><rect class="pl-chair" x="139" y="193" width="62" height="58" rx="14" transform="rotate(54.9 170 222)"/><g class="pl-patient"><ellipse class="pl-body" cx="170" cy="222" rx="21" ry="11" transform="rotate(54.9 170 222)"/><circle class="pl-head" cx="172.5" cy="220.3" r="8.5"/></g><g class="pl-nurse"><ellipse class="pl-body" cx="392" cy="66" rx="21" ry="11" transform="rotate(234.9 392 66)"/><circle class="pl-head" cx="389.5" cy="67.7" r="8.5"/></g><g transform="translate(92 306) rotate(-40.3)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="65" cy="297" r="10"/><text class="pl-num" x="65" y="301" text-anchor="middle">1</text><g transform="translate(136 246) rotate(-35.1)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="112" cy="252" r="10"/><text class="pl-num" x="112" y="256" text-anchor="middle">2</text><g transform="translate(290 156) rotate(-41.4)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="288" cy="180" r="10"/><text class="pl-num" x="288" y="184" text-anchor="middle">3</text><g transform="translate(330 66) rotate(135.7)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="332" cy="44" r="10"/><text class="pl-num" x="332" y="48" text-anchor="middle">4</text></svg>
-          <div class="ifsi-cam"><img src="img/ifsi.webp" width="1280" height="721" loading="lazy" decoding="async" alt="Image de la vidéo : dans une salle de l'institut, un homme assis dans un fauteuil, une bulle de pensée au-dessus de la tête, fait face à une infirmière qui prend des notes."><span class="cam-badge" aria-hidden="true">1</span></div>
+          <div class="ifsi-cam" data-morph><img src="img/ifsi.webp" width="1280" height="721" loading="lazy" decoding="async" alt="Image de la vidéo : dans une salle de l'institut, un homme assis dans un fauteuil, une bulle de pensée au-dessus de la tête, fait face à une infirmière qui prend des notes."><span class="cam-badge" aria-hidden="true">1</span></div>
         </div>
         <figcaption>
           <ol class="shots" role="list">
@@ -3832,7 +3837,9 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     if (!dlg || typeof dlg.showModal !== 'function') { return; }
     var card = a.closest('.work');
     var from = card ? $('.wv', card) : null;
-    var to = $('.plate img', dlg);
+    /* là où la vignette atterrit : l'image de la planche, ou son cadre quand l'image défile dedans */
+    var to = $('[data-morph]', dlg) || $('.plate img', dlg);
+    var pic = to && to.tagName !== 'IMG' ? $('img', to) : to;
     var preload = function () { $$('img', dlg).forEach(function (i) { i.loading = 'eager'; }); };
     if (card) { card.addEventListener('pointerenter', preload); card.addEventListener('focusin', preload); }
     a.addEventListener('click', function (e) {
@@ -3841,17 +3848,20 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       if (dlg.open) { return; }
       opener = a;
       preload();
-      var open = function () {
+      var open = function (swap) {
+        /* entrée avec la transition, la planche est déjà à sa place quand celle-ci finit : elle ne rejoue pas son apparition */
+        dlg.classList.toggle('vt-in', !!swap);
         root.classList.add('has-viewer');
         if (!dlg.open) { dlg.showModal(); }
         /* le focus va sur le contenu : les flèches le font défiler, Échap referme, Tab passe de lui à Fermer */
         var body = $('.viewer-body', dlg);
         if (body) { body.scrollTop = 0; try { body.focus({ preventScroll: true }); } catch (err) { body.focus(); } }
+        return body;
       };
       if (!(on() && from && to && typeof d.startViewTransition === 'function')) { open(); return; }
       /* la vignette se verrouille, puis s'étire jusqu'à la planche : même image, sans fondu au noir */
-      var ready = to.complete ? Promise.resolve() : Promise.race([
-        to.decode ? to.decode().catch(function () {}) : Promise.resolve(),
+      var ready = !pic || pic.complete ? Promise.resolve() : Promise.race([
+        pic.decode ? pic.decode().catch(function () {}) : Promise.resolve(),
         new Promise(function (r) { w.setTimeout(r, 200); })
       ]);
       ready.then(function () {
@@ -3860,15 +3870,29 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
           root.classList.add('vt');
           var t = d.startViewTransition(function () {
             from.style.viewTransitionName = '';
-            to.style.viewTransitionName = 'planche';
-            open();
+            var body = open(true);
+            /* l'étirement ne vise qu'une cible qu'on voit : sur un petit écran, l'image est plus bas dans la planche, la page fond simplement */
+            var r = to.getBoundingClientRect();
+            var top = 0, bot = w.innerHeight;
+            if (body) { var b = body.getBoundingClientRect(); top = b.top + body.clientTop; bot = top + body.clientHeight; }
+            var seen = Math.min(r.bottom, bot) - Math.max(r.top, top);
+            if (r.height > 0 && seen >= Math.min(120, r.height) && seen >= r.height * 0.3) {
+              /* ce que le bord de la planche cache reste caché pendant l'étirement : rien n'apparaît puis disparaît */
+              root.style.setProperty('--vt-t', (Math.max(0, top - r.top) / r.height).toFixed(4));
+              root.style.setProperty('--vt-b', (Math.max(0, r.bottom - bot) / r.height).toFixed(4));
+              to.style.viewTransitionName = 'planche';
+            } else {
+              root.classList.add('vt-solo');
+            }
           });
           /* un clic ou une touche pendant l'étirement le termine tout de suite : la planche répond sans attendre */
           var skip = function () { try { t.skipTransition(); } catch (e2) {} };
           w.addEventListener('pointerdown', skip, true);
           w.addEventListener('keydown', skip, true);
           var done = function () {
-            to.style.viewTransitionName = ''; from.style.viewTransitionName = ''; root.classList.remove('vt');
+            to.style.viewTransitionName = ''; from.style.viewTransitionName = '';
+            root.classList.remove('vt'); root.classList.remove('vt-solo');
+            root.style.removeProperty('--vt-t'); root.style.removeProperty('--vt-b');
             w.removeEventListener('pointerdown', skip, true);
             w.removeEventListener('keydown', skip, true);
           };
