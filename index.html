@@ -1284,6 +1284,10 @@ html.vt-solo::view-transition-old(planche) { animation-duration: 280ms; }
 /* sur grand écran, le titre ne reste plus seul : un dessin fait pour le projet se met à côté (decos.py).
    Sur téléphone et tablette, il n'est pas affiché : le texte passe d'abord */
 .case-art { display: none; }
+/* la page des mentions légales : pas de dessin, le texte prend toute la largeur utile */
+.legal .case-top { display: block; }
+.legal .prose p + p { margin-top: .9em; }
+.legal .prose a { overflow-wrap: anywhere; }
 @media (min-width: 1000px) {
   .case-top {
     display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
@@ -3176,6 +3180,84 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 </div></main>
 </div>
 
+<div class="view case legal" id="mentions" data-title="Mentions légales – Yasser Belouanas" hidden>
+<main data-main tabindex="-1"><div class="wrap">
+<div class="case-top">
+<a class="back" href="#projets">Retour aux projets</a>
+<div class="case-intro">
+<h1 tabindex="-1">Mentions légales et confidentialité</h1>
+<p class="lede">Qui publie ce site, qui l’héberge, ce qu’il fait de vos données (presque rien), et les règles pour utiliser son contenu. Dernière mise à jour : 17 novembre 2026.</p>
+</div>
+</div>
+
+<section class="sec">
+<h2>Éditeur du site</h2>
+<div class="sec-body">
+<div class="prose">
+<p>Ce site est un portfolio personnel, sans activité commerciale. Il est édité par Yasser Belouanas, étudiant en BUT Métiers du multimédia et de l’internet à l’IUT de Haguenau, qui en est aussi le directeur de la publication.</p>
+<p>Contact : <a href="mailto:ybelouanas2@gmail.com">ybelouanas2@gmail.com</a></p>
+</div>
+</div>
+</section>
+
+<section class="sec">
+<h2>Hébergement</h2>
+<div class="sec-body">
+<div class="prose">
+<p>Le site est hébergé par GitHub Pages, un service de GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis. Téléphone : +1 877 448 4820. Site : <a href="https://pages.github.com">pages.github.com</a></p>
+</div>
+</div>
+</section>
+
+<section class="sec">
+<h2>Vos données personnelles</h2>
+<div class="sec-body">
+<div class="prose">
+<p>Ce site n’a ni formulaire, ni compte à créer, ni outil de mesure d’audience, ni publicité. Je ne collecte aucune donnée sur les personnes qui le visitent.</p>
+<p>Si vous m’écrivez par e-mail, j’utilise votre adresse et votre message uniquement pour vous répondre. Je ne les transmets à personne, et je les supprime quand ils ne servent plus à notre échange.</p>
+<p>Comme la plupart des hébergeurs, GitHub enregistre l’adresse IP des visiteurs pour la sécurité de son service. Ce traitement relève de GitHub et de sa propre politique de confidentialité, présentée sur sa <a href="https://docs.github.com/en/articles/about-github-pages">page d’aide sur GitHub Pages</a>.</p>
+<p>Vous pouvez à tout moment me demander d’accéder à vos données, de les corriger ou de les supprimer, en écrivant à l’adresse ci-dessus. Si vous estimez que vos droits ne sont pas respectés, vous pouvez aussi faire une réclamation auprès de la <a href="https://www.cnil.fr">CNIL</a>.</p>
+</div>
+</div>
+</section>
+
+<section class="sec">
+<h2>Cookies</h2>
+<div class="sec-body">
+<div class="prose">
+<p>Ce site ne dépose aucun cookie. Une seule information peut être gardée dans votre navigateur : si vous cliquez sur « Couper les animations », ce choix y est enregistré pour être respecté à votre prochaine visite. Il reste sur votre appareil, n’est envoyé nulle part, et disparaît si vous effacez les données du site dans votre navigateur.</p>
+</div>
+</div>
+</section>
+
+<section class="sec">
+<h2>Propriété intellectuelle</h2>
+<div class="sec-body">
+<div class="prose">
+<p>Les textes, maquettes, schémas et visuels de ce site sont mes créations, sauf mention contraire. Merci de ne pas les reproduire ni les réutiliser sans mon accord.</p>
+<p>Plusieurs projets ont été réalisés en groupe pendant le BUT MMI : chaque étude de cas précise ma part et celle du reste du groupe.</p>
+<p>Les noms, logos et marques cités (par exemple le Pôle universitaire d’innovation Alsace, le CUEJ ou le Relais Culturel de Haguenau) appartiennent à leurs propriétaires. L’univers de Hunter x Hunter appartient à ses ayants droit : le site présenté ici était un exercice de cours, sans but commercial. Les captures d’autres sites servent seulement à illustrer et à expliquer mon travail.</p>
+<p>Les polices Archivo et Instrument Sans sont utilisées sous licence SIL Open Font License.</p>
+<p>Si vous êtes titulaire de droits sur un contenu présenté ici et souhaitez qu’il soit retiré, écrivez-moi : je le retirerai rapidement.</p>
+</div>
+</div>
+</section>
+
+<section class="sec">
+<h2>Conditions d’utilisation</h2>
+<div class="sec-body">
+<div class="prose">
+<p>Le site est accessible gratuitement et sans inscription. En le consultant, vous acceptez les conditions de cette page.</p>
+<p>Son contenu présente mon parcours et mes projets. Je fais attention à ce qu’il soit exact et à jour, mais des erreurs ou des oublis restent possibles : n’hésitez pas à me les signaler.</p>
+<p>Les liens vers d’autres sites, comme LinkedIn, sont donnés pour information. Je ne suis pas responsable de leur contenu.</p>
+<p>Je peux modifier ou interrompre le site à tout moment, par exemple pour le mettre à jour. Ces conditions sont soumises au droit français.</p>
+</div>
+</div>
+</section>
+
+</div></main>
+</div>
+
 <section class="contact" id="contact" data-reveal="curtain" data-scene="pass" aria-labelledby="contact-t">
 <div class="wrap">
 <h2 class="h2" id="contact-t"><span>Un stage UX/UI</span> <span>au printemps ?</span></h2>
@@ -3192,7 +3274,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 </div>
 </section>
 
-<footer class="site-foot"><div class="wrap"><p>© 2026 Yasser Belouanas. Projets réalisés pendant mon BUT MMI à l’IUT de Haguenau.</p><button class="motion" id="motion" type="button">Couper les animations</button></div></footer>
+<footer class="site-foot"><div class="wrap"><p>© 2026 Yasser Belouanas. Projets réalisés pendant mon BUT MMI à l’IUT de Haguenau. <a href="#mentions">Mentions légales et confidentialité</a></p><button class="motion" id="motion" type="button">Couper les animations</button></div></footer>
 
 <div class="viewwipe" aria-hidden="true"></div>
 
