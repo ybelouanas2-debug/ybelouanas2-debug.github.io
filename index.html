@@ -1147,6 +1147,28 @@ html.has-viewer { overflow: hidden; scrollbar-gutter: stable; }
 .v-gallery { display: grid; gap: clamp(26px, 3vw, 40px) clamp(18px, 2.6vw, 32px); max-width: 1060px; margin: clamp(32px, 4.4vw, 56px) auto 0; }
 @media (min-width: 760px) { .v-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .anim .viewer[open] .v-gallery .pan img { animation-play-state: running; }
+/* la fiche du flyer : le recto et le verso côte à côte, à la même hauteur, comme posés sur une table */
+.flyer-pair { display: grid; gap: clamp(18px, 2.6vw, 32px); max-width: 820px; margin: clamp(4px, 1vw, 10px) auto 0; }
+@media (min-width: 640px) { .flyer-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* la fiche de l'infographie : le texte et quatre gros plans à gauche, l'affiche entière à droite.
+   Les gros plans sont des cadrages dans la même image que l'affiche : rien de plus à télécharger */
+.ia-layout { display: grid; gap: clamp(26px, 3.6vw, 52px); align-items: start; }
+@media (min-width: 900px) { .ia-layout { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); } }
+.ia-read .viewer-text:last-of-type { margin-bottom: 14px; }
+.ia-zooms { display: grid; gap: clamp(18px, 2.2vw, 26px); }
+/* une rangée de deux gros plans : chacun prend une largeur proportionnelle à son format, donc la même hauteur */
+.ia-row { display: flex; gap: clamp(14px, 2vw, 22px); }
+.ia-zoom { flex: var(--a) 1 0%; min-width: 0; margin: 0; }
+@media (max-width: 599px) { .ia-row { flex-direction: column; } .ia-zoom { flex: none; } }
+.ia-crop { position: relative; overflow: hidden; aspect-ratio: var(--rw) / var(--rh); background: #fff; border: 1px solid var(--line); }
+.ia-crop img {
+  position: absolute; left: 0; top: 0; max-width: none;
+  width: calc(100% * 1600 / var(--rw));
+  transform: translate(calc(-100% * var(--rx) / 1600), calc(-100% * var(--ry) / 2262));
+}
+.ia-zoom figcaption { margin-top: 8px; font-size: .9rem; line-height: 1.4; color: var(--ink-2); }
+.ia-poster { margin: 0; }
+.ia-poster img { width: 100%; height: auto; }
 .ifsi-cam { position: relative; }
 .ifsi-cam img { display: block; width: 100%; height: auto; box-shadow: 0 1px 2px #0004, 0 18px 36px -18px #000b; }
 .cam-badge, .shots li::before {
@@ -2056,11 +2078,20 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       <button class="viewer-close" type="button" data-close>Fermer</button>
     </header>
     <div class="viewer-body" tabindex="0" role="region" aria-labelledby="voir-ia-t">
-      <p class="viewer-text">Une affiche A3 pour un hebdomadaire fictif, sur la place de l’intelligence artificielle en France et dans le monde. Il fallait rendre dix jeux de données lisibles par tout le monde, sur un fond clair imposé pour l’éco-conception. Chaque chiffre a la forme qui le rend le plus simple à lire : des barres pour comparer, des cercles pour les montants, une courbe pour l’évolution, une grille de points pour les parts.</p>
-      <figure class="plate plate-a3">
-        <img src="img/ia.webp" width="1600" height="2262" loading="lazy" decoding="async" alt="Infographie « L'intelligence artificielle : une révolution en marche » : une frise de 1950 à 2022, puis trois colonnes de graphiques sur l'usage de l'IA par les Français, le marché mondial et les entreprises françaises. Un perroquet sert de mascotte.">
-        <figcaption><a href="img/ia.webp" target="_blank" rel="noopener">Ouvrir l’affiche en pleine taille</a></figcaption>
-      </figure>
+      <div class="ia-layout">
+        <div class="ia-read">
+          <p class="viewer-text">Une affiche A3 pour un hebdomadaire fictif, sur la place de l’intelligence artificielle en France et dans le monde. Il fallait rendre dix jeux de données lisibles par tout le monde, sur un fond clair imposé pour l’éco-conception.</p>
+          <p class="viewer-text">Chaque chiffre a la forme qui le rend le plus simple à lire :</p>
+          <div class="ia-zooms">
+            <div class="ia-row"><figure class="ia-zoom" style="--a:1.793"><div class="ia-crop" style="--rx:56;--ry:1196;--rw:484;--rh:270"><img src="img/ia.webp" width="1600" height="2262" loading="lazy" decoding="async" alt="Détail : cinq barres, des 18-24 ans aux 60-75 ans, de 74 % à 17 %, avec la moyenne de 39 % en pointillé."></div><figcaption>Pour comparer, des barres : l’usage de l’IA générative selon l’âge.</figcaption></figure><figure class="ia-zoom" style="--a:2.241"><div class="ia-crop" style="--rx:562;--ry:1240;--rw:484;--rh:216"><img src="img/ia.webp" width="1600" height="2262" loading="lazy" decoding="async" alt="Détail : des cercles proportionnels, 2 849 milliards de dollars pour les États-Unis, 951 pour la Chine, quelques points pour les autres pays."></div><figcaption>Pour les montants, des cercles : les investissements mondiaux par pays.</figcaption></figure></div>
+            <div class="ia-row"><figure class="ia-zoom" style="--a:1.793"><div class="ia-crop" style="--rx:1066;--ry:1244;--rw:484;--rh:270"><img src="img/ia.webp" width="1600" height="2262" loading="lazy" decoding="async" alt="Détail : une courbe qui monte de 312 start-up en 2018 à 1 114 en 2026, avec l'étiquette « Plus du triple en 8 ans »."></div><figcaption>Pour l’évolution, une courbe : le nombre de start-up de l’IA en France.</figcaption></figure><figure class="ia-zoom" style="--a:2.420"><div class="ia-crop" style="--rx:1066;--ry:1600;--rw:484;--rh:200"><img src="img/ia.webp" width="1600" height="2262" loading="lazy" decoding="async" alt="Détail : une grille de cent points, dont 32 en vert pour les entreprises qui utilisent au moins une IA."></div><figcaption>Pour les parts, une grille de points : les PME et ETI qui utilisent l’IA.</figcaption></figure></div>
+          </div>
+        </div>
+        <figure class="plate ia-poster">
+          <img src="img/ia.webp" width="1600" height="2262" loading="lazy" decoding="async" alt="Infographie « L'intelligence artificielle : une révolution en marche » : une frise de 1950 à 2022, puis trois colonnes de graphiques sur l'usage de l'IA par les Français, le marché mondial et les entreprises françaises. Un perroquet sert de mascotte.">
+          <figcaption><a href="img/ia.webp" target="_blank" rel="noopener">Ouvrir l’affiche en pleine taille</a></figcaption>
+        </figure>
+      </div>
     </div>
   </div>
 </dialog>
@@ -2072,16 +2103,13 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       <button class="viewer-close" type="button" data-close>Fermer</button>
     </header>
     <div class="viewer-body" tabindex="0" role="region" aria-labelledby="voir-flyer-t">
-      <p class="viewer-text">Un flyer A5 recto verso pour l’association Jeux m’éclate, qui annonce un après-midi jeux à l’IUT. Tout part d’un slogan : le jeu nous oppose, puis nous rassemble. J’ai coupé la page en deux couleurs, avec deux adversaires d’un côté, des joueurs réunis de l’autre, et une poignée de main au milieu. Les dessins sont faits au trait, sur Photoshop.</p>
-      <div class="plates two">
-        <figure class="plate">
-          <img src="img/af-recto.webp" width="1100" height="1561" loading="lazy" decoding="async" alt="Recto : « Après-midi jeux », le 4 février 2026 de 14 h à 18 h au bâtiment B de l'IUT de Haguenau. La page est coupée en deux, rouge et beige : deux adversaires dessinés au trait en haut, trois joueurs souriants en bas, une poignée de main au centre, et un QR code pour s'inscrire.">
-          <figcaption>Recto</figcaption>
-        </figure>
-        <figure class="plate">
-          <img src="img/af-verso.webp" width="1100" height="1561" loading="lazy" decoding="async" alt="Verso : le nom de l'association, ses tarifs, son histoire depuis 2019 et son festival à Ohlungen, puis les infos de l'après-midi : 80 à 100 jeux, tous niveaux.">
-          <figcaption>Verso. Le téléphone et l’adresse mail de l’association sont floutés ici.</figcaption>
-        </figure>
+      <div class="v-text">
+        <p class="viewer-text">Un flyer A5 recto verso pour l’association Jeux m’éclate, qui annonce un après-midi jeux à l’IUT. Tout part d’un slogan : le jeu nous oppose, puis nous rassemble.</p>
+        <p class="viewer-text">J’ai coupé la page en deux couleurs, avec deux adversaires d’un côté, des joueurs réunis de l’autre, et une poignée de main au milieu. Les dessins sont faits au trait, sur Photoshop.</p>
+      </div>
+      <div class="flyer-pair">
+        <figure class="plate"><img src="img/af-recto.webp" width="1100" height="1561" loading="lazy" decoding="async" alt="Recto : « Après-midi jeux », le 4 février 2026 de 14 h à 18 h au bâtiment B de l'IUT de Haguenau. La page est coupée en deux, rouge et beige : deux adversaires dessinés au trait en haut, trois joueurs souriants en bas, une poignée de main au centre, et un QR code pour s'inscrire."><figcaption>Recto</figcaption></figure>
+        <figure class="plate"><img src="img/af-verso.webp" width="1100" height="1561" loading="lazy" decoding="async" alt="Verso : le nom de l'association, ses tarifs, son histoire depuis 2019 et son festival à Ohlungen, puis les infos de l'après-midi : 80 à 100 jeux, tous niveaux."><figcaption>Verso. Le téléphone et l’adresse mail de l’association sont floutés ici.</figcaption></figure>
       </div>
     </div>
   </div>
