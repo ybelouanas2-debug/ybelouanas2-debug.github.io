@@ -276,19 +276,15 @@ h1, h2, h3 { text-wrap: balance; }
 .btn-solid { background: #000; color: var(--yellow); }
 .btn-line { background: transparent; color: #000; }
 .btn:active, .fbtn:active, .ghost:active, .seg button:active { scale: .97; }
-.dispo { display: flex; align-items: flex-start; gap: 10px; font-weight: 600; line-height: 1.4; max-width: 60ch; text-wrap: balance; }
-.dispo::before {
-  content: ""; flex: none; width: 11px; height: 11px; margin-top: .36em;
-  border-radius: 50%; background: #000;
+/* les dates du stage, en haut de l'ouverture comme dans la barre du haut : sur téléphone, sous le nom et le menu */
+.site-head .bar-dispo { margin-left: auto; }
+.hero .bar-dispo::before { background: #000; box-shadow: none; }
+@media (max-width: 900px) {
+  .site-head .bar-dispo { display: flex; order: 3; flex-basis: 100%; margin-left: 0; white-space: normal; }
 }
 
-/* Trois projets flottent à droite du titre, sur grand écran seulement */
-/* chaque carte a sa profondeur (--k) : elle suit le pointeur, puis part plus vite que la page au défilement */
-.card {
-  position: absolute; left: var(--l); top: var(--t); width: var(--w); rotate: var(--r, 0deg);
-  transform: translate3d(calc(var(--px, 0) * var(--k, 10px)), calc(var(--py, 0) * var(--k, 10px)), 0);
-  transition: transform var(--dur-slow) var(--ease-out);
-}
+/* Trois projets posés sous le titre, légèrement inclinés : ils ne bougent pas */
+.card { position: absolute; left: var(--l); top: var(--t); width: var(--w); rotate: var(--r, 0deg); }
 .card .shot { display: block; overflow: hidden; }
 .card .browser .shot { aspect-ratio: 16 / 10; }
 .card .phone .shot { aspect-ratio: 390 / 700; }
@@ -296,16 +292,9 @@ h1, h2, h3 { text-wrap: balance; }
 .card .browser::before { background-color: #000; }
 .card .phone { width: 100%; border-width: 7px; border-radius: 26px; }
 .card img { width: 100%; }
-.c-a { --l: 3%; --t: 20%; --w: 41%; --r: -7deg; --k: 12px; --d: 3.8s; }
-.c-b { --l: 56%; --t: 20%; --w: 41%; --r: 7deg; --k: 22px; --d: 4.6s; --dl: -3s; z-index: 2; }
-.c-phone { --l: 41.5%; --t: 0%; --w: 17%; --r: 1.5deg; --k: 30px; --d: 3.3s; --dl: -2s; z-index: 3; }
-.anim .hero.go .card > * { animation: bob var(--d, 7s) var(--ease-in-out) var(--dl, 0s) infinite alternate paused; }
-.anim .hero.go.is-live .card > * { animation-play-state: running; }
-@keyframes bob { from { translate: 0 5px; } to { translate: 0 -6px; } }
-@supports (animation-timeline: scroll()) {
-  .anim .card { animation: drift linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
-  @keyframes drift { to { translate: 0 calc(var(--k, 10px) * -4); } }
-}
+.c-a { --l: 3%; --t: 20%; --w: 41%; --r: -7deg; }
+.c-b { --l: 56%; --t: 20%; --w: 41%; --r: 7deg; z-index: 2; }
+.c-phone { --l: 41.5%; --t: 0%; --w: 17%; --r: 1.5deg; z-index: 3; }
 
 /* La couche fil de fer : une copie de l'ouverture, textes en barres */
 /* Deux boîtes glissent en sens inverse : la fenêtre s'arrête à la ligne (--x), son contenu ne bouge pas.
@@ -334,7 +323,7 @@ h1, h2, h3 { text-wrap: balance; }
 .hero-wire .lede .tx, .hero-wire .site-nav .tx { background: var(--w-bar-2); }
 .hero-wire .btn { background: transparent; border: 1.5px solid var(--w-stroke); color: var(--w-label); }
 .hero-wire .btn-solid { background: var(--w-bar-2); }
-.hero-wire .dispo::before { background: var(--w-stroke); }
+.hero-wire .bar-dispo::before { background: var(--w-stroke); }
 .hero-wire .site-head { box-shadow: 0 1px 0 var(--w-bar); }
 .hero-wire [data-wire]::after {
   content: attr(data-wire);
@@ -392,38 +381,6 @@ h1, h2, h3 { text-wrap: balance; }
   .split-range { bottom: auto; top: calc(47% - 23px); }
   .split-hint { left: calc(var(--x0, 0px) + 26px); right: auto; bottom: auto; top: 84px; max-width: 15rem; text-align: left; }
 }
-
-/* ---------- Bandeau des étapes : à gauche de la ligne le fil de fer, à droite le mot ---------- */
-.ticker {
-  position: relative; overflow: hidden; height: clamp(52px, 6vw, 74px);
-  background: #000; color: #fff;
-  --lx: clamp(86px, 23vw, 330px);
-  -webkit-user-select: none; user-select: none;
-}
-.ticker-layer { position: absolute; inset: 0; display: flex; align-items: center; }
-.ticker-layer.is-ui { clip-path: inset(0 0 0 var(--lx)); }
-.ticker-layer.is-wire { clip-path: inset(0 calc(100% - var(--lx)) 0 0); background: var(--w-bg); color: var(--w-stroke); }
-.ticker-track { display: flex; align-items: center; flex: none; width: max-content; transform: translateX(-25%); }
-.anim .ticker-track { animation: ticker var(--loop-band) linear infinite paused; }
-.anim .ticker.is-live .ticker-track { animation-play-state: running; }
-@keyframes ticker { from { transform: translateX(-25%); } to { transform: translateX(0); } }
-.tk {
-  font-family: var(--display); font-weight: 700; font-size: clamp(.92rem, 1.9vw, 1.4rem);
-  letter-spacing: -.03em; line-height: 1; white-space: nowrap;
-}
-.tk::before { content: attr(data-t); }
-.is-wire .tk::before { color: transparent; background: var(--w-bar); border-radius: 4px; }
-.tk-sep {
-  position: relative; flex: none; width: clamp(22px, 3vw, 40px); height: 2px;
-  margin-inline: clamp(14px, 1.8vw, 26px); background: var(--yellow);
-}
-.tk-sep::after {
-  content: ""; position: absolute; right: -1px; top: 50%; width: 9px; height: 9px; margin-top: -4.5px;
-  border-top: 2px solid var(--yellow); border-right: 2px solid var(--yellow); transform: rotate(45deg);
-}
-.is-wire .tk-sep { background: var(--w-stroke); }
-.is-wire .tk-sep::after { border-color: var(--w-stroke); }
-.ticker-line { position: absolute; top: 0; bottom: 0; left: var(--lx); width: 2px; margin-left: -1px; background: #1F5BFF; }
 
 /* ---------- Sections de l'accueil ---------- */
 .band { padding-block: clamp(56px, 8vw, 108px); }
@@ -503,7 +460,8 @@ h1, h2, h3 { text-wrap: balance; }
 .shot img { width: 100%; }
 /* la page défile toute seule dans son cadre tant que le projet est à l'écran */
 .anim .pan img { animation: pan var(--pan-d, 16s) var(--ease-in-out) infinite paused; }
-.anim .is-live .pan img { animation-play-state: running; }
+/* sur l'accueil, la capture ne défile qu'au survol du projet (ou quand son lien a le focus) */
+.anim .proj:hover .pan img, .anim .proj:focus-within .pan img { animation-play-state: running; }
 @keyframes pan {
   0%, 9% { transform: translateY(0); }
   47%, 56% { transform: translateY(var(--pan, 0)); }
@@ -550,7 +508,7 @@ h1, h2, h3 { text-wrap: balance; }
 /* chaque personne avance dans son parcours */
 .mini .walker { fill: var(--c); stroke: var(--paper); stroke-width: 2.5; opacity: 0; }
 .anim .mini .walker { animation: walk var(--dur, 9s) linear var(--dl, 0s) infinite paused; }
-.anim .is-live .mini .walker { animation-play-state: running; }
+.anim .proj:hover .mini .walker, .anim .proj:focus-within .mini .walker { animation-play-state: running; }
 @keyframes walk {
   0% { transform: translateY(0); opacity: 0; }
   5%, 93% { opacity: 1; }
@@ -582,7 +540,7 @@ h1, h2, h3 { text-wrap: balance; }
 .facts-list dt { color: var(--ink-2); font-size: .95rem; }
 
 /* Contact */
-.contact { background: var(--yellow); color: #000; padding-block: clamp(56px, 8vw, 104px); }
+.contact { background: var(--yellow); color: #000; padding-block: clamp(56px, 8vw, 104px) clamp(48px, 6vw, 80px); }
 .contact .h2 { font-size: clamp(1.5rem, 4.8vw, 3.6rem); max-width: 15ch; }
 .contact-text { margin-top: 20px; font-size: clamp(1.06rem, 1.6vw, 1.26rem); line-height: 1.5; max-width: 50ch; }
 .mail-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin-top: clamp(26px, 4vw, 44px); }
@@ -596,13 +554,17 @@ h1, h2, h3 { text-wrap: balance; }
 /* le CV et LinkedIn : secondaires, sous l'adresse qui reste l'action principale */
 .links-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 4px; }
 
-.site-foot { padding-block: 26px 40px; font-size: .9rem; color: var(--ink-2); }
-.site-foot .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 28px; }
+.site-foot { padding-block: 0 34px; font-size: .9rem; }
+/* le pied de page termine le bloc du contact : même fond jaune, séparé par un simple trait */
+.site-foot { background: var(--yellow); color: #000; }
+.site-foot .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 28px; padding-top: 18px; border-top: 1px solid currentColor; }
+.site-foot a { color: inherit; }
+.site-foot :focus-visible { outline-color: #000; }
 .motion {
   border: 0; background: none; min-height: 44px; padding: 6px 0; cursor: pointer; color: inherit;
   text-decoration: underline; text-decoration-thickness: .08em; text-underline-offset: .2em;
 }
-.motion:active { color: var(--ink); }
+.motion:active { opacity: .7; }
 
 /* ---------- Études de cas ---------- */
 .case { padding-top: var(--bar-h); }
@@ -980,10 +942,6 @@ body::after {
 .hero .lede { font-size: clamp(1rem, 1.25vw, 1.14rem); max-width: 54ch; }
 .actions { justify-content: center; }
 .btn { min-height: 46px; padding: 0 26px; font-size: .92rem; letter-spacing: .02em; }
-.dispo { font-size: .96rem; text-align: left; }
-/* dans l'ouverture, tout est centré : la ligne des dates aussi, même quand elle passe sur deux lignes (téléphone) */
-.hero .dispo { display: block; text-align: center; }
-.hero .dispo::before { display: inline-block; vertical-align: .02em; margin: 0 10px 0 0; }
 .hero-art { position: relative; width: min(100%, 940px); height: 46vw; max-height: 440px; margin-top: clamp(4px, 1.4vw, 18px); }
 .hero-wire [data-wire]::after { left: 50%; translate: -50% 0; }
 .hero-wire .site-head[data-wire]::after, .hero-wire .hero-art[data-wire]::after { translate: none; }
@@ -1396,63 +1354,10 @@ html.vt-solo::view-transition-old(planche) { animation-duration: 280ms; }
 }
 
 /* ---------- Le mouvement ----------
-   Une seule règle : la ligne bleue va de droite à gauche. À sa gauche, ce qui n'est pas encore
-   dessiné ; à sa droite, le résultat. Tout est rangé sous .anim, posé par le script seulement
-   si les animations peuvent tourner : sans lui, rien n'est caché. */
-
-/* les textes montent, sans bruit */
-.anim [data-reveal="rise"], .anim [data-reveal="stagger"] > * {
-  opacity: 0; translate: 0 var(--shift);
-  transition: opacity var(--dur-slow) var(--ease-out), translate var(--dur-slow) var(--ease-out);
-  transition-delay: calc(var(--i, 0) * var(--stagger));
-}
-.anim [data-reveal="rise"].is-in, .anim [data-reveal="stagger"].is-in > * { opacity: 1; translate: none; }
-
-/* un visuel : l'emplacement vide du fil de fer, puis l'image */
-.anim [data-reveal="wipe"] { position: relative; overflow: hidden; }
-.anim [data-reveal="wipe"]::after {
-  content: ""; position: absolute; inset: 0; z-index: 4;
-  background:
-    linear-gradient(to top right, transparent calc(50% - .8px), var(--ph-line) calc(50% - .8px), var(--ph-line) calc(50% + .8px), transparent calc(50% + .8px)),
-    linear-gradient(to bottom right, transparent calc(50% - .8px), var(--ph-line) calc(50% - .8px), var(--ph-line) calc(50% + .8px), transparent calc(50% + .8px)),
-    var(--ph-bg);
-  border-right: 3px solid transparent;
-  transition: transform var(--dur-wipe) var(--ease-out);
-}
-.anim [data-reveal="wipe"].is-in::after { transform: translateX(-101%); border-right-color: var(--guide); }
-
-/* un titre d'étude de cas : chaque ligne sort de sa fente, avec une impulsion puis un arrêt net */
-/* en colonne flexible : les marges négatives des lignes ne fusionnent pas, l'interligne reste celui du titre */
-.anim [data-reveal="lines"] { display: flex; flex-direction: column; }
-.anim [data-reveal="lines"] .ln { display: block; overflow: hidden; padding-block: .16em; margin-block: -.16em; }
-.anim [data-reveal="lines"] .ln-i { display: block; translate: 0 135%; transition: translate 680ms cubic-bezier(.16, 1, .3, 1) calc(var(--li, 0) * 50ms); }
-.anim [data-reveal="lines"].is-in .ln-i { translate: none; }
-/* une figure : une fenêtre qui s'ouvre comme un volet, pendant que l'image recule */
-.anim [data-reveal="shutter"] { clip-path: inset(14% 30% 14% 30%); transition: clip-path 700ms cubic-bezier(.16, 1, .3, 1); }
-.anim [data-reveal="shutter"] > * { scale: 1.14; transition: scale 900ms cubic-bezier(.16, 1, .3, 1); }
-.anim [data-reveal="shutter"].is-in { clip-path: inset(0 0 0 0); }
-.anim [data-reveal="shutter"].is-in > * { scale: 1; }
-/* un titre de rubrique : la barre grise, puis le mot. La barre se replie, la ligne glisse, rien n'est remesuré. */
-.anim [data-reveal="bar"] .wt { position: relative; display: inline-block; }
-.anim [data-reveal="bar"] .wt-t { display: inline-block; clip-path: inset(-10% 0 -10% 100%); transition: clip-path var(--dur-slow) var(--ease-out); }
-.anim [data-reveal="bar"] .wt::before, .anim [data-reveal="bar"] .wt::after {
-  content: ""; position: absolute; left: 0; right: 0; top: 16%; bottom: 12%;
-  transition: transform var(--dur-slow) var(--ease-out), opacity 1ms linear var(--dur-slow);
-}
-.anim [data-reveal="bar"] .wt::before { background: var(--ph-bar); transform-origin: 0 50%; }
-.anim [data-reveal="bar"] .wt::after { border-right: 3px solid transparent; }
-.anim [data-reveal="bar"].is-in .wt-t { clip-path: inset(-10% 0 -10% 0); }
-.anim [data-reveal="bar"].is-in .wt::before { transform: scaleX(0); opacity: 0; }
-.anim [data-reveal="bar"].is-in .wt::after { transform: translateX(-100%); opacity: 0; border-right-color: var(--guide); }
-
-/* une bande de couleur : la page se retire devant elle */
-.anim [data-reveal="curtain"] { position: relative; overflow: hidden; }
-.anim [data-reveal="curtain"]::after {
-  content: ""; position: absolute; inset: 0; z-index: 4;
-  background: var(--page); border-right: 3px solid transparent;
-  transition: transform var(--dur-wipe) var(--ease-out);
-}
-.anim [data-reveal="curtain"].is-in::after { transform: translateX(-101%); border-right-color: #1F5BFF; }
+   Peu d'animations, et chacune dit quelque chose : la ligne bleue de l'ouverture, le passage d'une page
+   à l'autre, la planche qui s'ouvre, les dessins des études de cas, et ce qui répond à un geste (survol,
+   filtre). Rien n'attend le défilement pour apparaître : le contenu est là tout de suite.
+   Tout est rangé sous .anim, posé par le script seulement si les animations peuvent tourner. */
 
 /* d'une page à l'autre : le même geste, sur tout l'écran */
 .viewwipe {
@@ -1481,156 +1386,6 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   @keyframes lecture { to { transform: scaleX(1); } }
 }
 
-/* ---------- Les scènes ----------
-   Sur un écran assez grand, le défilement ne fait plus seulement descendre la page : il fait avancer
-   une caméra. Le script calcule où en est chaque scène (--p pendant qu'elle est épinglée, --e à son
-   entrée, --v pendant sa traversée, --c quand la suivante la recouvre) et amortit ces valeurs pour
-   donner du poids au mouvement. Ici, on ne fait que traduire ces valeurs en déplacements et en échelles.
-   Tout est sous .cine : sans lui (téléphone, animations coupées), la page reste une page normale. */
-
-/* Scène 1, l'ouverture : elle reste en place, le titre grandit, les maquettes montent et passent devant */
-.cine .hero { position: sticky; top: 0; height: 100vh; z-index: 0; }
-.cine .hero.is-rest { visibility: hidden; }
-.cine .hero.is-rest .card > * { animation-play-state: paused; }
-.cine #vue-accueil > .ticker { margin-top: 65vh; z-index: 1; }
-.cine #vue-accueil > main { position: relative; z-index: 1; background: var(--canvas); }
-.cine .hero .wrap { transform: translateY(calc(var(--c, 0) * -10vh)); }
-.cine .hero .kicker, .cine .hero-sub, .cine .split-hint {
-  opacity: calc(1 - var(--p, 0) * 3.4); transform: translateY(calc(var(--p, 0) * -7vh));
-}
-.cine .hero.is-deep .hero-sub, .cine .hero.is-deep .split-hint { visibility: hidden; }
-.cine .split { opacity: calc(1 - var(--p, 0) * 3.4); }
-.cine .hero.is-deep .split { visibility: hidden; }
-.cine .hero h1 { z-index: 2; transform-origin: 50% 0; transform: translateY(calc(var(--p, 0) * 4vh)) scale(calc(1 + var(--p, 0) * .46)); }
-.cine .hero h1 > span:first-child { transform: translateX(calc(var(--p, 0) * -3vw)); }
-.cine .hero h1 > span:last-child { transform: translateX(calc(var(--p, 0) * 3vw)); }
-.cine .hero-art { z-index: 3; transform-origin: 50% 0; transform: translateY(calc(var(--p, 0) * -47vh)) scale(calc(1 + var(--p, 0) * .62)); }
-.cine .card { animation: none; translate: 0 calc(var(--p, 0) * var(--k, 10px) * -3.4); }
-.cine .hero-art { perspective: 1100px; }
-.cine .card {
-  transform: translate3d(calc(var(--px, 0) * var(--k, 10px)), calc(var(--py, 0) * var(--k, 10px)), calc(var(--k, 10px) * 2))
-             rotateY(calc(var(--px, 0) * 8deg)) rotateX(calc(var(--py, 0) * -5deg));
-}
-.cine .card .shot { position: relative; }
-.cine .hero-live:not(.hero-wire) .card .shot::after {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(112deg, #fff0 34%, #ffffff59 50%, #fff0 66%) calc(50% + var(--px, 0) * 150%) 0 / 260% 100% no-repeat;
-}
-
-/* Scènes 2 à 6, les projets : chacun tient l'écran le temps d'un travelling */
-.cine .proj { height: 120vh; border-bottom: 0; }
-.cine .proj-stage {
-  position: sticky; top: var(--bar-h); height: calc(100vh - var(--bar-h));
-  z-index: 0; padding-block: 0; overflow: hidden; border-bottom: 1px solid var(--ink);
-}
-.cine .proj-stage::before {
-  content: counter(p, decimal-leading-zero); position: absolute; z-index: -1; left: -.04em; bottom: -.1em;
-  font-family: var(--display); font-weight: 900; font-stretch: 62%; font-size: 62vh; line-height: .8;
-  color: var(--soft); pointer-events: none;
-  transform: translateY(calc((var(--p, 0) - .5) * -16vh));
-}
-/* le texte ne bouge pas : le lien du titre couvre toute la scène, et doit rester au-dessus du visuel */
-.cine .proj h3 a::after { z-index: 2; }
-/* le visuel vit dans un vrai volume : il vient du fond, puis penche à peine selon le pointeur */
-.cine .proj-stage { perspective: 1500px; }
-.cine .proj-visual {
-  transform: translate3d(0, calc((.5 - var(--p, 0)) * 12vh), calc(-260px + var(--p, 0) * 260px))
-             rotateY(calc(var(--tx, 0) * 5deg)) rotateX(calc(var(--ty, 0) * -3.5deg));
-  opacity: clamp(.18, calc((1 - var(--p, 0)) * 7), 1);
-}
-.cine .proj-stage::before { opacity: clamp(0, calc((1 - var(--p, 0)) * 7), 1); }
-/* cliquer sur un projet : la caméra plonge dans le visuel, puis l'étude de cas s'ouvre */
-.cine .proj.is-diving .proj-visual {
-  transition: transform 340ms var(--ease-in), opacity 160ms linear 180ms;
-  transform: translate3d(0, 0, 1180px); opacity: 0;
-}
-.cine .proj.is-diving .proj-text, .cine .proj.is-diving .proj-stage::before { transition: opacity var(--dur-base) var(--ease-out); opacity: 0; }
-.view.is-arriving { animation: fondu var(--dur-base) var(--ease-out); }
-.cine .proj:has(h3 a:focus-visible) { outline: none; }
-.cine .proj:has(h3 a:focus-visible) .proj-stage { outline: 3px solid var(--guide); outline-offset: -3px; }
-
-/* les mots géants arrivent de loin, celui de la bande noire traverse l'écran */
-.cine .band-head .h2 { transform-origin: 50% 100%; transform: translateY(calc((1 - var(--e, 1)) * 9vh)) scale(calc(1.34 - var(--e, 1) * .34)); }
-.cine .band.dark .band-head .h2 { transform: translateX(calc((.5 - var(--v, .5)) * 26vw)); }
-.cine .band-head p { transform: translateY(calc((1 - var(--e, 1)) * 5vh)); }
-/* contact : les deux lignes du titre viennent chacune d'un côté et se rejoignent */
-.cine .contact .h2 > span:first-child { transform: translateX(calc((1 - var(--e, 1)) * -22vw)); }
-.cine .contact .h2 > span:last-child { transform: translateX(calc((1 - var(--e, 1)) * 22vw)); }
-
-/* ---------- La vitesse ----------
-   Le geste ne déforme rien : seuls les bandeaux suivent la molette (voir la boucle des scènes). */
-
-/* ---------- Le manifeste ----------
-   La devise en très gros, sur deux lignes qui défilent à contre-sens. Au milieu, une fenêtre :
-   la première ligne passe derrière, la seconde devant, en différence (ses lettres s'inversent là où
-   elles croisent l'image). Dans la fenêtre, la ligne bleue fait du fil de fer une maquette, au rythme
-   de la molette. Pour finir, un trait à la main entoure le résultat, comme une annotation. */
-.manif { position: relative; background: #17130D; color: #F5EFE2; --o: 1; --s: 1; --draw: 1; --ww: min(86vw, 640px); }
-.manif-stage { position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; padding: clamp(64px, 11vh, 120px) 0; }
-/* les bandeaux sont bien plus larges que l'écran : ils ne doivent pas élargir la grille (sinon la fenêtre part hors champ) */
-.mq { min-width: 0; overflow: hidden; }
-.mq {
-  width: 100%; white-space: nowrap; pointer-events: none; user-select: none;
-  font-family: var(--display); text-transform: uppercase; font-size: clamp(3.4rem, 12vw, 12.5rem); line-height: .84;
-}
-.mq-track { display: inline-flex; align-items: center; width: max-content; }
-.mq-w { padding-inline: .12em; letter-spacing: -.01em; }
-.mq-a { color: var(--yellow); }
-.mq-a .mq-w { font-weight: 900; font-stretch: 62%; }
-.mq-b { position: relative; z-index: 3; color: #fff; mix-blend-mode: difference; }
-.mq-b .mq-w { font-weight: 200; font-stretch: 125%; }
-.mq-sep { flex: none; width: .2em; height: .2em; margin-inline: .16em; background: currentColor; }
-.mq-a .mq-sep { background: var(--guide); }
-.manif-win { position: relative; z-index: 2; width: var(--ww); margin: clamp(18px, 4vw, 34px) 0; }
-.mw { position: relative; aspect-ratio: 1200 / 750; overflow: hidden; border: 1px solid #F5EFE2; background: #fff; box-shadow: 0 34px 60px -34px #000; }
-.mw img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; scale: calc(1.35 - .35 * var(--o)); }
-.mw-ui { clip-path: inset(0 0 0 calc((1 - var(--s)) * 100%)); }
-.mw-line {
-  position: absolute; inset: 0; border-left: 3px solid var(--guide); pointer-events: none;
-  transform: translateX(calc((1 - var(--s)) * 100%)); opacity: clamp(0, calc((1 - var(--s)) * 30), 1);
-}
-.scribble { position: absolute; left: -9%; top: calc(var(--ww) * -.075); width: 118%; max-width: none; height: auto; aspect-ratio: 1.5226; overflow: visible; pointer-events: none; }
-.scribble path {
-  fill: none; stroke: var(--guide); stroke-width: 5; stroke-linecap: round; vector-effect: non-scaling-stroke;
-  stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--draw));
-}
-.manif-win figcaption {
-  margin-top: 16px; text-align: center; font-size: .72rem; font-weight: 600; letter-spacing: .08em;
-  text-transform: uppercase; color: #B5AC9A;
-}
-/* sans les scènes : les bandeaux tournent tout seuls, la fenêtre fait sa bascule une fois, à l'arrivée */
-.anim .mq-a .mq-track { animation: mq 40s linear infinite paused; }
-.anim .mq-b .mq-track { animation: mq 52s linear infinite reverse paused; }
-.anim .mq.is-live .mq-track { animation-play-state: running; }
-@keyframes mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-html.anim:not(.cine) .manif:not(.is-in) .mw-ui { clip-path: inset(0 0 0 100%); }
-html.anim:not(.cine) .manif:not(.is-in) .mw-line { transform: translateX(100%); opacity: 1; }
-html.anim:not(.cine) .manif:not(.is-in) .scribble path { stroke-dashoffset: 1; }
-html.anim:not(.cine) .manif.is-in .mw-ui { transition: clip-path 1.5s var(--ease-in-out) .3s; }
-html.anim:not(.cine) .manif.is-in .mw-line { transition: transform 1.5s var(--ease-in-out) .3s, opacity .3s linear 1.7s; }
-html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset 1.1s var(--ease-out) 1.6s; }
-/* avec les scènes : l'intermède tient l'écran, la molette fait tout avancer (et les bandeaux suivent le geste) */
-.cine .mq-track, .cine .ticker-track { animation: none !important; }
-.cine .manif {
-  height: 175vh; --ww: min(46vw, 72vh);
-  --o: clamp(0, calc(var(--p, 0) / .26), 1);
-  --s: clamp(0, calc((var(--p, 0) - .3) / .44), 1);
-  --draw: clamp(0, calc((var(--p, 0) - .78) / .17), 1);
-}
-.cine .manif-stage { position: sticky; top: var(--bar-h); height: calc(100vh - var(--bar-h)); padding: 0; display: block; }
-.cine .mq { position: absolute; left: 0; }
-.cine .mq-a { top: 21%; z-index: 1; }
-.cine .mq-b { top: 57%; }
-.cine .manif-win { position: absolute; left: 50%; top: 50%; margin: 0; translate: -50% -50%; }
-.cine .manif-win figcaption { position: absolute; top: 100%; left: 0; right: 0; margin-top: calc(var(--ww) * .075 + 18px); opacity: var(--draw); }
-.cine .mw { clip-path: inset(0 calc((1 - var(--o)) * 46%) 0 calc((1 - var(--o)) * 46%)); }
-
-/* ---------- Les instruments ----------
-   Un calque posé sur la page, comme les règles et l'inspecteur d'un outil de maquettage : le calque
-   en cours, la position du pointeur, le zoom de la caméra, la hauteur dans la page. Il ne capte aucun
-   clic et n'existe que lorsque les scènes tournent. */
-
-
 /* le survol n'existe qu'avec une souris : au doigt, c'est l'appui qui répond */
 @media (hover: hover) and (pointer: fine) {
   .site-nav a:hover { background-size: 100% 2px; }
@@ -1652,10 +1407,9 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   .anim .work:hover .w-ifsi .plan-sheet { translate: 0 -6px; rotate: 0deg; }
   .viewer-close:hover { background: var(--ink); color: var(--canvas); }
   .split-grab:hover .split-knob { scale: 1.08; }
-  .anim .ticker:hover .ticker-track { animation-play-state: paused; }
   .next:hover b { translate: 10px 0; text-decoration: underline; text-decoration-thickness: .08em; text-underline-offset: .16em; }
   .back:hover::before { translate: -4px 0; }
-  .motion:hover { color: var(--ink); }
+  .motion:hover { text-decoration-thickness: 2px; }
 }
 
 /* ---------- Quand la colonne de contenu se resserre ---------- */
@@ -1743,13 +1497,13 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   }
   @page { margin: 14mm 12mm; }
   body { background: #fff; }
-  .topbar, .split, .split-hint, .hero-clip, .ticker, .viewwipe, .motion, .manif, body::after,
+  .topbar, .split, .split-hint, .hero-clip, .viewwipe, .motion, body::after,
   .skip, .actions, .filter, .seg, .ghost, .flowtabs, #copy, .copied, .back { display: none !important; }
   [data-reveal] { opacity: 1 !important; translate: none !important; }
   [data-reveal]::after, .wt::before, .wt::after { display: none !important; }
   .wt-t { clip-path: none !important; }
   /* les bandes sombres et jaunes passent en noir sur blanc : sans fond imprimé, leur texte clair disparaîtrait */
-  .band.dark, .contact, .hero { --ink: #17130D; --ink-2: #4F483D; --line: #CFC5AF; --guide: #1F5BFF; background: none !important; color: #17130D !important; }
+  .band.dark, .contact, .site-foot, .hero { --ink: #17130D; --ink-2: #4F483D; --line: #CFC5AF; --guide: #1F5BFF; background: none !important; color: #17130D !important; }
   /* les trois parcours de l'escalade, l'un sous l'autre, au lieu d'un seul onglet */
   .flows[data-active] .flowcol { display: block !important; }
   .flows { grid-template-columns: minmax(0, 1fr) !important; }
@@ -1861,11 +1615,12 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 
 <div class="view" id="vue-accueil">
 
-<header class="hero" id="haut" data-scene="hero">
+<header class="hero" id="haut">
   <div class="hero-live">
     <div class="wrap">
       <div class="site-head" data-wire="BANDEAU - nom et navigation">
         <a class="brand" href="#haut">Yasser Belouanas</a>
+        <p class="bar-dispo">Stage UX/UI du 12 avril au 4 juin 2027</p>
         <nav class="site-nav" aria-label="Navigation principale">
           <a href="#projets">Projets</a>
           <a href="#a-propos">À propos</a>
@@ -1882,7 +1637,6 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
           <a class="btn btn-solid" href="#projets" data-keep>Voir les projets</a>
           <a class="btn btn-line" href="#contact" data-keep>Me contacter</a>
         </div>
-          <p class="dispo" data-wire="INFO CLÉ - dates de stage"><span>Disponible pour un stage de 8 semaines, du 12 avril au 4 juin 2027</span></p>
         </div>
         <div class="hero-art" data-wire="VISUELS - trois projets" aria-hidden="true">
           <div class="card c-a"><div class="browser"><span class="shot"><img src="img/cover-divein.webp" srcset="img/cover-divein-560.webp 560w, img/cover-divein.webp 1120w, img/cover-divein-1440.webp 1440w" sizes="(min-width: 900px) and (min-height: 700px) 650px, 39vw" width="1120" height="700" alt="" loading="lazy" decoding="async"></span></div></div>
@@ -1899,18 +1653,17 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   </div>
 </header>
 
-<div class="ticker" aria-hidden="true"><div class="ticker-layer is-ui"><div class="ticker-track"><span class="tk" data-t="Benchmark"></span><i class="tk-sep"></i><span class="tk" data-t="Personae"></span><i class="tk-sep"></i><span class="tk" data-t="User flows"></span><i class="tk-sep"></i><span class="tk" data-t="Arborescence"></span><i class="tk-sep"></i><span class="tk" data-t="Fils de fer"></span><i class="tk-sep"></i><span class="tk" data-t="Maquettes"></span><i class="tk-sep"></i><span class="tk" data-t="Design system"></span><i class="tk-sep"></i><span class="tk" data-t="Intégration"></span><i class="tk-sep"></i><span class="tk" data-t="Benchmark"></span><i class="tk-sep"></i><span class="tk" data-t="Personae"></span><i class="tk-sep"></i><span class="tk" data-t="User flows"></span><i class="tk-sep"></i><span class="tk" data-t="Arborescence"></span><i class="tk-sep"></i><span class="tk" data-t="Fils de fer"></span><i class="tk-sep"></i><span class="tk" data-t="Maquettes"></span><i class="tk-sep"></i><span class="tk" data-t="Design system"></span><i class="tk-sep"></i><span class="tk" data-t="Intégration"></span><i class="tk-sep"></i><span class="tk" data-t="Benchmark"></span><i class="tk-sep"></i><span class="tk" data-t="Personae"></span><i class="tk-sep"></i><span class="tk" data-t="User flows"></span><i class="tk-sep"></i><span class="tk" data-t="Arborescence"></span><i class="tk-sep"></i><span class="tk" data-t="Fils de fer"></span><i class="tk-sep"></i><span class="tk" data-t="Maquettes"></span><i class="tk-sep"></i><span class="tk" data-t="Design system"></span><i class="tk-sep"></i><span class="tk" data-t="Intégration"></span><i class="tk-sep"></i><span class="tk" data-t="Benchmark"></span><i class="tk-sep"></i><span class="tk" data-t="Personae"></span><i class="tk-sep"></i><span class="tk" data-t="User flows"></span><i class="tk-sep"></i><span class="tk" data-t="Arborescence"></span><i class="tk-sep"></i><span class="tk" data-t="Fils de fer"></span><i class="tk-sep"></i><span class="tk" data-t="Maquettes"></span><i class="tk-sep"></i><span class="tk" data-t="Design system"></span><i class="tk-sep"></i><span class="tk" data-t="Intégration"></span><i class="tk-sep"></i></div></div><div class="ticker-layer is-wire"><div class="ticker-track"><span class="tk" data-t="Benchmark"></span><i class="tk-sep"></i><span class="tk" data-t="Personae"></span><i class="tk-sep"></i><span class="tk" data-t="User flows"></span><i class="tk-sep"></i><span class="tk" data-t="Arborescence"></span><i class="tk-sep"></i><span class="tk" data-t="Fils de fer"></span><i class="tk-sep"></i><span class="tk" data-t="Maquettes"></span><i class="tk-sep"></i><span class="tk" data-t="Design system"></span><i class="tk-sep"></i><span class="tk" data-t="Intégration"></span><i class="tk-sep"></i><span class="tk" data-t="Benchmark"></span><i class="tk-sep"></i><span class="tk" data-t="Personae"></span><i class="tk-sep"></i><span class="tk" data-t="User flows"></span><i class="tk-sep"></i><span class="tk" data-t="Arborescence"></span><i class="tk-sep"></i><span class="tk" data-t="Fils de fer"></span><i class="tk-sep"></i><span class="tk" data-t="Maquettes"></span><i class="tk-sep"></i><span class="tk" data-t="Design system"></span><i class="tk-sep"></i><span class="tk" data-t="Intégration"></span><i class="tk-sep"></i><span class="tk" data-t="Benchmark"></span><i class="tk-sep"></i><span class="tk" data-t="Personae"></span><i class="tk-sep"></i><span class="tk" data-t="User flows"></span><i class="tk-sep"></i><span class="tk" data-t="Arborescence"></span><i class="tk-sep"></i><span class="tk" data-t="Fils de fer"></span><i class="tk-sep"></i><span class="tk" data-t="Maquettes"></span><i class="tk-sep"></i><span class="tk" data-t="Design system"></span><i class="tk-sep"></i><span class="tk" data-t="Intégration"></span><i class="tk-sep"></i><span class="tk" data-t="Benchmark"></span><i class="tk-sep"></i><span class="tk" data-t="Personae"></span><i class="tk-sep"></i><span class="tk" data-t="User flows"></span><i class="tk-sep"></i><span class="tk" data-t="Arborescence"></span><i class="tk-sep"></i><span class="tk" data-t="Fils de fer"></span><i class="tk-sep"></i><span class="tk" data-t="Maquettes"></span><i class="tk-sep"></i><span class="tk" data-t="Design system"></span><i class="tk-sep"></i><span class="tk" data-t="Intégration"></span><i class="tk-sep"></i></div></div><i class="ticker-line"></i></div>
 
 <main data-main tabindex="-1">
 
   <section class="band" id="projets">
     <div class="wrap">
-      <div class="band-head" data-scene="pass">
-        <h2 class="h2" data-reveal="bar"><span class="wt"><span class="wt-t">Projets</span></span></h2>
+      <div class="band-head">
+        <h2 class="h2"><span class="wt"><span class="wt-t">Projets</span></span></h2>
         <p>Cinq projets racontés en détail. Chacun montre une partie différente du métier, du benchmark jusqu’à la mise en ligne.</p>
       </div>
 
-      <div class="filter" data-reveal="rise" role="group" aria-labelledby="filtre-titre">
+      <div class="filter" role="group" aria-labelledby="filtre-titre">
         <p class="filter-label" id="filtre-titre">Voir les projets par compétence</p>
         <button class="fbtn" type="button" data-f="tous" aria-pressed="true">Tous</button>
         <button class="fbtn" type="button" data-f="recherche" aria-pressed="false">Recherche UX</button>
@@ -1923,9 +1676,9 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 
       <div class="projects">
 
-        <article class="proj" data-skills="strategie ui" data-scene="pin">
+        <article class="proj" data-skills="strategie ui">
           <div class="proj-stage">
-          <div class="proj-text" data-reveal="rise">
+          <div class="proj-text">
             <h3><a href="#ecole-hiver">Faire connaître l’École d’Hiver aux doctorants</a></h3>
             <p class="proj-hook">Un vrai commanditaire, le Pôle universitaire d’innovation Alsace, et une page à concevoir pour donner envie aux doctorants de partir trois jours en résidence.</p>
             <dl class="proj-meta">
@@ -1935,15 +1688,15 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
             <ul class="chips" aria-label="Compétences"><li class="chip">Stratégie et SEO</li><li class="chip">Maquettes UI</li></ul>
             <span class="more" aria-hidden="true">Lire l’étude de cas</span>
           </div>
-          <div class="proj-visual v-eh" aria-hidden="true" data-reveal="wipe">
+          <div class="proj-visual v-eh" aria-hidden="true">
             <div class="browser"><span class="shot pan" style="--pan:-70.0%;--pan-d:22s"><img src="img/cover-eh-long-final.webp" srcset="img/cover-eh-long-final-640.webp 640w, img/cover-eh-long-final.webp 960w" sizes="(max-width: 900px) 84vw, 590px" width="960" height="2000" alt="" loading="lazy" decoding="async"></span></div>
           </div>
         </div>
         </article>
 
-        <article class="proj" data-skills="recherche parcours" data-scene="pin">
+        <article class="proj" data-skills="recherche parcours">
           <div class="proj-stage">
-          <div class="proj-text" data-reveal="rise">
+          <div class="proj-text">
             <h3><a href="#escalade">Le site d’une salle d’escalade associative</a></h3>
             <p class="proj-hook">Trois personnes, trois frustrations, et une arborescence où chaque page répond à l’une d’elles.</p>
             <dl class="proj-meta">
@@ -1953,15 +1706,15 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
             <ul class="chips" aria-label="Compétences"><li class="chip">Recherche UX</li><li class="chip">Parcours et arborescence</li></ul>
             <span class="more" aria-hidden="true">Lire l’étude de cas</span>
           </div>
-          <div class="proj-visual v-escalade" aria-hidden="true" data-reveal="wipe">
+          <div class="proj-visual v-escalade" aria-hidden="true">
             <svg class="mini" viewBox="0 0 520 344" aria-hidden="true" focusable="false"><g class="p-camille"><text x="96" y="22" text-anchor="middle">Camille</text><rect class="pl" x="48" y="40" width="96" height="16" rx="8"/><line class="ln" x1="96" y1="56" x2="96" y2="66"/><rect class="st" x="48" y="66" width="96" height="16" rx="2"/><line class="ln" x1="96" y1="82" x2="96" y2="92"/><polygon class="dc" points="96,92 130,105.0 96,118 62,105.0"/><line class="ln" x1="96" y1="118" x2="96" y2="128"/><rect class="st" x="48" y="128" width="96" height="16" rx="2"/><line class="ln" x1="96" y1="144" x2="96" y2="154"/><polygon class="dc" points="96,154 130,167.0 96,180 62,167.0"/><line class="ln" x1="96" y1="180" x2="96" y2="190"/><rect class="st" x="48" y="190" width="96" height="16" rx="2"/><line class="ln" x1="96" y1="206" x2="96" y2="216"/><polygon class="dc" points="96,216 130,229.0 96,242 62,229.0"/><line class="ln" x1="96" y1="242" x2="96" y2="252"/><rect class="st" x="48" y="252" width="96" height="16" rx="2"/><line class="ln" x1="96" y1="268" x2="96" y2="278"/><polygon class="dc" points="96,278 130,291.0 96,304 62,291.0"/><line class="ln" x1="96" y1="304" x2="96" y2="314"/><rect class="pl" x="48" y="314" width="96" height="16" rx="8"/><circle class="walker" cx="96" cy="48.0" r="6" style="--len:274px;--dur:9.1s;--dl:0.0s"/></g><g class="p-ines"><text x="260" y="22" text-anchor="middle">Ines</text><rect class="pl" x="212" y="40" width="96" height="16" rx="8"/><line class="ln" x1="260" y1="56" x2="260" y2="66"/><rect class="st" x="212" y="66" width="96" height="16" rx="2"/><line class="ln" x1="260" y1="82" x2="260" y2="92"/><rect class="st" x="212" y="92" width="96" height="16" rx="2"/><line class="ln" x1="260" y1="108" x2="260" y2="118"/><rect class="st" x="212" y="118" width="96" height="16" rx="2"/><line class="ln" x1="260" y1="134" x2="260" y2="144"/><rect class="st" x="212" y="144" width="96" height="16" rx="2"/><line class="ln" x1="260" y1="160" x2="260" y2="170"/><polygon class="dc" points="260,170 294,183.0 260,196 226,183.0"/><line class="ln" x1="260" y1="196" x2="260" y2="206"/><rect class="st" x="212" y="206" width="96" height="16" rx="2"/><line class="ln" x1="260" y1="222" x2="260" y2="232"/><polygon class="dc" points="260,232 294,245.0 260,258 226,245.0"/><line class="ln" x1="260" y1="258" x2="260" y2="268"/><rect class="pl" x="212" y="268" width="96" height="16" rx="8"/><circle class="walker" cx="260" cy="48.0" r="6" style="--len:228px;--dur:7.6s;--dl:-3.4s"/></g><g class="p-marc"><text x="424" y="22" text-anchor="middle">Marc</text><rect class="pl" x="376" y="40" width="96" height="16" rx="8"/><line class="ln" x1="424" y1="56" x2="424" y2="66"/><rect class="st" x="376" y="66" width="96" height="16" rx="2"/><line class="ln" x1="424" y1="82" x2="424" y2="92"/><polygon class="dc" points="424,92 458,105.0 424,118 390,105.0"/><line class="ln" x1="424" y1="118" x2="424" y2="128"/><rect class="st" x="376" y="128" width="96" height="16" rx="2"/><line class="ln" x1="424" y1="144" x2="424" y2="154"/><polygon class="dc" points="424,154 458,167.0 424,180 390,167.0"/><line class="ln" x1="424" y1="180" x2="424" y2="190"/><rect class="st" x="376" y="190" width="96" height="16" rx="2"/><line class="ln" x1="424" y1="206" x2="424" y2="216"/><polygon class="dc" points="424,216 458,229.0 424,242 390,229.0"/><line class="ln" x1="424" y1="242" x2="424" y2="252"/><rect class="st" x="376" y="252" width="96" height="16" rx="2"/><line class="ln" x1="424" y1="268" x2="424" y2="278"/><rect class="pl" x="376" y="278" width="96" height="16" rx="8"/><circle class="walker" cx="424" cy="48.0" r="6" style="--len:238px;--dur:7.9s;--dl:-6.8s"/></g></svg>
           </div>
         </div>
         </article>
 
-        <article class="proj" data-skills="recherche parcours ui" data-scene="pin">
+        <article class="proj" data-skills="recherche parcours ui">
           <div class="proj-stage">
-          <div class="proj-text" data-reveal="rise">
+          <div class="proj-text">
             <h3><a href="#webdoc">Un webdocumentaire à maquetter avant son contenu</a></h3>
             <p class="proj-hook">Un site mobile pour les enquêtes des étudiants en journalisme du CUEJ, dessiné alors que ni les textes ni les photos n’existent encore.</p>
             <dl class="proj-meta">
@@ -1971,7 +1724,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
             <ul class="chips" aria-label="Compétences"><li class="chip">Recherche UX</li><li class="chip">Parcours et arborescence</li><li class="chip">Maquettes UI</li></ul>
             <span class="more" aria-hidden="true">Lire l’étude de cas</span>
           </div>
-          <div class="proj-visual v-webdoc" aria-hidden="true" data-reveal="wipe">
+          <div class="proj-visual v-webdoc" aria-hidden="true">
             <div class="duo">
               <div class="phone"><span class="shot pan" style="--pan:-17.3%;--pan-d:13s"><img src="img/webdoc-wf-article.webp" width="390" height="846" alt="" loading="lazy" decoding="async"></span></div>
               <div class="phone"><span class="shot pan" style="--pan:-62.0%;--pan-d:19s"><img src="img/webdoc-specimen.webp" width="390" height="1843" alt="" loading="lazy" decoding="async"></span></div>
@@ -1980,9 +1733,9 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
         </div>
         </article>
 
-        <article class="proj" data-skills="recherche strategie ui" data-scene="pin">
+        <article class="proj" data-skills="recherche strategie ui">
           <div class="proj-stage">
-          <div class="proj-text" data-reveal="rise">
+          <div class="proj-text">
             <h3><a href="#dive-in">DIVE IN, un théâtre qui se ressent</a></h3>
             <p class="proj-hook">Un spectacle immersif sans dialogue imaginé pour le Relais Culturel de Haguenau : une stratégie, puis une page de présentation et une landing page qui ne font pas le même travail.</p>
             <dl class="proj-meta">
@@ -1992,15 +1745,15 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
             <ul class="chips" aria-label="Compétences"><li class="chip">Recherche UX</li><li class="chip">Stratégie</li><li class="chip">Maquettes UI</li></ul>
             <span class="more" aria-hidden="true">Lire l’étude de cas</span>
           </div>
-          <div class="proj-visual v-divein" aria-hidden="true" data-reveal="wipe">
+          <div class="proj-visual v-divein" aria-hidden="true">
             <div class="browser"><span class="shot pan" style="--pan:-55.1%;--pan-d:17s"><img src="img/divein-landing.webp" srcset="img/divein-landing-720.webp 720w, img/divein-landing.webp 1440w" sizes="(max-width: 900px) 84vw, 590px" width="1440" height="2003" alt="" loading="lazy" decoding="async"></span></div>
           </div>
         </div>
         </article>
 
-        <article class="proj" data-skills="code" data-scene="pin">
+        <article class="proj" data-skills="code">
           <div class="proj-stage">
-          <div class="proj-text" data-reveal="rise">
+          <div class="proj-text">
             <h3><a href="#kyoto">Découvrir Kyoto</a></h3>
             <p class="proj-hook">Mon premier site relié à une base de données. Un travail individuel, de la maquette à la mise en ligne.</p>
             <dl class="proj-meta">
@@ -2010,7 +1763,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
             <ul class="chips" aria-label="Compétences"><li class="chip">Intégration</li></ul>
             <span class="more" aria-hidden="true">Lire l’étude de cas</span>
           </div>
-          <div class="proj-visual v-kyoto" aria-hidden="true" data-reveal="wipe">
+          <div class="proj-visual v-kyoto" aria-hidden="true">
             <div class="browser"><span class="shot pan" style="--pan:-55.1%;--pan-d:16s"><img src="img/kyoto-accueil.webp" srcset="img/kyoto-accueil-720.webp 720w, img/kyoto-accueil.webp 1280w" sizes="(max-width: 900px) 84vw, 590px" width="1280" height="1782" alt="" loading="lazy" decoding="async"></span></div>
           </div>
         </div>
@@ -2020,34 +1773,16 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     </div>
   </section>
 
-  <!-- intermède : le manifeste en très gros, qui défile à la vitesse du geste -->
-  <section class="manif" id="manifeste" data-scene="manif" data-reveal="manif" aria-labelledby="manif-t">
-    <div class="manif-stage">
-      <h2 class="vh" id="manif-t">D’abord ranger. Ensuite dessiner.</h2>
-      <div class="mq mq-a" aria-hidden="true"><div class="mq-track"><span class="mq-w">D’abord ranger</span><i class="mq-sep"></i><span class="mq-w">D’abord ranger</span><i class="mq-sep"></i><span class="mq-w">D’abord ranger</span><i class="mq-sep"></i><span class="mq-w">D’abord ranger</span><i class="mq-sep"></i><span class="mq-w">D’abord ranger</span><i class="mq-sep"></i><span class="mq-w">D’abord ranger</span><i class="mq-sep"></i></div></div>
-      <figure class="manif-win">
-        <div class="mw">
-          <img class="mw-wire" src="img/manif-wire.webp" srcset="img/manif-wire-720.webp 720w, img/manif-wire.webp 1200w" sizes="(max-width: 770px) 86vw, 640px" width="1200" height="750" loading="lazy" decoding="async" alt="Fil de fer de l'en-tête de la page École d'Hiver.">
-          <img class="mw-ui" src="img/manif-ui.webp" srcset="img/manif-ui-720.webp 720w, img/manif-ui.webp 1200w" sizes="(max-width: 770px) 86vw, 640px" width="1200" height="750" loading="lazy" decoding="async" alt="Le même en-tête en maquette, avec la photo de groupe floutée.">
-          <i class="mw-line" aria-hidden="true"></i>
-        </div>
-        <svg class="scribble" viewBox="0 0 1000 640" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M820 58C650 4 286 6 118 92C-6 160 4 466 168 556C332 644 702 642 872 552C1010 478 1010 214 902 124C826 60 660 30 488 46"/></svg>
-        <figcaption>École d’Hiver : le fil de fer, puis la maquette.</figcaption>
-      </figure>
-      <div class="mq mq-b" aria-hidden="true"><div class="mq-track"><span class="mq-w">Ensuite dessiner</span><i class="mq-sep"></i><span class="mq-w">Ensuite dessiner</span><i class="mq-sep"></i><span class="mq-w">Ensuite dessiner</span><i class="mq-sep"></i><span class="mq-w">Ensuite dessiner</span><i class="mq-sep"></i><span class="mq-w">Ensuite dessiner</span><i class="mq-sep"></i><span class="mq-w">Ensuite dessiner</span><i class="mq-sep"></i></div></div>
-    </div>
-  </section>
-
   <section class="band" id="autres">
     <div class="wrap">
-      <div class="band-head" data-scene="pass">
-        <h2 class="h2" data-reveal="bar"><span class="wt"><span class="wt-t">Et aussi</span></span></h2>
+      <div class="band-head">
+        <h2 class="h2"><span class="wt"><span class="wt-t">Et aussi</span></span></h2>
         <p>Des projets plus courts, qui m’ont fait toucher à d’autres supports.</p>
       </div>
 
-      <div class="works" data-reveal="stagger">
+      <div class="works">
         <article class="work">
-          <div class="work-visual w-ia" aria-hidden="true" data-reveal="shutter">
+          <div class="work-visual w-ia" aria-hidden="true">
             <div class="wv">
             <span class="sheet"><img src="img/ia-s.webp" width="640" height="905" alt="" loading="lazy" decoding="async"></span>
             </div>
@@ -2058,7 +1793,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
           <span class="more" aria-hidden="true">Voir en grand</span>
         </article>
         <article class="work">
-          <div class="work-visual w-flyer" aria-hidden="true" data-reveal="shutter">
+          <div class="work-visual w-flyer" aria-hidden="true">
             <div class="wv">
             <span class="sheet is-back"><img src="img/af-verso-s.webp" width="480" height="681" alt="" loading="lazy" decoding="async"></span>
             <span class="sheet is-front"><img src="img/af-recto-s.webp" width="480" height="681" alt="" loading="lazy" decoding="async"></span>
@@ -2070,7 +1805,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
           <span class="more" aria-hidden="true">Voir en grand</span>
         </article>
         <article class="work">
-          <div class="work-visual w-hxh" aria-hidden="true" data-reveal="shutter">
+          <div class="work-visual w-hxh" aria-hidden="true">
             <div class="wv">
             <div class="browser"><span class="shot"><img src="img/hxh-accueil.webp" srcset="img/hxh-accueil-640.webp 640w, img/hxh-accueil.webp 1100w" sizes="(max-width: 600px) 72vw, (max-width: 1440px) 34vw, 484px" width="1100" height="687" alt="" loading="lazy" decoding="async"></span></div>
             </div>
@@ -2081,7 +1816,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
           <span class="more" aria-hidden="true">Voir en grand</span>
         </article>
         <article class="work">
-          <div class="work-visual w-ifsi" aria-hidden="true" data-reveal="shutter">
+          <div class="work-visual w-ifsi" aria-hidden="true">
             <div class="wv">
             <span class="sheet plan-sheet"><svg class="plan-svg" viewBox="22 18 516 321" aria-hidden="true" focusable="false"><clipPath id="pl-room-mini"><rect x="25" y="25" width="510" height="310"/></clipPath><rect class="pl-floor" x="24" y="24" width="512" height="312"/><rect class="pl-win" x="330" y="19" width="140" height="10"/><path class="pl-thin" d="M330 24H470"/><path class="pl-gap" d="M396 336H458"/><path class="pl-thin" d="M396 336V278"/><path class="pl-thin pl-dash" d="M396 278A58 58 0 0 1 454 336"/><g clip-path="url(#pl-room-mini)"><path class="pl-fov pl-c1" d="M13 0L303 135.2L303 -135.2Z" transform="translate(92 306) rotate(-40.3)"/><path class="pl-fov pl-c2" d="M13 0L294.5 44.6L294.5 -44.6Z" transform="translate(136 246) rotate(-35.1)"/><path class="pl-fov pl-c3" d="M13 0L139.4 20L139.4 -20Z" transform="translate(290 156) rotate(-41.4)"/><path class="pl-fov pl-c4" d="M13 0L219.8 36.5L219.8 -36.5Z" transform="translate(330 66) rotate(135.7)"/></g><rect class="pl-seat" x="372" y="40" width="40" height="34" rx="8"/><rect class="pl-desk" x="318" y="98" width="180" height="58"/><path class="pl-thin" d="M408 98V156"/><rect class="pl-obj" x="348" y="110" width="22" height="30"/><path class="pl-thin" d="M353 118H365M353 125H365"/><rect class="pl-obj" x="440" y="110" width="30" height="21" transform="rotate(-8 455 120)"/><rect class="pl-chair" x="139" y="193" width="62" height="58" rx="14" transform="rotate(54.9 170 222)"/><g class="pl-patient"><ellipse class="pl-body" cx="170" cy="222" rx="21" ry="11" transform="rotate(54.9 170 222)"/><circle class="pl-head" cx="172.5" cy="220.3" r="8.5"/></g><g class="pl-nurse"><ellipse class="pl-body" cx="392" cy="66" rx="21" ry="11" transform="rotate(234.9 392 66)"/><circle class="pl-head" cx="389.5" cy="67.7" r="8.5"/></g><g transform="translate(92 306) rotate(-40.3)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="65" cy="297" r="10"/><text class="pl-num" x="65" y="301" text-anchor="middle">1</text><g transform="translate(136 246) rotate(-35.1)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="112" cy="252" r="10"/><text class="pl-num" x="112" y="256" text-anchor="middle">2</text><g transform="translate(290 156) rotate(-41.4)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="288" cy="180" r="10"/><text class="pl-num" x="288" y="184" text-anchor="middle">3</text><g transform="translate(330 66) rotate(135.7)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="332" cy="44" r="10"/><text class="pl-num" x="332" y="48" text-anchor="middle">4</text></svg></span>
             </div>
@@ -2093,7 +1828,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
         </article>
       </div>
 
-      <div class="others" data-reveal="stagger">
+      <div class="others">
         <article class="other">
           <h3>Horuz</h3>
           <p>Un réseau social pour les créateurs de jeux vidéo, quelque part entre LinkedIn, Twitter et GitHub. J’ai dessiné les fils de fer, puis l’interface sur Figma.</p>
@@ -2108,9 +1843,9 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     </div>
   </section>
 
-  <section class="band dark" id="a-propos" data-reveal="curtain">
+  <section class="band dark" id="a-propos">
     <div class="wrap">
-      <div class="band-head" data-scene="pass"><h2 class="h2">À propos</h2></div>
+      <div class="band-head"><h2 class="h2">À propos</h2></div>
       <div class="about">
         <div class="about-text">
           <p>J’ai 19 ans et je suis en 2<sup>e</sup> année de BUT Métiers du Multimédia et de l’Internet à l’IUT de Haguenau (Université de Strasbourg), dans le parcours Stratégie de communication et UX design.</p>
@@ -2268,7 +2003,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   <div class="prose">
     <p>J’ai commencé par des fils de fer en gris, sur ordinateur puis sur téléphone, pour choisir l’ordre des parties avant de m’occuper des couleurs. La page suit les questions qu’un doctorant se pose, dans l’ordre où il se les pose. Les fils de fer sont plus bas : le bouton « Fil de fer » les affiche à la place des maquettes.</p>
   </div>
-  <ol class="qsteps" data-reveal="stagger">
+  <ol class="qsteps">
     <li><b>C’est quoi ?</b><span>Le titre, les dates, le lieu et les trois arguments, tout en haut. Puis les défis et ceux qui les posent.</span></li>
     <li><b>Ça se passe comment ?</b><span>Les étapes, de l’inscription au pitch, puis le programme jour par jour.</span></li>
     <li><b>Ça m’apporte quoi ?</b><span>Les heures de formation validées, les valeurs, les témoignages.</span></li>
@@ -2283,7 +2018,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   <div class="prose">
     <p>La charte de l’édition 2027 était imposée : des fonds sombres, des couleurs vives, un esprit de soirée festive. Mon travail n’était pas de la changer, mais de la faire tenir sur une longue page qui reste lisible.</p>
   </div>
-  <ul class="charte" aria-label="Couleurs et polices de la charte 2027" data-reveal="stagger">
+  <ul class="charte" aria-label="Couleurs et polices de la charte 2027">
     <li><i style="--sw:#1D1D1D"></i>Noir #1D1D1D</li>
     <li><i style="--sw:#FA0ECB"></i>Rose #FA0ECB</li>
     <li><i style="--sw:#FFF300"></i>Jaune #FFF300</li>
@@ -2307,7 +2042,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       <button class="ghost" type="button" data-expand="eh-d" data-more="Dérouler la page ordinateur" data-less="Replier la page ordinateur" aria-expanded="false">Dérouler la page ordinateur</button>
       <button class="ghost" type="button" data-expand="eh-m" data-more="Dérouler la page téléphone" data-less="Replier la page téléphone" aria-expanded="false">Dérouler la page téléphone</button>
     </div>
-    <div class="stage" data-reveal="shutter">
+    <div class="stage">
       <div class="devices">
         <div class="browser"><div class="crop cmp" id="eh-d" data-show="ui" style="--h:560px">
           <span class="cmp-wire"><img class="is-wire" aria-hidden="true" src="img/eh-desktop-wire.webp" width="1440" height="5938" loading="lazy" decoding="async" alt="Fil de fer ordinateur de la même page, en gris : les mêmes parties dans le même ordre, des emplacements pour les photos et les vidéos, et des notes sur l'inscription, le programme et la FAQ en accordéon."></span>
@@ -2332,7 +2067,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   <div class="prose">
     <p>Une bonne page ne sert à rien si personne n’y arrive. Sur le site du Pôle, j’ai ajouté un lien « École d’Hiver » dans le menu « Doctorant ou doctorante », là où le doctorant cherche déjà ce qui le concerne. Il mène à la page, sur ordinateur comme sur téléphone.</p>
   </div>
-  <div class="fig stage" data-reveal="shutter">
+  <div class="fig stage">
     <ol class="clics">
       <li>
         <p class="clic-t"><b>1</b>Il ouvre le menu « Doctorant ou doctorante ».</p>
@@ -2354,7 +2089,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   <div class="prose">
     <p>Ma partie : choisir les mots-clés, réécrire la page pour eux et repérer les sites qui pourraient faire un lien vers elle. Je suis parti de ce qu’un doctorant tape vraiment. « École d’hiver » tout seul est un piège, parce que beaucoup d’écoles scientifiques portent ce nom. Je l’ai donc toujours associé à autre chose.</p>
   </div>
-  <div class="kwwrap" tabindex="0" role="region" aria-label="Les cinq mots-clés, à faire défiler horizontalement sur petit écran" data-reveal="rise">
+  <div class="kwwrap" tabindex="0" role="region" aria-label="Les cinq mots-clés, à faire défiler horizontalement sur petit écran">
     <table class="kw">
       <caption class="vh">Les cinq mots-clés étudiés, ce que cherche la personne et la page visée</caption>
       <thead><tr><th scope="col">Mot-clé</th><th scope="col">Ce que cherche la personne</th><th scope="col">Page visée</th></tr></thead>
@@ -2369,7 +2104,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   </div>
   <p class="cap">En jaune, le mot-clé retenu pour la page. Ces recherches sont trop rares pour que l’outil de mesure donne un chiffre, mais Google en propose trois dans ses suggestions : le public est petit, et presque personne ne se place dessus.</p>
 
-  <div class="serp-pair" data-reveal="stagger">
+  <div class="serp-pair">
     <figure class="serp serp-before">
       <figcaption>Ce que la page de 2026 annonçait aux moteurs de recherche</figcaption>
       <div class="serp-card">
@@ -2433,7 +2168,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   <div class="prose">
     <p>La salle propose des cours pour enfants et adultes, un cursus pour apprendre à grimper en falaise en autonomie, des stages pendant les vacances, et un atelier qui répare et reconditionne le matériel, avec une petite boutique d’occasion. Les personae étaient fournis par l’enseignante. Je m’en suis servi comme fil rouge pour chaque décision.</p>
   </div>
-  <div class="people" data-reveal="stagger">
+  <div class="people">
     <article class="person p-camille"><h3>Camille</h3><p>Maman, elle veut inscrire sa fille sans se perdre dans le vocabulaire de l’escalade.</p></article>
     <article class="person p-ines"><h3>Ines</h3><p>Elle grimpe déjà en salle et veut passer en falaise, sans refaire une initiation dont elle n’a pas besoin.</p></article>
     <article class="person p-marc"><h3>Marc</h3><p>Adhérent depuis longtemps, il veut savoir vite si son vieux matériel peut être repris.</p></article>
@@ -2447,7 +2182,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   <div class="prose">
     <p>J’ai comparé huit acteurs : six salles et clubs, et deux services de reprise ou de réparation de matériel. Chaque critère de la grille vient d’une frustration de nos trois personnes.</p>
   </div>
-  <div class="tablewrap" tabindex="0" role="region" aria-label="Grille de benchmark, à faire défiler horizontalement sur petit écran" data-reveal="rise">
+  <div class="tablewrap" tabindex="0" role="region" aria-label="Grille de benchmark, à faire défiler horizontalement sur petit écran">
     <table class="matrix">
 <caption class="vh">Grille de benchmark : huit acteurs comparés sur neuf critères, trois par personne</caption>
 <thead>
@@ -2588,7 +2323,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   <div class="prose">
     <p>Pour chaque frustration repérée, j’ai fixé la réponse attendue sur le site, puis la page qui la porte dans l’arborescence.</p>
   </div>
-  <ul class="map" data-reveal="stagger">
+  <ul class="map">
     <li><p class="need p-camille">Vocabulaire trop technique<small>Camille</small></p><span class="arrow" aria-hidden="true"></span><p class="answer"><b>Textes simples et FAQ</b><span>Niveaux expliqués, questions des parents</span></p></li>
     <li><p class="need p-camille">Créneaux invisibles avant de s’engager<small>Camille</small></p><span class="arrow" aria-hidden="true"></span><p class="answer"><b>Planning des créneaux</b><span>Public, filtrable, avec les places restantes</span></p></li>
     <li><p class="need p-camille">Inscription qui impose un appel<small>Camille</small></p><span class="arrow" aria-hidden="true"></span><p class="answer"><b>Inscription</b><span>Inscription et paiement en ligne</span></p></li>
@@ -2613,7 +2348,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       <button type="button" data-p="marc" aria-pressed="false">Marc</button>
     </div>
   </div>
-  <div class="flows" data-active="camille" data-reveal="stagger">
+  <div class="flows" data-active="camille">
     <div class="flowcol p-camille"><h3>Camille</h3><p class="goal">Inscrire sa fille à un cours enfant</p>
 <ol class="flow" aria-label="Parcours de Camille">
 <li class="fn cap-node">Page « Cours enfants »</li>
@@ -2661,7 +2396,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 <section class="sec">
   <h2>L’arborescence</h2>
 <div class="sec-body">
-  <div class="tree" data-reveal="stagger">
+  <div class="tree">
     <span class="tree-root">Accueil</span>
     <div class="branch">
       <h3>La salle</h3>
@@ -2700,7 +2435,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 <section class="sec">
   <h2>Les choix que j’ai faits</h2>
 <div class="sec-body">
-  <ul class="choices" data-reveal="stagger">
+  <ul class="choices">
     <li><b>La même logique pour chaque offre</b>Cours enfants, cours adultes, stages : planning, fiche, inscription. On apprend le chemin une fois, il marche partout.</li>
     <li><b>Les critères de reprise avant le formulaire</b>Marc vérifie si son matériel est accepté avant de remplir quoi que ce soit.</li>
     <li><b>Le questionnaire de niveau en entrée du cursus falaise</b>Ines n’a pas à refaire une initiation dont elle n’a pas besoin.</li>
@@ -2748,7 +2483,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   <div class="prose">
     <p>J’ai commencé par analyser trois webdocumentaires très différents : cuej.info, qui range ses dossiers comme un site d’info, Pregoneros de Medellín, qui se visite le long d’une rue, et The Fallen of World War II, une page unique calée sur une vidéo. Pour chacun, je me suis posé les trois mêmes questions : où suis-je, que puis-je faire ici, où en suis-je ?</p>
   </div>
-  <div class="kr" data-reveal="stagger">
+  <div class="kr">
     <div>
       <h3>Ce que je reprends</h3>
       <ul>
@@ -2782,11 +2517,11 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       <p>Il y a aussi une raison pratique. Je ne sais ni combien il y aura d’articles, ni s’ils seront courts ou longs. Avec un sommaire et des thèmes séparés, si un article s’ajoute ou si un texte fait le double, le reste du site ne bouge pas.</p>
     </div>
     <figure>
-      <img class="plain-img" src="img/webdoc-arbo.webp" width="1000" height="1052" loading="lazy" alt="Arborescence du webdoc : l'accueil mène au sommaire, le sommaire à trois thèmes avec leurs sous-thèmes, et chaque thème à ses articles." style="width:min(100%,380px)" data-reveal="rise">
+      <img class="plain-img" src="img/webdoc-arbo.webp" width="1000" height="1052" loading="lazy" alt="Arborescence du webdoc : l'accueil mène au sommaire, le sommaire à trois thèmes avec leurs sous-thèmes, et chaque thème à ses articles." style="width:min(100%,380px)">
       <figcaption class="cap">Mon arborescence, telle qu’elle est dans le fichier Figma.</figcaption>
     </figure>
   </div>
-  <div class="frames" data-reveal="stagger">
+  <div class="frames">
     <figure><img src="img/webdoc-wf-accueil.webp" width="390" height="620" loading="lazy" alt="Fil de fer de l'accueil : bandeau, visuel d'ouverture, titre du dossier, édito, bouton Découvrir les thèmes, crédits."><figcaption><b>Accueil</b>Annonce le sujet, avec un seul chemin : vers le sommaire.</figcaption></figure>
     <figure><img src="img/webdoc-wf-sommaire.webp" width="390" height="436" loading="lazy" alt="Fil de fer du sommaire : trois cartes de thèmes identiques avec vignette, titre, chapô et nombre d'articles."><figcaption><b>Sommaire</b>Liste verticale des thèmes, avec des cartes de taille et de forme identiques.</figcaption></figure>
     <figure><img src="img/webdoc-wf-theme.webp" width="390" height="712" loading="lazy" alt="Fil de fer d'une page thème : fil d'Ariane court, visuel, titre et chapô, quatre sous-thèmes en liste, bouton Retour au sommaire."><figcaption><b>Page thème</b>Les sous-thèmes en liste verticale, pas en carrousel.</figcaption></figure>
@@ -2798,7 +2533,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 <section class="sec">
   <h2>Trois décisions de navigation</h2>
 <div class="sec-body">
-  <ul class="choices" data-reveal="stagger">
+  <ul class="choices">
     <li><b>Les sous-thèmes en liste, les uns sous les autres</b>En carrousel, on n’en voit qu’un à la fois, on ne sait pas combien il y en a, et ça casse dès que le nombre change. En liste, on voit tout d’un coup et ça tient aussi bien avec trois qu’avec huit.</li>
     <li><b>Le nom du thème en haut, tout seul</b>Sur un téléphone, « Accueil, Thème, Article » prend toute la largeur et finit coupé. Un seul mot cliquable suffit pour savoir où on est et pour remonter.</li>
     <li><b>Le retour au sommaire à la fin de l’article</b>Un menu collé en bas de l’écran mange de la place pendant toute la lecture. À la fin, les boutons arrivent pile au moment où on a envie de passer à autre chose.</li>
@@ -2815,7 +2550,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   </div>
 
   <h3 class="subhead">La palette</h3>
-  <ul class="swatches" data-reveal="stagger">
+  <ul class="swatches">
     <li class="sw" style="--sw:#F5F0E6"><i></i><div><b>fond/page</b><span>Fond de lecture, #F5F0E6</span></div></li>
     <li class="sw" style="--sw:#E3D5BC"><i></i><div><b>fond/dossier</b><span>Cartes et encadrés, #E3D5BC</span></div></li>
     <li class="sw" style="--sw:#1F1B16"><i></i><div><b>fond/inverse</b><span>Fond sombre ponctuel, #1F1B16</span></div></li>
@@ -2832,11 +2567,11 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     <div>
       <h3 class="subhead" style="margin-top:0">La typographie</h3>
       <p class="cap" style="margin-bottom:14px">Deux familles : Source Serif 4 pour la lecture, IBM Plex Mono pour tout ce qui relève du document (rubrique, crédit, durée, bouton).</p>
-      <img class="plain-img" src="img/webdoc-typo.webp" width="605" height="805" loading="lazy" alt="Échelle typographique du webdoc : douze styles, du titre d'article en 32 pixels au libellé de bouton en 14 pixels." style="width:min(100%,440px)" data-reveal="rise">
+      <img class="plain-img" src="img/webdoc-typo.webp" width="605" height="805" loading="lazy" alt="Échelle typographique du webdoc : douze styles, du titre d'article en 32 pixels au libellé de bouton en 14 pixels." style="width:min(100%,440px)">
     </div>
     <div>
       <h3 class="subhead" style="margin-top:0">Les espacements</h3>
-      <ul class="spaces" data-reveal="stagger">
+      <ul class="spaces">
         <li><i style="--w:4px"></i><b>4 px</b><span>Entre un libellé et sa valeur</span></li>
         <li><i style="--w:8px"></i><b>8 px</b><span>Entre un titre et son chapô</span></li>
         <li><i style="--w:16px"></i><b>16 px</b><span>Marges de l’écran, entre deux paragraphes</span></li>
@@ -2847,7 +2582,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       <p class="cap">Six valeurs, enregistrées en variables. Un écart de 7 ou de 11 px dans la maquette signale une marge posée à l’œil.</p>
 
       <h3 class="subhead">Le bouton, testé avec trois libellés</h3>
-      <img class="plain-img" src="img/webdoc-bouton.webp" width="600" height="488" loading="lazy" alt="Test du bouton avec un libellé très court, un libellé de référence et un libellé très long qui dépasse la largeur utile." style="width:min(100%,440px);margin-top:14px" data-reveal="rise">
+      <img class="plain-img" src="img/webdoc-bouton.webp" width="600" height="488" loading="lazy" alt="Test du bouton avec un libellé très court, un libellé de référence et un libellé très long qui dépasse la largeur utile." style="width:min(100%,440px);margin-top:14px">
       <p class="cap">Règle retenue : trois mots au maximum sur un bouton qui s’adapte à son texte. Au-delà, il passe en pleine largeur.</p>
     </div>
   </div>
@@ -2916,7 +2651,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   <div class="prose">
     <p>Pour choisir où communiquer au lieu de le deviner, j’ai construit trois personas à partir de leurs habitudes : où ils sortent, ce qu’ils lisent, ce qui les freine. Chacun a décidé de canaux, et surtout d’un moment différent pour lui parler.</p>
   </div>
-  <div class="personas" data-reveal="stagger">
+  <div class="personas">
     <article class="persona dv-1">
       <h3>Sophie et Marc</h3>
       <p class="who">Un couple de Lyonnais, 42 et 45 ans, infirmière et technicien. Trois ou quatre séjours par an, des restos, des escape games, l’Atelier des Lumières. Jamais le théâtre.</p>
@@ -2974,7 +2709,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       </div>
       <button class="ghost" type="button" data-expand="cmp-landing" data-more="Dérouler la page" data-less="Replier la page" aria-expanded="false">Dérouler la page</button>
     </div>
-    <div class="stage dark" data-reveal="shutter">
+    <div class="stage dark">
       <div class="browser"><div class="crop cmp" id="cmp-landing" data-show="ui" style="--h:560px">
         <span class="cmp-wire"><img class="is-wire" aria-hidden="true" src="img/divein-landing-wire.webp" width="1440" height="2648" loading="lazy" alt="Fil de fer annoté de la landing page : en-tête sans menu, bloc principal qui reprend le message de la publicité, trois raisons d'y aller, un bouton de réservation pour chaque date, un renvoi vers le site et un pied de page minimal."></span>
         <i class="cmp-line" aria-hidden="true"></i>
@@ -2992,7 +2727,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       </div>
       <button class="ghost" type="button" data-expand="cmp-page" data-more="Dérouler la page" data-less="Replier la page" aria-expanded="false">Dérouler la page</button>
     </div>
-    <div class="stage" data-reveal="shutter">
+    <div class="stage">
       <div class="browser"><div class="crop cmp" id="cmp-page" data-show="ui" style="--h:560px">
         <span class="cmp-wire"><img class="is-wire" aria-hidden="true" src="img/divein-page-wire.webp" width="1400" height="3309" loading="lazy" alt="Fil de fer de la page de présentation : menu, bloc principal avec deux boutons, concept, les quatre sens, prochaines séances, témoignages, infos pratiques et pied de page."></span>
         <i class="cmp-line" aria-hidden="true"></i>
@@ -3013,7 +2748,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       <p>Le teaser tient en une ligne de lumière et quelques mots. La première version était trop chargée, je l’ai vidée.</p>
     </div>
     <figure>
-      <img class="teaser" src="img/divein-teaser.webp" width="720" height="720" loading="lazy" alt="Teaser carré pour les réseaux sociaux : fond noir, une fine ligne de lumière cyan, le texte Bientôt, un nouvel univers, la même plongée." data-reveal="rise">
+      <img class="teaser" src="img/divein-teaser.webp" width="720" height="720" loading="lazy" alt="Teaser carré pour les réseaux sociaux : fond noir, une fine ligne de lumière cyan, le texte Bientôt, un nouvel univers, la même plongée.">
       <figcaption class="cap">Teaser carré pour les réseaux sociaux.</figcaption>
     </figure>
   </div>
@@ -3063,7 +2798,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     <div class="tool">
       <button class="ghost" type="button" data-expand="ky-home" data-more="Dérouler la page d'accueil" data-less="Replier la page d'accueil" aria-expanded="false">Dérouler la page d’accueil</button>
     </div>
-    <div class="stage" data-reveal="shutter">
+    <div class="stage">
       <div class="browser"><div class="crop" id="ky-home" style="--h:560px"><img src="img/kyoto-accueil.webp" width="1280" height="1782" loading="lazy" decoding="async" alt="Page d'accueil du site Découvrir Kyoto : un bandeau « Bienvenue à Kyoto » avec le nom de la ville en kanji rouges, six cartes de catégories avec leur nombre d'articles, puis six cartes illustrées pour les derniers lieux ajoutés."></div></div>
     </div>
     <p class="cap">La page d’accueil, telle qu’elle s’affiche sur ordinateur.</p>
@@ -3077,7 +2812,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   <div class="prose">
     <p>Avant d’écrire une ligne de code, j’ai rangé le contenu dans une base de quatre tables reliées entre elles : une trentaine de lieux, classés dans six catégories et huit quartiers. Un lieu a une catégorie et un quartier, et chaque avis est rattaché à un lieu. Comme ça, aucune information n’est écrite deux fois, et je peux afficher un lieu avec tous ses avis et sa note moyenne.</p>
   </div>
-  <div class="tables" data-reveal="stagger">
+  <div class="tables">
     <div class="tcard"><h3>article</h3><ul><li class="pk">id_article</li><li>titre</li><li>texte</li><li>image</li><li>prix</li><li>date_creation</li><li class="fk">id_categorie</li><li class="fk">id_quartier</li></ul></div>
     <div class="tcard"><h3>categorie</h3><ul><li class="pk">id_categorie</li><li>nom</li><li>icone</li><li>description</li></ul></div>
     <div class="tcard"><h3>quartier</h3><ul><li class="pk">id_quartier</li><li>nom</li><li>description</li></ul></div>
@@ -3094,7 +2829,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     <p>Chaque page est générée à partir de la base. Côté PHP, je vais chercher un lieu et ses avis, et je calcule la note moyenne. Côté Twig, un modèle affiche le tout et parcourt les avis. Le code qui cherche les données reste séparé de celui qui les affiche.</p>
     <p>Pour ajouter un lieu, il suffit de l’ajouter dans la base, sans toucher au code. C’est le vrai progrès par rapport à mon premier site, où tout était écrit à la main.</p>
   </div>
-  <ol class="pipe" aria-label="Le chemin d'une page, de la base à l'écran" data-reveal="stagger">
+  <ol class="pipe" aria-label="Le chemin d'une page, de la base à l'écran">
     <li><b>La base</b><span>Quatre tables MySQL</span></li>
     <li><b>PHP</b><span>Va chercher un lieu et ses avis, calcule la note moyenne</span></li>
     <li><b>Twig</b><span>Un modèle met ces données en page</span></li>
@@ -3105,7 +2840,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     <div class="tool">
       <button class="ghost" type="button" data-expand="ky-fiche" data-more="Dérouler la fiche" data-less="Replier la fiche" aria-expanded="false">Dérouler la fiche</button>
     </div>
-    <div class="stage" data-reveal="shutter">
+    <div class="stage">
       <div class="browser"><div class="crop" id="ky-fiche" style="--h:520px"><img src="img/kyoto-fiche.webp" width="1280" height="1644" loading="lazy" decoding="async" alt="Fiche du lieu « Cérémonie du thé à Kyoto » : une grande photo, la catégorie, le quartier et le tarif, le texte de présentation, puis les avis des visiteurs avec la note moyenne et le formulaire pour laisser un avis."></div></div>
     </div>
     <p class="cap">Au bout du chemin, la fiche d’un lieu : sa catégorie, son quartier et son tarif, puis les avis des visiteurs et leur note moyenne.</p>
@@ -3115,7 +2850,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     <div class="tool">
       <button class="ghost" type="button" data-expand="ky-tous" data-more="Dérouler les trente lieux" data-less="Replier la liste" aria-expanded="false">Dérouler les trente lieux</button>
     </div>
-    <div class="stage" data-reveal="shutter">
+    <div class="stage">
       <div class="pair">
         <figure>
           <div class="browser"><img src="img/kyoto-liste.webp" width="1280" height="1180" loading="lazy" decoding="async" alt="Page de la catégorie Activités : quatre lieux en liste, chacun avec sa photo, le début de son texte, son prix et un lien « Lire la suite »."></div>
@@ -3140,7 +2875,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       <p>Je sais donc exactement où est la faille et comment la corriger. Pour moi, c’est la partie la plus utile du projet : tester au lieu de supposer.</p>
     </div>
     <figure>
-      <img class="plain-img" src="img/kyoto-avis.webp" width="960" height="775" loading="lazy" decoding="async" alt="Bas d'une fiche : la note moyenne, un avis déjà publié, puis le formulaire « Laisser un avis » avec le nom, la note, le commentaire et le bouton « Publier mon avis »." data-reveal="rise">
+      <img class="plain-img" src="img/kyoto-avis.webp" width="960" height="775" loading="lazy" decoding="async" alt="Bas d'une fiche : la note moyenne, un avis déjà publié, puis le formulaire « Laisser un avis » avec le nom, la note, le commentaire et le bouton « Publier mon avis ».">
       <figcaption class="cap">Le formulaire d’avis, en bas d’une fiche. C’est lui que j’ai essayé de piéger.</figcaption>
     </figure>
   </div>
@@ -3258,7 +2993,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
 </div></main>
 </div>
 
-<section class="contact" id="contact" data-reveal="curtain" data-scene="pass" aria-labelledby="contact-t">
+<section class="contact" id="contact" aria-labelledby="contact-t">
 <div class="wrap">
 <h2 class="h2" id="contact-t"><span>Un stage UX/UI</span> <span>au printemps ?</span></h2>
 <p class="contact-text">Je suis disponible 8 semaines, du 12 avril au 4 juin 2027, avec une convention de stage de l’IUT de Haguenau. Écrivez-moi, ou téléchargez directement mon CV.</p>
@@ -3306,56 +3041,9 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
   var homeTitle = d.title;
   var homeY = 0;                       /* où en était la liste des projets quand on l'a quittée */
   var first = true;
-  var diving = false;                  /* vrai le temps d'une plongée de la caméra dans un projet */
   var viewerSync = function () {};     /* remplacée plus bas par la visionneuse */
 
-  /* ---------- Titres d'étude de cas : chaque ligne sort d'une fente, d'un coup sec ----------
-     On mesure où le navigateur coupe les lignes, puis on range chaque ligne dans sa propre fenêtre.
-     Seulement pour un titre fait de texte simple, et seulement quand on le voit (une vue cachée ne se mesure pas). */
   var esc = function (s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
-  var splitLines = function (el) {
-    var src = el.getAttribute('data-src');
-    if (src === null) {
-      if (el.children.length) { return; }
-      src = el.textContent;
-      el.setAttribute('data-src', src);
-    }
-    if (!el.getClientRects().length) { return; }
-    /* déjà découpé, le titre est une colonne (voir [data-reveal="lines"]) : chaque mot y irait seul sur sa ligne.
-       Le temps de la mesure, on le remet en bloc ordinaire, sinon une deuxième visite ou un redimensionnement
-       le découperait mot par mot */
-    el.style.display = 'block';
-    var words = src.split(' ');
-    el.innerHTML = words.map(function (x) { return '<span class="lw">' + esc(x) + '</span>'; }).join(' ');
-    var lines = [], top = null;
-    $$('.lw', el).forEach(function (s) {
-      if (top === null || Math.abs(s.offsetTop - top) > 4) { lines.push([]); top = s.offsetTop; }
-      lines[lines.length - 1].push(s.textContent);
-    });
-    el.innerHTML = lines.map(function (l, i) {
-      return '<span class="ln"><span class="ln-i" style="--li:' + i + '">' + esc(l.join(' ')) + '</span></span>';
-    }).join(' ');
-    el.style.display = '';
-  };
-  var splitView = function (view) {
-    if (!view || !on() || !hasIO || typeof seen === 'undefined') { return; }
-    $$('.case-top h1, .sec > h2', view).forEach(function (el) {
-      var fresh = el.getAttribute('data-src') === null;
-      splitLines(el);
-      if (fresh && el.getAttribute('data-src') !== null && !el.classList.contains('is-in')) {
-        el.setAttribute('data-reveal', 'lines');
-        seen.observe(el);
-      }
-    });
-  };
-  var resplitTimer = 0;
-  w.addEventListener('resize', function () {
-    w.clearTimeout(resplitTimer);
-    resplitTimer = w.setTimeout(function () {
-      var view = current ? d.getElementById(current) : null;
-      if (view) { $$('[data-src]', view).forEach(splitLines); }
-    }, 250);
-  });
 
   function show(id) {
     var changed = id !== current;
@@ -3367,16 +3055,8 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     d.title = (id && view.getAttribute('data-title')) || homeTitle;
     /* les deux versions d'une maquette doivent être prêtes avant qu'on demande la bascule */
     $$('.cmp img', view).forEach(function (i) { i.loading = 'eager'; });
-    if (!id) { $$('.is-diving').forEach(function (n) { n.classList.remove('is-diving'); }); }
     if (!changed || first) { return; }
-    splitView(view);
-    if (diving) {
-      /* on arrive au bout de la plongée : l'étude de cas apparaît en fondu, sans rideau */
-      diving = false;
-      view.classList.remove('is-arriving');
-      void view.offsetWidth;
-      view.classList.add('is-arriving');
-    } else if (wipe && on()) {
+    if (wipe && on()) {
       /* la ligne bleue traverse l'écran et laisse la nouvelle page derrière elle */
       wipe.classList.remove('run');
       void wipe.offsetWidth;
@@ -3430,14 +3110,13 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     }
     first = false;
     sync();
-    if (typeof kick === 'function') { raf(kick); }
   }
 
   /* ---------- Barre du haut : visible après l'ouverture, rubrique en cours soulignée ----------
      Rien n'écoute le défilement : des observateurs préviennent quand une rubrique croise un repère. */
   var links = topbar ? $$('.site-nav a', topbar) : [];
   var tint = $('meta[name="theme-color"]');
-  var gate = null;                     /* le bandeau sous l'ouverture : la barre du haut apparaît quand il est passé */
+  var gate = null;                     /* l'ouverture : la barre du haut apparaît quand elle est passée */
   var heroGone = !hero;
   var crossing = {};                   /* rubriques de l'accueil qui croisent le repère, à 40 % de la hauteur */
   var atContact = false;
@@ -3466,7 +3145,7 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     });
   }
   if (hasIO && topbar) {
-    gate = $('.ticker') || hero;
+    gate = hero;
     if (gate) {
       new IntersectionObserver(function (e) {
         var last = e[e.length - 1];
@@ -3502,150 +3181,6 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       if (m) { e.preventDefault(); m.focus(); m.scrollIntoView(); }
     });
   }
-
-  /* ---------- Scènes : le défilement fait avancer la caméra ----------
-     Pour chaque scène à l'écran, on calcule où elle en est (entre 0 et 1) et on rattrape cette valeur
-     avec de l'inertie. Le CSS fait le reste ; le même tour de boucle fait avancer les bandeaux. */
-  var mqCine = w.matchMedia ? w.matchMedia('(min-width: 900px) and (min-height: 700px)') : null;
-  var scenes = $$('[data-scene]').map(function (el) {
-    return { el: el, kind: el.getAttribute('data-scene'), cur: {}, near: el === hero, tx: 0, ty: 0 };
-  });
-  var cineOn = false, looping = false, lastT = 0, lastY = w.scrollY;
-  /* vitesse signée du défilement (px/ms) */
-  var vel = 0;
-  /* les bandeaux qui défilent : la vitesse du geste s'ajoute à leur vitesse de croisière */
-  var marquees = [];
-  $$('.mq').forEach(function (m) {
-    marquees.push({ el: m, tracks: [$('.mq-track', m)], copies: 2, dir: m.classList.contains('mq-b') ? -1 : 1, base: 0.07, pos: 0, unit: 0, live: false });
-  });
-  var tkr = $('.ticker');
-  if (tkr) { marquees.push({ el: tkr, tracks: $$('.ticker-track', tkr), copies: 4, dir: -1, base: 0.035, pos: -1, unit: 0, live: false }); }
-  var measureMarquees = function () {
-    marquees.forEach(function (m) {
-      m.unit = m.tracks[0] ? m.tracks[0].scrollWidth / m.copies : 0;
-      if (m.pos < 0 && m.unit) { m.pos = m.unit - 1; }
-    });
-  };
-  var remeasure = function () {};
-  var HERO = 0.65;   /* longueur de l'ouverture, en hauteurs d'écran (doit suivre le margin-top du bandeau) */
-  var clamp = function (x) { return x < 0 ? 0 : (x > 1 ? 1 : x); };
-
-  var kick = function () { if (cineOn && !looping) { looping = true; raf(step); } };
-  function step(now) {
-    looping = false;
-    if (!cineOn) { return; }
-    var dt = Math.min(64, (now - lastT) || 16);
-    lastT = now;
-    var k = 1 - Math.exp(-dt / 130);   /* l'inertie : plus le diviseur est grand, plus le mouvement est lourd */
-    var vh = w.innerHeight, y = w.scrollY, moving = false;
-    scenes.forEach(function (sc) {
-      if (!sc.near || sc.el.getClientRects().length === 0) { return; }
-      var t;
-      if (sc.kind === 'hero') {
-        t = { p: clamp(y / (vh * HERO)), c: clamp((y - vh * HERO) / vh) };
-      } else {
-        var r = sc.el.getBoundingClientRect();
-        if (sc.kind === 'pin' || sc.kind === 'manif') {
-          var room = r.height - (vh - 56);
-          t = { p: room > 0 ? clamp((56 - r.top) / room) : 0, e: clamp((vh - r.top) / (vh * 0.9)), tx: sc.tx, ty: sc.ty };
-        } else {
-          t = { e: clamp((vh - r.top) / (vh * 0.8)), v: clamp((vh - r.top) / (vh + r.height)) };
-        }
-      }
-      for (var key in t) {
-        var c = sc.cur[key];
-        var n = c === undefined ? t[key] : c + (t[key] - c) * k;
-        if (Math.abs(t[key] - n) < 0.0008) { n = t[key]; } else { moving = true; }
-        if (n !== c) { sc.cur[key] = n; sc.el.style.setProperty('--' + key, n.toFixed(4)); }
-      }
-      if (sc.kind === 'hero') {
-        sc.el.classList.toggle('is-deep', sc.cur.p > 0.3);
-        sc.el.classList.toggle('is-rest', sc.cur.c >= 1);
-      }
-    });
-    /* la vitesse du geste, pour les bandeaux */
-    var raw = (y - lastY) / dt;
-    vel += (raw - vel) * 0.3;
-    if (Math.abs(vel) < 0.002) { vel = 0; }
-    lastY = y;
-    /* les bandeaux : vitesse de croisière, plus la vitesse du geste ; remonter les fait repartir en arrière */
-    var push = Math.max(-1.2, Math.min(1.2, vel * 0.45));
-    marquees.forEach(function (m) {
-      if (!m.live || !m.unit) { return; }
-      m.pos = (((m.pos + (m.base + push) * m.dir * dt) % m.unit) + m.unit) % m.unit;
-      var tr = 'translate3d(' + (-m.pos).toFixed(1) + 'px,0,0)';
-      m.tracks.forEach(function (t) { t.style.transform = tr; });
-      moving = true;
-    });
-    if (moving) { kick(); }
-  }
-  var setCine = function () {
-    var next = on() && !!mqCine && mqCine.matches;
-    if (next === cineOn) { return; }
-    cineOn = next;
-    root.classList.toggle('cine', next);
-    if (!next) {
-      scenes.forEach(function (sc) {
-        for (var key in sc.cur) { sc.el.style.removeProperty('--' + key); }
-        sc.cur = {};
-        sc.el.classList.remove('is-deep', 'is-rest', 'is-diving');
-      });
-      /* sans scènes, les bandeaux repassent aux animations CSS */
-      marquees.forEach(function (m) { m.tracks.forEach(function (t) { t.style.transform = ''; }); });
-      vel = 0;
-    }
-    measureMarquees();
-    remeasure();
-    kick();
-  };
-  if (hasIO) {
-    var nearby = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        scenes.forEach(function (sc) { if (sc.el === e.target) { sc.near = e.isIntersecting; } });
-      });
-      kick();
-    }, { rootMargin: '30% 0px 30% 0px' });
-    scenes.forEach(function (sc) { if (sc.el !== hero) { nearby.observe(sc.el); } });
-    var mqIO = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        marquees.forEach(function (m) { if (m.el === e.target) { m.live = e.isIntersecting; } });
-      });
-      kick();
-    });
-    marquees.forEach(function (m) { mqIO.observe(m.el); });
-  }
-  w.addEventListener('resize', measureMarquees);
-  if (d.fonts && d.fonts.ready) { d.fonts.ready.then(measureMarquees); }
-  w.addEventListener('scroll', kick, { passive: true });   /* ne fait que réveiller la boucle */
-  w.addEventListener('resize', kick);
-  /* le pointeur : il fait pencher, à peine, le visuel du projet survolé */
-  w.addEventListener('pointermove', function (e) {
-    if (!cineOn) { return; }
-    var stage = e.pointerType === 'mouse' && e.target.closest ? e.target.closest('.proj-stage') : null;
-    scenes.forEach(function (sc) {
-      if (sc.kind !== 'pin') { return; }
-      if (stage && sc.el.contains(stage)) {
-        var r = stage.getBoundingClientRect();
-        sc.tx = (e.clientX - r.left) / r.width - 0.5;
-        sc.ty = (e.clientY - r.top) / r.height - 0.5;
-      } else { sc.tx = 0; sc.ty = 0; }
-    });
-    kick();
-  }, { passive: true });
-  /* cliquer sur un projet : la caméra plonge dans son visuel avant d'ouvrir l'étude de cas */
-  d.addEventListener('click', function (e) {
-    var a = e.target.closest ? e.target.closest('.proj h3 a') : null;
-    if (!a || !cineOn || e.metaKey || e.ctrlKey || e.shiftKey || e.button) { return; }
-    var row = a.closest('.proj');
-    e.preventDefault();
-    if (row.classList.contains('is-diving')) { return; }
-    row.classList.add('is-diving');
-    w.setTimeout(function () { diving = true; location.hash = a.getAttribute('href'); }, 300);
-  });
-  if (mqCine) {
-    if (mqCine.addEventListener) { mqCine.addEventListener('change', setCine); } else if (mqCine.addListener) { mqCine.addListener(setCine); }
-  }
-  setCine();
 
   /* ---------- Ouverture : fil de fer et maquette ---------- */
   var range = $('#split');
@@ -3718,14 +3253,12 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     var stopped = false;
     range.addEventListener('input', function () { stopped = true; endOpening(); paint(parseFloat(range.value)); });
     w.addEventListener('resize', measure);
-    remeasure = measure;
     measure();
     /* l'ouverture n'apparaît qu'avec ses vraies polices : sinon le titre change de largeur sous les yeux
        quand elles arrivent (sur téléphone, les boutons passaient même sur deux lignes) */
     var reveal = function () {
       if (hero.hasAttribute('data-split')) { return; }
       hero.setAttribute('data-split', 'on');
-      hero.classList.add('go');        /* les deux couches se mettent à flotter au même instant */
     };
     if (d.fonts && d.fonts.status === 'loading') { d.fonts.ready.then(reveal); w.setTimeout(reveal, 1500); }
     else { reveal(); }
@@ -3793,51 +3326,17 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
       if (opening) { w.setTimeout(sweep, 360); }
     });
 
-    /* les visuels de l'ouverture suivent un peu le pointeur, chacun selon sa profondeur */
-    if (w.matchMedia && w.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-      hero.addEventListener('pointermove', function (e) {
-        if (!on()) { return; }
-        var r = hero.getBoundingClientRect();
-        hero.style.setProperty('--px', (-((e.clientX - r.left) / r.width - 0.5)).toFixed(3));
-        hero.style.setProperty('--py', (-((e.clientY - r.top) / r.height - 0.5)).toFixed(3));
-      });
-      hero.addEventListener('pointerleave', function () {
-        hero.style.setProperty('--px', '0');
-        hero.style.setProperty('--py', '0');
-      });
-    }
   }
 
-  /* ---------- Apparitions au défilement ---------- */
+  /* ---------- Les dessins des études de cas ne tournent que tant qu'on les voit ---------- */
   if (hasIO) {
-    $$('[data-reveal="stagger"]').forEach(function (g) {
-      Array.prototype.forEach.call(g.children, function (c, i) { c.style.setProperty('--i', Math.min(i, 9)); });
-    });
-    var seen = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (!e.isIntersecting) { return; }
-        var el = e.target;
-        var kind = el.getAttribute('data-reveal');
-        el.classList.add('is-in');     /* une seule fois : rien ne se rejoue au passage suivant */
-        seen.unobserve(el);
-        /* une fois en place, un bloc de texte reprend ses propres transitions */
-        if (kind === 'rise' || kind === 'stagger' || kind === 'shutter') {
-          w.setTimeout(function () { el.removeAttribute('data-reveal'); }, 2000);
-        }
-      });
-    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.01 });
-    $$('[data-reveal]').forEach(function (el) { seen.observe(el); });
-
-    /* ce qui bouge en boucle ne bouge que tant qu'on le voit */
     var watch = function (threshold) {
       return new IntersectionObserver(function (entries) {
         entries.forEach(function (e) { e.target.classList.toggle('is-live', e.isIntersecting); });
       }, { threshold: threshold });
     };
     var covers = watch(0.3);
-    $$('.proj-visual, .case-art').forEach(function (el) { covers.observe(el); });
-    var bands = watch(0);
-    $$('.hero, .ticker, .mq').forEach(function (el) { bands.observe(el); });
+    $$('.case-art').forEach(function (el) { covers.observe(el); });
   }
 
   /* ---------- Filtre des projets ---------- */
@@ -4039,10 +3538,6 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     el.innerHTML = '<span class="roll"><span class="roll-i">' + esc(el.textContent) + '</span></span>';
   });
 
-  /* la vue affichée au chargement : ses titres sont découpés une fois les polices prêtes */
-  if (d.fonts && d.fonts.ready) { d.fonts.ready.then(function () { splitView(current ? d.getElementById(current) : null); }); }
-  else { splitView(current ? d.getElementById(current) : null); }
-
   /* ---------- Impression et « Enregistrer en PDF » ----------
      Sur papier, tout doit être là : on coupe les animations (ce qui attendait le défilement apparaît),
      on charge les images encore en attente, et tout revient comme avant une fois l'impression finie. */
@@ -4051,13 +3546,13 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
     if (printing) { return; }
     printing = true;
     animBefore = on();
-    if (animBefore) { stopSplit(); root.classList.remove('anim'); setCine(); }
+    if (animBefore) { stopSplit(); root.classList.remove('anim'); }
     $$('img[loading="lazy"]').forEach(function (i) { i.loading = 'eager'; });
   });
   w.addEventListener('afterprint', function () {
     if (!printing) { return; }
     printing = false;
-    if (animBefore) { root.classList.add('anim'); setCine(); }
+    if (animBefore) { root.classList.add('anim'); }
   });
 
   /* ---------- Couper ou relancer les animations ---------- */
@@ -4073,7 +3568,6 @@ html.anim:not(.cine) .manif.is-in .scribble path { transition: stroke-dashoffset
         var next = !on();
         root.classList.toggle('anim', next);
         if (!next) { stopSplit(); }
-        setCine();
         try { localStorage.setItem('yb-motion', next ? 'on' : 'off'); } catch (e) { /* le choix vaut au moins pour cette visite */ }
         label();
       });
