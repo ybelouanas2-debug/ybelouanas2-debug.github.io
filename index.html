@@ -1354,10 +1354,31 @@ html.vt-solo::view-transition-old(planche) { animation-duration: 280ms; }
 }
 
 /* ---------- Le mouvement ----------
-   Peu d'animations, et chacune dit quelque chose : la ligne bleue de l'ouverture, le passage d'une page
-   à l'autre, la planche qui s'ouvre, les dessins des études de cas, et ce qui répond à un geste (survol,
-   filtre). Rien n'attend le défilement pour apparaître : le contenu est là tout de suite.
+   Sur l'accueil, peu d'animations, et chacune dit quelque chose : la ligne bleue de l'ouverture, le passage
+   d'une page à l'autre, la planche qui s'ouvre, et ce qui répond à un geste (survol, filtre) ; rien n'y attend
+   le défilement. Les études de cas, elles, gardent leur mise en scène : dessins, titres et figures qui apparaissent.
    Tout est rangé sous .anim, posé par le script seulement si les animations peuvent tourner. */
+
+/* ---- dans les études de cas seulement : le texte monte, les titres sortent ligne par ligne, les figures s'ouvrent ---- */
+/* les textes montent, sans bruit */
+.anim [data-reveal="rise"], .anim [data-reveal="stagger"] > * {
+  opacity: 0; translate: 0 var(--shift);
+  transition: opacity var(--dur-slow) var(--ease-out), translate var(--dur-slow) var(--ease-out);
+  transition-delay: calc(var(--i, 0) * var(--stagger));
+}
+.anim [data-reveal="rise"].is-in, .anim [data-reveal="stagger"].is-in > * { opacity: 1; translate: none; }
+
+/* un titre d'étude de cas : chaque ligne sort de sa fente, avec une impulsion puis un arrêt net */
+/* en colonne flexible : les marges négatives des lignes ne fusionnent pas, l'interligne reste celui du titre */
+.anim [data-reveal="lines"] { display: flex; flex-direction: column; }
+.anim [data-reveal="lines"] .ln { display: block; overflow: hidden; padding-block: .16em; margin-block: -.16em; }
+.anim [data-reveal="lines"] .ln-i { display: block; translate: 0 135%; transition: translate 680ms cubic-bezier(.16, 1, .3, 1) calc(var(--li, 0) * 50ms); }
+.anim [data-reveal="lines"].is-in .ln-i { translate: none; }
+/* une figure : une fenêtre qui s'ouvre comme un volet, pendant que l'image recule */
+.anim [data-reveal="shutter"] { clip-path: inset(14% 30% 14% 30%); transition: clip-path 700ms cubic-bezier(.16, 1, .3, 1); }
+.anim [data-reveal="shutter"] > * { scale: 1.14; transition: scale 900ms cubic-bezier(.16, 1, .3, 1); }
+.anim [data-reveal="shutter"].is-in { clip-path: inset(0 0 0 0); }
+.anim [data-reveal="shutter"].is-in > * { scale: 1; }
 
 /* d'une page à l'autre : le même geste, sur tout l'écran */
 .viewwipe {
@@ -2003,7 +2024,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   <div class="prose">
     <p>J’ai commencé par des fils de fer en gris, sur ordinateur puis sur téléphone, pour choisir l’ordre des parties avant de m’occuper des couleurs. La page suit les questions qu’un doctorant se pose, dans l’ordre où il se les pose. Les fils de fer sont plus bas : le bouton « Fil de fer » les affiche à la place des maquettes.</p>
   </div>
-  <ol class="qsteps">
+  <ol class="qsteps" data-reveal="stagger">
     <li><b>C’est quoi ?</b><span>Le titre, les dates, le lieu et les trois arguments, tout en haut. Puis les défis et ceux qui les posent.</span></li>
     <li><b>Ça se passe comment ?</b><span>Les étapes, de l’inscription au pitch, puis le programme jour par jour.</span></li>
     <li><b>Ça m’apporte quoi ?</b><span>Les heures de formation validées, les valeurs, les témoignages.</span></li>
@@ -2018,7 +2039,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   <div class="prose">
     <p>La charte de l’édition 2027 était imposée : des fonds sombres, des couleurs vives, un esprit de soirée festive. Mon travail n’était pas de la changer, mais de la faire tenir sur une longue page qui reste lisible.</p>
   </div>
-  <ul class="charte" aria-label="Couleurs et polices de la charte 2027">
+  <ul class="charte" aria-label="Couleurs et polices de la charte 2027" data-reveal="stagger">
     <li><i style="--sw:#1D1D1D"></i>Noir #1D1D1D</li>
     <li><i style="--sw:#FA0ECB"></i>Rose #FA0ECB</li>
     <li><i style="--sw:#FFF300"></i>Jaune #FFF300</li>
@@ -2042,7 +2063,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
       <button class="ghost" type="button" data-expand="eh-d" data-more="Dérouler la page ordinateur" data-less="Replier la page ordinateur" aria-expanded="false">Dérouler la page ordinateur</button>
       <button class="ghost" type="button" data-expand="eh-m" data-more="Dérouler la page téléphone" data-less="Replier la page téléphone" aria-expanded="false">Dérouler la page téléphone</button>
     </div>
-    <div class="stage">
+    <div class="stage" data-reveal="shutter">
       <div class="devices">
         <div class="browser"><div class="crop cmp" id="eh-d" data-show="ui" style="--h:560px">
           <span class="cmp-wire"><img class="is-wire" aria-hidden="true" src="img/eh-desktop-wire.webp" width="1440" height="5938" loading="lazy" decoding="async" alt="Fil de fer ordinateur de la même page, en gris : les mêmes parties dans le même ordre, des emplacements pour les photos et les vidéos, et des notes sur l'inscription, le programme et la FAQ en accordéon."></span>
@@ -2067,7 +2088,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   <div class="prose">
     <p>Une bonne page ne sert à rien si personne n’y arrive. Sur le site du Pôle, j’ai ajouté un lien « École d’Hiver » dans le menu « Doctorant ou doctorante », là où le doctorant cherche déjà ce qui le concerne. Il mène à la page, sur ordinateur comme sur téléphone.</p>
   </div>
-  <div class="fig stage">
+  <div class="fig stage" data-reveal="shutter">
     <ol class="clics">
       <li>
         <p class="clic-t"><b>1</b>Il ouvre le menu « Doctorant ou doctorante ».</p>
@@ -2089,7 +2110,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   <div class="prose">
     <p>Ma partie : choisir les mots-clés, réécrire la page pour eux et repérer les sites qui pourraient faire un lien vers elle. Je suis parti de ce qu’un doctorant tape vraiment. « École d’hiver » tout seul est un piège, parce que beaucoup d’écoles scientifiques portent ce nom. Je l’ai donc toujours associé à autre chose.</p>
   </div>
-  <div class="kwwrap" tabindex="0" role="region" aria-label="Les cinq mots-clés, à faire défiler horizontalement sur petit écran">
+  <div class="kwwrap" tabindex="0" role="region" aria-label="Les cinq mots-clés, à faire défiler horizontalement sur petit écran" data-reveal="rise">
     <table class="kw">
       <caption class="vh">Les cinq mots-clés étudiés, ce que cherche la personne et la page visée</caption>
       <thead><tr><th scope="col">Mot-clé</th><th scope="col">Ce que cherche la personne</th><th scope="col">Page visée</th></tr></thead>
@@ -2104,7 +2125,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   </div>
   <p class="cap">En jaune, le mot-clé retenu pour la page. Ces recherches sont trop rares pour que l’outil de mesure donne un chiffre, mais Google en propose trois dans ses suggestions : le public est petit, et presque personne ne se place dessus.</p>
 
-  <div class="serp-pair">
+  <div class="serp-pair" data-reveal="stagger">
     <figure class="serp serp-before">
       <figcaption>Ce que la page de 2026 annonçait aux moteurs de recherche</figcaption>
       <div class="serp-card">
@@ -2168,7 +2189,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   <div class="prose">
     <p>La salle propose des cours pour enfants et adultes, un cursus pour apprendre à grimper en falaise en autonomie, des stages pendant les vacances, et un atelier qui répare et reconditionne le matériel, avec une petite boutique d’occasion. Les personae étaient fournis par l’enseignante. Je m’en suis servi comme fil rouge pour chaque décision.</p>
   </div>
-  <div class="people">
+  <div class="people" data-reveal="stagger">
     <article class="person p-camille"><h3>Camille</h3><p>Maman, elle veut inscrire sa fille sans se perdre dans le vocabulaire de l’escalade.</p></article>
     <article class="person p-ines"><h3>Ines</h3><p>Elle grimpe déjà en salle et veut passer en falaise, sans refaire une initiation dont elle n’a pas besoin.</p></article>
     <article class="person p-marc"><h3>Marc</h3><p>Adhérent depuis longtemps, il veut savoir vite si son vieux matériel peut être repris.</p></article>
@@ -2182,7 +2203,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   <div class="prose">
     <p>J’ai comparé huit acteurs : six salles et clubs, et deux services de reprise ou de réparation de matériel. Chaque critère de la grille vient d’une frustration de nos trois personnes.</p>
   </div>
-  <div class="tablewrap" tabindex="0" role="region" aria-label="Grille de benchmark, à faire défiler horizontalement sur petit écran">
+  <div class="tablewrap" tabindex="0" role="region" aria-label="Grille de benchmark, à faire défiler horizontalement sur petit écran" data-reveal="rise">
     <table class="matrix">
 <caption class="vh">Grille de benchmark : huit acteurs comparés sur neuf critères, trois par personne</caption>
 <thead>
@@ -2323,7 +2344,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   <div class="prose">
     <p>Pour chaque frustration repérée, j’ai fixé la réponse attendue sur le site, puis la page qui la porte dans l’arborescence.</p>
   </div>
-  <ul class="map">
+  <ul class="map" data-reveal="stagger">
     <li><p class="need p-camille">Vocabulaire trop technique<small>Camille</small></p><span class="arrow" aria-hidden="true"></span><p class="answer"><b>Textes simples et FAQ</b><span>Niveaux expliqués, questions des parents</span></p></li>
     <li><p class="need p-camille">Créneaux invisibles avant de s’engager<small>Camille</small></p><span class="arrow" aria-hidden="true"></span><p class="answer"><b>Planning des créneaux</b><span>Public, filtrable, avec les places restantes</span></p></li>
     <li><p class="need p-camille">Inscription qui impose un appel<small>Camille</small></p><span class="arrow" aria-hidden="true"></span><p class="answer"><b>Inscription</b><span>Inscription et paiement en ligne</span></p></li>
@@ -2348,7 +2369,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
       <button type="button" data-p="marc" aria-pressed="false">Marc</button>
     </div>
   </div>
-  <div class="flows" data-active="camille">
+  <div class="flows" data-active="camille" data-reveal="stagger">
     <div class="flowcol p-camille"><h3>Camille</h3><p class="goal">Inscrire sa fille à un cours enfant</p>
 <ol class="flow" aria-label="Parcours de Camille">
 <li class="fn cap-node">Page « Cours enfants »</li>
@@ -2396,7 +2417,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 <section class="sec">
   <h2>L’arborescence</h2>
 <div class="sec-body">
-  <div class="tree">
+  <div class="tree" data-reveal="stagger">
     <span class="tree-root">Accueil</span>
     <div class="branch">
       <h3>La salle</h3>
@@ -2435,7 +2456,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 <section class="sec">
   <h2>Les choix que j’ai faits</h2>
 <div class="sec-body">
-  <ul class="choices">
+  <ul class="choices" data-reveal="stagger">
     <li><b>La même logique pour chaque offre</b>Cours enfants, cours adultes, stages : planning, fiche, inscription. On apprend le chemin une fois, il marche partout.</li>
     <li><b>Les critères de reprise avant le formulaire</b>Marc vérifie si son matériel est accepté avant de remplir quoi que ce soit.</li>
     <li><b>Le questionnaire de niveau en entrée du cursus falaise</b>Ines n’a pas à refaire une initiation dont elle n’a pas besoin.</li>
@@ -2483,7 +2504,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   <div class="prose">
     <p>J’ai commencé par analyser trois webdocumentaires très différents : cuej.info, qui range ses dossiers comme un site d’info, Pregoneros de Medellín, qui se visite le long d’une rue, et The Fallen of World War II, une page unique calée sur une vidéo. Pour chacun, je me suis posé les trois mêmes questions : où suis-je, que puis-je faire ici, où en suis-je ?</p>
   </div>
-  <div class="kr">
+  <div class="kr" data-reveal="stagger">
     <div>
       <h3>Ce que je reprends</h3>
       <ul>
@@ -2517,11 +2538,11 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
       <p>Il y a aussi une raison pratique. Je ne sais ni combien il y aura d’articles, ni s’ils seront courts ou longs. Avec un sommaire et des thèmes séparés, si un article s’ajoute ou si un texte fait le double, le reste du site ne bouge pas.</p>
     </div>
     <figure>
-      <img class="plain-img" src="img/webdoc-arbo.webp" width="1000" height="1052" loading="lazy" alt="Arborescence du webdoc : l'accueil mène au sommaire, le sommaire à trois thèmes avec leurs sous-thèmes, et chaque thème à ses articles." style="width:min(100%,380px)">
+      <img class="plain-img" src="img/webdoc-arbo.webp" width="1000" height="1052" loading="lazy" alt="Arborescence du webdoc : l'accueil mène au sommaire, le sommaire à trois thèmes avec leurs sous-thèmes, et chaque thème à ses articles." style="width:min(100%,380px)" data-reveal="rise">
       <figcaption class="cap">Mon arborescence, telle qu’elle est dans le fichier Figma.</figcaption>
     </figure>
   </div>
-  <div class="frames">
+  <div class="frames" data-reveal="stagger">
     <figure><img src="img/webdoc-wf-accueil.webp" width="390" height="620" loading="lazy" alt="Fil de fer de l'accueil : bandeau, visuel d'ouverture, titre du dossier, édito, bouton Découvrir les thèmes, crédits."><figcaption><b>Accueil</b>Annonce le sujet, avec un seul chemin : vers le sommaire.</figcaption></figure>
     <figure><img src="img/webdoc-wf-sommaire.webp" width="390" height="436" loading="lazy" alt="Fil de fer du sommaire : trois cartes de thèmes identiques avec vignette, titre, chapô et nombre d'articles."><figcaption><b>Sommaire</b>Liste verticale des thèmes, avec des cartes de taille et de forme identiques.</figcaption></figure>
     <figure><img src="img/webdoc-wf-theme.webp" width="390" height="712" loading="lazy" alt="Fil de fer d'une page thème : fil d'Ariane court, visuel, titre et chapô, quatre sous-thèmes en liste, bouton Retour au sommaire."><figcaption><b>Page thème</b>Les sous-thèmes en liste verticale, pas en carrousel.</figcaption></figure>
@@ -2533,7 +2554,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 <section class="sec">
   <h2>Trois décisions de navigation</h2>
 <div class="sec-body">
-  <ul class="choices">
+  <ul class="choices" data-reveal="stagger">
     <li><b>Les sous-thèmes en liste, les uns sous les autres</b>En carrousel, on n’en voit qu’un à la fois, on ne sait pas combien il y en a, et ça casse dès que le nombre change. En liste, on voit tout d’un coup et ça tient aussi bien avec trois qu’avec huit.</li>
     <li><b>Le nom du thème en haut, tout seul</b>Sur un téléphone, « Accueil, Thème, Article » prend toute la largeur et finit coupé. Un seul mot cliquable suffit pour savoir où on est et pour remonter.</li>
     <li><b>Le retour au sommaire à la fin de l’article</b>Un menu collé en bas de l’écran mange de la place pendant toute la lecture. À la fin, les boutons arrivent pile au moment où on a envie de passer à autre chose.</li>
@@ -2550,7 +2571,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   </div>
 
   <h3 class="subhead">La palette</h3>
-  <ul class="swatches">
+  <ul class="swatches" data-reveal="stagger">
     <li class="sw" style="--sw:#F5F0E6"><i></i><div><b>fond/page</b><span>Fond de lecture, #F5F0E6</span></div></li>
     <li class="sw" style="--sw:#E3D5BC"><i></i><div><b>fond/dossier</b><span>Cartes et encadrés, #E3D5BC</span></div></li>
     <li class="sw" style="--sw:#1F1B16"><i></i><div><b>fond/inverse</b><span>Fond sombre ponctuel, #1F1B16</span></div></li>
@@ -2567,11 +2588,11 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
     <div>
       <h3 class="subhead" style="margin-top:0">La typographie</h3>
       <p class="cap" style="margin-bottom:14px">Deux familles : Source Serif 4 pour la lecture, IBM Plex Mono pour tout ce qui relève du document (rubrique, crédit, durée, bouton).</p>
-      <img class="plain-img" src="img/webdoc-typo.webp" width="605" height="805" loading="lazy" alt="Échelle typographique du webdoc : douze styles, du titre d'article en 32 pixels au libellé de bouton en 14 pixels." style="width:min(100%,440px)">
+      <img class="plain-img" src="img/webdoc-typo.webp" width="605" height="805" loading="lazy" alt="Échelle typographique du webdoc : douze styles, du titre d'article en 32 pixels au libellé de bouton en 14 pixels." style="width:min(100%,440px)" data-reveal="rise">
     </div>
     <div>
       <h3 class="subhead" style="margin-top:0">Les espacements</h3>
-      <ul class="spaces">
+      <ul class="spaces" data-reveal="stagger">
         <li><i style="--w:4px"></i><b>4 px</b><span>Entre un libellé et sa valeur</span></li>
         <li><i style="--w:8px"></i><b>8 px</b><span>Entre un titre et son chapô</span></li>
         <li><i style="--w:16px"></i><b>16 px</b><span>Marges de l’écran, entre deux paragraphes</span></li>
@@ -2582,7 +2603,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
       <p class="cap">Six valeurs, enregistrées en variables. Un écart de 7 ou de 11 px dans la maquette signale une marge posée à l’œil.</p>
 
       <h3 class="subhead">Le bouton, testé avec trois libellés</h3>
-      <img class="plain-img" src="img/webdoc-bouton.webp" width="600" height="488" loading="lazy" alt="Test du bouton avec un libellé très court, un libellé de référence et un libellé très long qui dépasse la largeur utile." style="width:min(100%,440px);margin-top:14px">
+      <img class="plain-img" src="img/webdoc-bouton.webp" width="600" height="488" loading="lazy" alt="Test du bouton avec un libellé très court, un libellé de référence et un libellé très long qui dépasse la largeur utile." style="width:min(100%,440px);margin-top:14px" data-reveal="rise">
       <p class="cap">Règle retenue : trois mots au maximum sur un bouton qui s’adapte à son texte. Au-delà, il passe en pleine largeur.</p>
     </div>
   </div>
@@ -2651,7 +2672,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   <div class="prose">
     <p>Pour choisir où communiquer au lieu de le deviner, j’ai construit trois personas à partir de leurs habitudes : où ils sortent, ce qu’ils lisent, ce qui les freine. Chacun a décidé de canaux, et surtout d’un moment différent pour lui parler.</p>
   </div>
-  <div class="personas">
+  <div class="personas" data-reveal="stagger">
     <article class="persona dv-1">
       <h3>Sophie et Marc</h3>
       <p class="who">Un couple de Lyonnais, 42 et 45 ans, infirmière et technicien. Trois ou quatre séjours par an, des restos, des escape games, l’Atelier des Lumières. Jamais le théâtre.</p>
@@ -2709,7 +2730,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
       </div>
       <button class="ghost" type="button" data-expand="cmp-landing" data-more="Dérouler la page" data-less="Replier la page" aria-expanded="false">Dérouler la page</button>
     </div>
-    <div class="stage dark">
+    <div class="stage dark" data-reveal="shutter">
       <div class="browser"><div class="crop cmp" id="cmp-landing" data-show="ui" style="--h:560px">
         <span class="cmp-wire"><img class="is-wire" aria-hidden="true" src="img/divein-landing-wire.webp" width="1440" height="2648" loading="lazy" alt="Fil de fer annoté de la landing page : en-tête sans menu, bloc principal qui reprend le message de la publicité, trois raisons d'y aller, un bouton de réservation pour chaque date, un renvoi vers le site et un pied de page minimal."></span>
         <i class="cmp-line" aria-hidden="true"></i>
@@ -2727,7 +2748,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
       </div>
       <button class="ghost" type="button" data-expand="cmp-page" data-more="Dérouler la page" data-less="Replier la page" aria-expanded="false">Dérouler la page</button>
     </div>
-    <div class="stage">
+    <div class="stage" data-reveal="shutter">
       <div class="browser"><div class="crop cmp" id="cmp-page" data-show="ui" style="--h:560px">
         <span class="cmp-wire"><img class="is-wire" aria-hidden="true" src="img/divein-page-wire.webp" width="1400" height="3309" loading="lazy" alt="Fil de fer de la page de présentation : menu, bloc principal avec deux boutons, concept, les quatre sens, prochaines séances, témoignages, infos pratiques et pied de page."></span>
         <i class="cmp-line" aria-hidden="true"></i>
@@ -2748,7 +2769,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
       <p>Le teaser tient en une ligne de lumière et quelques mots. La première version était trop chargée, je l’ai vidée.</p>
     </div>
     <figure>
-      <img class="teaser" src="img/divein-teaser.webp" width="720" height="720" loading="lazy" alt="Teaser carré pour les réseaux sociaux : fond noir, une fine ligne de lumière cyan, le texte Bientôt, un nouvel univers, la même plongée.">
+      <img class="teaser" src="img/divein-teaser.webp" width="720" height="720" loading="lazy" alt="Teaser carré pour les réseaux sociaux : fond noir, une fine ligne de lumière cyan, le texte Bientôt, un nouvel univers, la même plongée." data-reveal="rise">
       <figcaption class="cap">Teaser carré pour les réseaux sociaux.</figcaption>
     </figure>
   </div>
@@ -2798,7 +2819,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
     <div class="tool">
       <button class="ghost" type="button" data-expand="ky-home" data-more="Dérouler la page d'accueil" data-less="Replier la page d'accueil" aria-expanded="false">Dérouler la page d’accueil</button>
     </div>
-    <div class="stage">
+    <div class="stage" data-reveal="shutter">
       <div class="browser"><div class="crop" id="ky-home" style="--h:560px"><img src="img/kyoto-accueil.webp" width="1280" height="1782" loading="lazy" decoding="async" alt="Page d'accueil du site Découvrir Kyoto : un bandeau « Bienvenue à Kyoto » avec le nom de la ville en kanji rouges, six cartes de catégories avec leur nombre d'articles, puis six cartes illustrées pour les derniers lieux ajoutés."></div></div>
     </div>
     <p class="cap">La page d’accueil, telle qu’elle s’affiche sur ordinateur.</p>
@@ -2812,7 +2833,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   <div class="prose">
     <p>Avant d’écrire une ligne de code, j’ai rangé le contenu dans une base de quatre tables reliées entre elles : une trentaine de lieux, classés dans six catégories et huit quartiers. Un lieu a une catégorie et un quartier, et chaque avis est rattaché à un lieu. Comme ça, aucune information n’est écrite deux fois, et je peux afficher un lieu avec tous ses avis et sa note moyenne.</p>
   </div>
-  <div class="tables">
+  <div class="tables" data-reveal="stagger">
     <div class="tcard"><h3>article</h3><ul><li class="pk">id_article</li><li>titre</li><li>texte</li><li>image</li><li>prix</li><li>date_creation</li><li class="fk">id_categorie</li><li class="fk">id_quartier</li></ul></div>
     <div class="tcard"><h3>categorie</h3><ul><li class="pk">id_categorie</li><li>nom</li><li>icone</li><li>description</li></ul></div>
     <div class="tcard"><h3>quartier</h3><ul><li class="pk">id_quartier</li><li>nom</li><li>description</li></ul></div>
@@ -2829,7 +2850,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
     <p>Chaque page est générée à partir de la base. Côté PHP, je vais chercher un lieu et ses avis, et je calcule la note moyenne. Côté Twig, un modèle affiche le tout et parcourt les avis. Le code qui cherche les données reste séparé de celui qui les affiche.</p>
     <p>Pour ajouter un lieu, il suffit de l’ajouter dans la base, sans toucher au code. C’est le vrai progrès par rapport à mon premier site, où tout était écrit à la main.</p>
   </div>
-  <ol class="pipe" aria-label="Le chemin d'une page, de la base à l'écran">
+  <ol class="pipe" aria-label="Le chemin d'une page, de la base à l'écran" data-reveal="stagger">
     <li><b>La base</b><span>Quatre tables MySQL</span></li>
     <li><b>PHP</b><span>Va chercher un lieu et ses avis, calcule la note moyenne</span></li>
     <li><b>Twig</b><span>Un modèle met ces données en page</span></li>
@@ -2840,7 +2861,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
     <div class="tool">
       <button class="ghost" type="button" data-expand="ky-fiche" data-more="Dérouler la fiche" data-less="Replier la fiche" aria-expanded="false">Dérouler la fiche</button>
     </div>
-    <div class="stage">
+    <div class="stage" data-reveal="shutter">
       <div class="browser"><div class="crop" id="ky-fiche" style="--h:520px"><img src="img/kyoto-fiche.webp" width="1280" height="1644" loading="lazy" decoding="async" alt="Fiche du lieu « Cérémonie du thé à Kyoto » : une grande photo, la catégorie, le quartier et le tarif, le texte de présentation, puis les avis des visiteurs avec la note moyenne et le formulaire pour laisser un avis."></div></div>
     </div>
     <p class="cap">Au bout du chemin, la fiche d’un lieu : sa catégorie, son quartier et son tarif, puis les avis des visiteurs et leur note moyenne.</p>
@@ -2850,7 +2871,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
     <div class="tool">
       <button class="ghost" type="button" data-expand="ky-tous" data-more="Dérouler les trente lieux" data-less="Replier la liste" aria-expanded="false">Dérouler les trente lieux</button>
     </div>
-    <div class="stage">
+    <div class="stage" data-reveal="shutter">
       <div class="pair">
         <figure>
           <div class="browser"><img src="img/kyoto-liste.webp" width="1280" height="1180" loading="lazy" decoding="async" alt="Page de la catégorie Activités : quatre lieux en liste, chacun avec sa photo, le début de son texte, son prix et un lien « Lire la suite »."></div>
@@ -2875,7 +2896,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
       <p>Je sais donc exactement où est la faille et comment la corriger. Pour moi, c’est la partie la plus utile du projet : tester au lieu de supposer.</p>
     </div>
     <figure>
-      <img class="plain-img" src="img/kyoto-avis.webp" width="960" height="775" loading="lazy" decoding="async" alt="Bas d'une fiche : la note moyenne, un avis déjà publié, puis le formulaire « Laisser un avis » avec le nom, la note, le commentaire et le bouton « Publier mon avis ».">
+      <img class="plain-img" src="img/kyoto-avis.webp" width="960" height="775" loading="lazy" decoding="async" alt="Bas d'une fiche : la note moyenne, un avis déjà publié, puis le formulaire « Laisser un avis » avec le nom, la note, le commentaire et le bouton « Publier mon avis »." data-reveal="rise">
       <figcaption class="cap">Le formulaire d’avis, en bas d’une fiche. C’est lui que j’ai essayé de piéger.</figcaption>
     </figure>
   </div>
@@ -3044,6 +3065,54 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   var viewerSync = function () {};     /* remplacée plus bas par la visionneuse */
 
   var esc = function (s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+  /* ---------- Titres d'étude de cas : chaque ligne sort d'une fente, d'un coup sec ----------
+     On mesure où le navigateur coupe les lignes, puis on range chaque ligne dans sa propre fenêtre.
+     Seulement pour un titre fait de texte simple, et seulement quand on le voit (une vue cachée ne se mesure pas). */
+  var splitLines = function (el) {
+    var src = el.getAttribute('data-src');
+    if (src === null) {
+      if (el.children.length) { return; }
+      src = el.textContent;
+      el.setAttribute('data-src', src);
+    }
+    if (!el.getClientRects().length) { return; }
+    /* déjà découpé, le titre est une colonne (voir [data-reveal="lines"]) : chaque mot y irait seul sur sa ligne.
+       Le temps de la mesure, on le remet en bloc ordinaire, sinon une deuxième visite ou un redimensionnement
+       le découperait mot par mot */
+    el.style.display = 'block';
+    var words = src.split(' ');
+    el.innerHTML = words.map(function (x) { return '<span class="lw">' + esc(x) + '</span>'; }).join(' ');
+    var lines = [], top = null;
+    $$('.lw', el).forEach(function (s) {
+      if (top === null || Math.abs(s.offsetTop - top) > 4) { lines.push([]); top = s.offsetTop; }
+      lines[lines.length - 1].push(s.textContent);
+    });
+    el.innerHTML = lines.map(function (l, i) {
+      return '<span class="ln"><span class="ln-i" style="--li:' + i + '">' + esc(l.join(' ')) + '</span></span>';
+    }).join(' ');
+    el.style.display = '';
+  };
+  var splitView = function (view) {
+    /* seulement dans une étude de cas : ni l'accueil, ni les mentions légales */
+    if (!view || !view.classList.contains('case') || view.classList.contains('legal')) { return; }
+    if (!view || !on() || !hasIO || typeof seen === 'undefined') { return; }
+    $$('.case-top h1, .sec > h2', view).forEach(function (el) {
+      var fresh = el.getAttribute('data-src') === null;
+      splitLines(el);
+      if (fresh && el.getAttribute('data-src') !== null && !el.classList.contains('is-in')) {
+        el.setAttribute('data-reveal', 'lines');
+        seen.observe(el);
+      }
+    });
+  };
+  var resplitTimer = 0;
+  w.addEventListener('resize', function () {
+    w.clearTimeout(resplitTimer);
+    resplitTimer = w.setTimeout(function () {
+      var view = current ? d.getElementById(current) : null;
+      if (view) { $$('[data-src]', view).forEach(splitLines); }
+    }, 250);
+  });
 
   function show(id) {
     var changed = id !== current;
@@ -3056,6 +3125,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
     /* les deux versions d'une maquette doivent être prêtes avant qu'on demande la bascule */
     $$('.cmp img', view).forEach(function (i) { i.loading = 'eager'; });
     if (!changed || first) { return; }
+    splitView(view);
     if (wipe && on()) {
       /* la ligne bleue traverse l'écran et laisse la nouvelle page derrière elle */
       wipe.classList.remove('run');
@@ -3328,8 +3398,27 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 
   }
 
-  /* ---------- Les dessins des études de cas ne tournent que tant qu'on les voit ---------- */
+  /* ---------- Apparitions au défilement, dans les études de cas ---------- */
   if (hasIO) {
+    $$('[data-reveal="stagger"]').forEach(function (g) {
+      Array.prototype.forEach.call(g.children, function (c, i) { c.style.setProperty('--i', Math.min(i, 9)); });
+    });
+    var seen = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) { return; }
+        var el = e.target;
+        var kind = el.getAttribute('data-reveal');
+        el.classList.add('is-in');     /* une seule fois : rien ne se rejoue au passage suivant */
+        seen.unobserve(el);
+        /* une fois en place, un bloc de texte reprend ses propres transitions */
+        if (kind === 'rise' || kind === 'stagger' || kind === 'shutter') {
+          w.setTimeout(function () { el.removeAttribute('data-reveal'); }, 2000);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.01 });
+    $$('[data-reveal]').forEach(function (el) { seen.observe(el); });
+
+    /* les dessins des études de cas ne tournent que tant qu'on les voit */
     var watch = function (threshold) {
       return new IntersectionObserver(function (entries) {
         entries.forEach(function (e) { e.target.classList.toggle('is-live', e.isIntersecting); });
@@ -3465,8 +3554,8 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
             var r = to.getBoundingClientRect();
             var top = 0, bot = w.innerHeight;
             if (body) { var b = body.getBoundingClientRect(); top = b.top + body.clientTop; bot = top + body.clientHeight; }
-            var seen = Math.min(r.bottom, bot) - Math.max(r.top, top);
-            if (r.height > 0 && seen >= Math.min(120, r.height) && seen >= r.height * 0.3) {
+            var shown = Math.min(r.bottom, bot) - Math.max(r.top, top);
+            if (r.height > 0 && shown >= Math.min(120, r.height) && shown >= r.height * 0.3) {
               /* ce que le bord de la planche cache reste caché pendant l'étirement : rien n'apparaît puis disparaît */
               root.style.setProperty('--vt-t', (Math.max(0, top - r.top) / r.height).toFixed(4));
               root.style.setProperty('--vt-b', (Math.max(0, r.bottom - bot) / r.height).toFixed(4));
@@ -3537,6 +3626,10 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
     if (el.closest('.hero-wire') || el.children.length || !el.textContent.trim()) { return; }
     el.innerHTML = '<span class="roll"><span class="roll-i">' + esc(el.textContent) + '</span></span>';
   });
+
+  /* la vue affichée au chargement : ses titres sont découpés une fois les polices prêtes */
+  if (d.fonts && d.fonts.ready) { d.fonts.ready.then(function () { splitView(current ? d.getElementById(current) : null); }); }
+  else { splitView(current ? d.getElementById(current) : null); }
 
   /* ---------- Impression et « Enregistrer en PDF » ----------
      Sur papier, tout doit être là : on coupe les animations (ce qui attendait le défilement apparaît),
