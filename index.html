@@ -1429,7 +1429,7 @@ html.vt-solo::view-transition-old(planche) { animation-duration: 280ms; }
 .anim [data-reveal="shutter"].is-in > * { scale: 1; }
 
 /* ---- sur l'accueil, un seul effet au défilement : chaque visuel de projet passe du fil de fer à l'image ---- */
-/* un visuel : l'emplacement vide du fil de fer, puis l'image */
+/* un visuel : l'emplacement vide du fil de fer, puis l'image ; et dans l'autre sens quand il quitte l'écran */
 .anim [data-reveal="wipe"] { position: relative; overflow: hidden; }
 .anim [data-reveal="wipe"]::after {
   content: ""; position: absolute; inset: 0; z-index: 4;
@@ -1438,9 +1438,13 @@ html.vt-solo::view-transition-old(planche) { animation-duration: 280ms; }
     linear-gradient(to bottom right, transparent calc(50% - .8px), var(--ph-line) calc(50% - .8px), var(--ph-line) calc(50% + .8px), transparent calc(50% + .8px)),
     var(--ph-bg);
   border-right: 3px solid transparent;
-  transition: transform var(--dur-wipe) var(--ease-out);
+  /* en se refermant, la ligne bleue reste visible pendant qu'elle repasse, puis s'efface une fois la case fermée */
+  transition: transform var(--dur-wipe) var(--ease-out), border-right-color 0s linear var(--dur-wipe);
 }
-.anim [data-reveal="wipe"].is-in::after { transform: translateX(-101%); border-right-color: var(--guide); }
+.anim [data-reveal="wipe"].is-in::after {
+  transform: translateX(-101%); border-right-color: var(--guide);
+  transition: transform var(--dur-wipe) var(--ease-out), border-right-color 0s;
+}
 
 
 /* d'une page à l'autre : le même geste, sur tout l'écran */
@@ -3483,7 +3487,17 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
         }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.01 });
-    $$('[data-reveal]').forEach(function (el) { seen.observe(el); });
+    $$('[data-reveal]:not([data-reveal="wipe"])').forEach(function (el) { seen.observe(el); });
+
+    /* les visuels des projets, dans les deux sens : ils passent à l'image aux trois quarts visibles, et se referment
+       en fil de fer à moitié sortis, pour qu'on voie la case se refermer ; deux seuils écartés, sans clignotement au bord */
+    var wiper = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.intersectionRatio >= 0.7) { e.target.classList.add('is-in'); }
+        else if (e.intersectionRatio <= 0.45) { e.target.classList.remove('is-in'); }
+      });
+    }, { rootMargin: '-56px 0px 0px 0px', threshold: [0, 0.45, 0.7, 1] });   /* la barre du haut ne compte pas comme écran */
+    $$('[data-reveal="wipe"]').forEach(function (el) { wiper.observe(el); });
 
     /* les dessins des études de cas ne tournent que tant qu'on les voit */
     var watch = function (threshold) {
