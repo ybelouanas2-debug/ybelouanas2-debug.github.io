@@ -1104,11 +1104,12 @@ body::after {
 .w-hxh .browser::before { background-color: #000; }
 .w-hxh .shot { display: block; aspect-ratio: 1100 / 687; overflow: hidden; }
 .w-ifsi { --vbg: #17130D; }
-/* la vidéo ne pouvait pas être mise en ligne : sur la table, le plan de tournage imprimé, toujours sur papier clair */
-.w-ifsi .plan-sheet {
-  width: 82%; padding: 3.2%; rotate: -1.5deg;
-  --paper: #FCF8EF; --canvas: #F5EFE2; --soft: #EAE2D0; --ink: #17130D; background: var(--paper);
+/* l'image du plan 1, entièrement floutée (la vidéo ne pouvait pas être mise en ligne), sur un écran */
+.w-ifsi .screen {
+  display: block; width: 84%; border: 6px solid #000; border-radius: 6px; background: #000;
+  box-shadow: 0 0 0 1px #5A5140; transition: translate var(--dur-base) var(--ease-out);
 }
+.w-ifsi .screen img { width: 100%; }
 .work h3 { font-size: clamp(1.3rem, 2.2vw, 1.8rem); line-height: .98; font-stretch: 76%; }
 .work h3 a { text-decoration: none; }
 .work h3 a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
@@ -1189,6 +1190,7 @@ html.has-viewer { overflow: hidden; scrollbar-gutter: stable; }
 @media (min-width: 760px) { .v-pair { grid-template-columns: var(--cols, minmax(0, 1fr) minmax(0, 1fr)); } }
 .v-fig figcaption { max-width: 920px; margin: clamp(18px, 2.4vw, 28px) auto 0; }
 .v-fig figcaption p { max-width: 68ch; margin: 0 auto; text-align: center; }
+.cam-badge { position: absolute; left: 12px; top: 12px; }
 /* la fiche de l'IFSI : le plan seul, assez grand pour se lire, et à côté la liste des plans qui s'allument avec lui */
 .plan-fig { max-width: 1000px; }
 /* largeur explicite : centré par ses marges, un SVG sans taille propre retomberait à 300 px */
@@ -1225,7 +1227,9 @@ html.has-viewer { overflow: hidden; scrollbar-gutter: stable; }
 .ia-zoom figcaption { margin-top: 8px; font-size: .9rem; line-height: 1.4; color: var(--ink-2); }
 .ia-poster { margin: 0; }
 .ia-poster img { width: 100%; height: auto; }
-.shots li::before {
+.ifsi-cam { position: relative; }
+.ifsi-cam img { display: block; width: 100%; height: auto; box-shadow: 0 1px 2px #0004, 0 18px 36px -18px #000b; }
+.cam-badge, .shots li::before {
   display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%;
   background: var(--ink); color: var(--canvas); font-family: var(--display); font-weight: 800; font-size: 12px; line-height: 1;
 }
@@ -1488,7 +1492,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   .anim .work:hover .w-flyer .is-back { translate: 40% -5%; rotate: 11deg; }
   .anim .work:hover .w-flyer .is-front { translate: -40% 4%; rotate: -8deg; }
   .anim .work:hover .w-hxh .browser { translate: 0 -6px; }
-  .anim .work:hover .w-ifsi .plan-sheet { translate: 0 -6px; rotate: 0deg; }
+  .anim .work:hover .w-ifsi .screen { translate: 0 -6px; }
   .anim .ticker:hover .ticker-track { animation-play-state: paused; }
   .viewer-close:hover { background: var(--ink); color: var(--canvas); }
   .split-grab:hover .split-knob { scale: 1.08; }
@@ -1566,8 +1570,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   }
   .view.is-entering { animation-duration: var(--dur-base) !important; }
   .btn:hover, .proj:hover .proj-visual > *, .next:hover b { translate: none; }
-  .work:hover .w-ia .sheet, .work:hover .w-hxh .browser, .work:hover .w-ifsi .plan-sheet { translate: none !important; }
-  .work:hover .w-ifsi .plan-sheet { rotate: -1.5deg !important; }
+  .work:hover .w-ia .sheet, .work:hover .w-hxh .browser, .work:hover .w-ifsi .screen { translate: none !important; }
   .work:hover .w-flyer .is-back { translate: 24% -3% !important; rotate: 7deg !important; }
   .work:hover .w-flyer .is-front { translate: -24% 3% !important; rotate: -5deg !important; }
   .motion, .viewwipe { display: none; }
@@ -1611,6 +1614,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
 @keyframes pl-tag1 { 0.00% { background-color: var(--yellow); color: #000 } 18.00% { background-color: var(--yellow); color: #000 } 21.00% { background-color: var(--ink); color: var(--canvas) } 97.00% { background-color: var(--ink); color: var(--canvas) } 100.00% { background-color: var(--yellow); color: #000 } }
 .anim .viewer[open] .pl-c1 { animation: pl-on1 10s linear infinite; }
 .anim .viewer[open] .shots li:nth-child(1)::before { animation: pl-tag1 10s linear infinite; }
+.anim .viewer[open] .cam-badge { animation: pl-tag1 10s linear infinite; }
 .anim .work:hover .w-ifsi .pl-c1 { animation: pl-on1 6s linear infinite; }
 @keyframes pl-on2 { 19.00% { opacity: .14 } 22.00% { opacity: .7 } 38.00% { opacity: .7 } 41.00% { opacity: .14 } 59.00% { opacity: .14 } 62.00% { opacity: .7 } 78.00% { opacity: .7 } 81.00% { opacity: .14 } 100.00% { opacity: .14 } }
 @keyframes pl-tag2 { 19.00% { background-color: var(--ink); color: var(--canvas) } 22.00% { background-color: var(--yellow); color: #000 } 38.00% { background-color: var(--yellow); color: #000 } 41.00% { background-color: var(--ink); color: var(--canvas) } 59.00% { background-color: var(--ink); color: var(--canvas) } 62.00% { background-color: var(--yellow); color: #000 } 78.00% { background-color: var(--yellow); color: #000 } 81.00% { background-color: var(--ink); color: var(--canvas) } 100.00% { background-color: var(--ink); color: var(--canvas) } }
@@ -1906,12 +1910,12 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
         <article class="work">
           <div class="work-visual w-ifsi" aria-hidden="true">
             <div class="wv">
-            <span class="sheet plan-sheet"><svg class="plan-svg" viewBox="22 18 516 321" aria-hidden="true" focusable="false"><clipPath id="pl-room-mini"><rect x="25" y="25" width="510" height="310"/></clipPath><rect class="pl-floor" x="24" y="24" width="512" height="312"/><rect class="pl-win" x="330" y="19" width="140" height="10"/><path class="pl-thin" d="M330 24H470"/><path class="pl-gap" d="M396 336H458"/><path class="pl-thin" d="M396 336V278"/><path class="pl-thin pl-dash" d="M396 278A58 58 0 0 1 454 336"/><g clip-path="url(#pl-room-mini)"><path class="pl-fov pl-c1" d="M13 0L303 135.2L303 -135.2Z" transform="translate(92 306) rotate(-40.3)"/><path class="pl-fov pl-c2" d="M13 0L294.5 44.6L294.5 -44.6Z" transform="translate(136 246) rotate(-35.1)"/><path class="pl-fov pl-c3" d="M13 0L139.4 20L139.4 -20Z" transform="translate(290 156) rotate(-41.4)"/><path class="pl-fov pl-c4" d="M13 0L219.8 36.5L219.8 -36.5Z" transform="translate(330 66) rotate(135.7)"/></g><rect class="pl-seat" x="372" y="40" width="40" height="34" rx="8"/><rect class="pl-desk" x="318" y="98" width="180" height="58"/><path class="pl-thin" d="M408 98V156"/><rect class="pl-obj" x="348" y="110" width="22" height="30"/><path class="pl-thin" d="M353 118H365M353 125H365"/><rect class="pl-obj" x="440" y="110" width="30" height="21" transform="rotate(-8 455 120)"/><rect class="pl-chair" x="139" y="193" width="62" height="58" rx="14" transform="rotate(54.9 170 222)"/><g class="pl-patient"><ellipse class="pl-body" cx="170" cy="222" rx="21" ry="11" transform="rotate(54.9 170 222)"/><circle class="pl-head" cx="172.5" cy="220.3" r="8.5"/></g><g class="pl-nurse"><ellipse class="pl-body" cx="392" cy="66" rx="21" ry="11" transform="rotate(234.9 392 66)"/><circle class="pl-head" cx="389.5" cy="67.7" r="8.5"/></g><g transform="translate(92 306) rotate(-40.3)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="65" cy="297" r="10"/><text class="pl-num" x="65" y="301" text-anchor="middle">1</text><g transform="translate(136 246) rotate(-35.1)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="112" cy="252" r="10"/><text class="pl-num" x="112" y="256" text-anchor="middle">2</text><g transform="translate(290 156) rotate(-41.4)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="288" cy="180" r="10"/><text class="pl-num" x="288" y="184" text-anchor="middle">3</text><g transform="translate(330 66) rotate(135.7)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="332" cy="44" r="10"/><text class="pl-num" x="332" y="48" text-anchor="middle">4</text></svg></span>
+            <span class="screen"><img src="img/ifsi-flou.webp" srcset="img/ifsi-flou-640.webp 640w, img/ifsi-flou.webp 1280w" sizes="(max-width: 600px) 72vw, (max-width: 1440px) 34vw, 484px" width="1280" height="721" alt="" loading="lazy" decoding="async"></span>
             </div>
           </div>
           <p class="where">SAÉ 104, en groupe de cinq, 1<sup>re</sup> année</p>
           <h3><a href="img/ifsi-plan.svg" data-view="voir-ifsi" aria-haspopup="dialog">Vidéo tournée dans un IFSI</a></h3>
-          <p>Une vidéo pour un institut de formation en soins infirmiers : un entretien avec un patient en grande détresse, joué et filmé sur place. J’étais au cadre, à l’image et au son. On n’avait pas le droit de la mettre en ligne : je montre le plan de tournage.</p>
+          <p>Une vidéo pour un institut de formation en soins infirmiers : un entretien avec un patient en grande détresse, joué et filmé sur place. J’étais au cadre, à l’image et au son. On n’avait pas le droit de la mettre en ligne : l’image est entièrement floutée.</p>
           <span class="more" aria-hidden="true">Voir en grand</span>
         </article>
       </div>
@@ -2038,8 +2042,11 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
         <p class="viewer-text">Pour cette SAÉ, l’IUT travaillait avec l’institut de formation en soins infirmiers (IFSI) : chaque groupe tournait sur place une vidéo d’un peu plus de deux minutes pour les étudiants infirmiers de 1<sup>re</sup> année, avec un référent de l’IFSI pour suivre le tournage. Notre scène : l’entretien d’une infirmière avec un patient venu de lui-même au centre médico-psychologique, en grande détresse. La vidéo sert ensuite d’exercice : les étudiants doivent évaluer le risque suicidaire et proposer une prise en soins.</p>
         <p class="viewer-text">Pour un sujet pareil, on a gardé une mise en scène sobre : des plans posés, une lumière douce, et un champ-contrechamp qui laisse le temps d’écouter. Le texte de la situation s’affiche au début, les questions de l’exercice à la fin. Dans un groupe de cinq, j’étais au cadre, à l’image et au son, avec un cahier des charges précis : 25 images par seconde, un son mixé sur plusieurs pistes, une balance des blancs juste et des sous-titres en anglais.</p>
       </div>
-      <figure class="plate v-fig plan-fig">
-        <div class="plan-room" data-morph><svg class="plan-svg" viewBox="22 18 516 321" role="img" aria-labelledby="plan-ifsi-t"><title id="plan-ifsi-t">Plan de la salle vu de dessus : le patient dans un fauteuil, l’infirmière derrière un bureau, et les quatre places de la caméra.</title><clipPath id="pl-room"><rect x="25" y="25" width="510" height="310"/></clipPath><rect class="pl-floor" x="24" y="24" width="512" height="312"/><rect class="pl-win" x="330" y="19" width="140" height="10"/><path class="pl-thin" d="M330 24H470"/><path class="pl-gap" d="M396 336H458"/><path class="pl-thin" d="M396 336V278"/><path class="pl-thin pl-dash" d="M396 278A58 58 0 0 1 454 336"/><g clip-path="url(#pl-room)"><path class="pl-fov pl-c1" d="M13 0L303 135.2L303 -135.2Z" transform="translate(92 306) rotate(-40.3)"/><path class="pl-fov pl-c2" d="M13 0L294.5 44.6L294.5 -44.6Z" transform="translate(136 246) rotate(-35.1)"/><path class="pl-fov pl-c3" d="M13 0L139.4 20L139.4 -20Z" transform="translate(290 156) rotate(-41.4)"/><path class="pl-fov pl-c4" d="M13 0L219.8 36.5L219.8 -36.5Z" transform="translate(330 66) rotate(135.7)"/></g><rect class="pl-seat" x="372" y="40" width="40" height="34" rx="8"/><rect class="pl-desk" x="318" y="98" width="180" height="58"/><path class="pl-thin" d="M408 98V156"/><rect class="pl-obj" x="348" y="110" width="22" height="30"/><path class="pl-thin" d="M353 118H365M353 125H365"/><rect class="pl-obj" x="440" y="110" width="30" height="21" transform="rotate(-8 455 120)"/><rect class="pl-chair" x="139" y="193" width="62" height="58" rx="14" transform="rotate(54.9 170 222)"/><g class="pl-patient"><ellipse class="pl-body" cx="170" cy="222" rx="21" ry="11" transform="rotate(54.9 170 222)"/><circle class="pl-head" cx="172.5" cy="220.3" r="8.5"/></g><g class="pl-nurse"><ellipse class="pl-body" cx="392" cy="66" rx="21" ry="11" transform="rotate(234.9 392 66)"/><circle class="pl-head" cx="389.5" cy="67.7" r="8.5"/></g><g transform="translate(92 306) rotate(-40.3)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="65" cy="297" r="10"/><text class="pl-num" x="65" y="301" text-anchor="middle">1</text><g transform="translate(136 246) rotate(-35.1)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="112" cy="252" r="10"/><text class="pl-num" x="112" y="256" text-anchor="middle">2</text><g transform="translate(290 156) rotate(-41.4)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="288" cy="180" r="10"/><text class="pl-num" x="288" y="184" text-anchor="middle">3</text><g transform="translate(330 66) rotate(135.7)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="332" cy="44" r="10"/><text class="pl-num" x="332" y="48" text-anchor="middle">4</text></svg></div>
+      <figure class="plate v-fig">
+        <div class="v-pair" style="--cols: minmax(0, 1.6075fr) minmax(0, 1.775fr)">
+          <svg class="plan-svg" viewBox="22 18 516 321" role="img" aria-labelledby="plan-ifsi-t"><title id="plan-ifsi-t">Plan de la salle vu de dessus : le patient dans un fauteuil, l’infirmière derrière un bureau, et les quatre places de la caméra.</title><clipPath id="pl-room"><rect x="25" y="25" width="510" height="310"/></clipPath><rect class="pl-floor" x="24" y="24" width="512" height="312"/><rect class="pl-win" x="330" y="19" width="140" height="10"/><path class="pl-thin" d="M330 24H470"/><path class="pl-gap" d="M396 336H458"/><path class="pl-thin" d="M396 336V278"/><path class="pl-thin pl-dash" d="M396 278A58 58 0 0 1 454 336"/><g clip-path="url(#pl-room)"><path class="pl-fov pl-c1" d="M13 0L303 135.2L303 -135.2Z" transform="translate(92 306) rotate(-40.3)"/><path class="pl-fov pl-c2" d="M13 0L294.5 44.6L294.5 -44.6Z" transform="translate(136 246) rotate(-35.1)"/><path class="pl-fov pl-c3" d="M13 0L139.4 20L139.4 -20Z" transform="translate(290 156) rotate(-41.4)"/><path class="pl-fov pl-c4" d="M13 0L219.8 36.5L219.8 -36.5Z" transform="translate(330 66) rotate(135.7)"/></g><rect class="pl-seat" x="372" y="40" width="40" height="34" rx="8"/><rect class="pl-desk" x="318" y="98" width="180" height="58"/><path class="pl-thin" d="M408 98V156"/><rect class="pl-obj" x="348" y="110" width="22" height="30"/><path class="pl-thin" d="M353 118H365M353 125H365"/><rect class="pl-obj" x="440" y="110" width="30" height="21" transform="rotate(-8 455 120)"/><rect class="pl-chair" x="139" y="193" width="62" height="58" rx="14" transform="rotate(54.9 170 222)"/><g class="pl-patient"><ellipse class="pl-body" cx="170" cy="222" rx="21" ry="11" transform="rotate(54.9 170 222)"/><circle class="pl-head" cx="172.5" cy="220.3" r="8.5"/></g><g class="pl-nurse"><ellipse class="pl-body" cx="392" cy="66" rx="21" ry="11" transform="rotate(234.9 392 66)"/><circle class="pl-head" cx="389.5" cy="67.7" r="8.5"/></g><g transform="translate(92 306) rotate(-40.3)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="65" cy="297" r="10"/><text class="pl-num" x="65" y="301" text-anchor="middle">1</text><g transform="translate(136 246) rotate(-35.1)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="112" cy="252" r="10"/><text class="pl-num" x="112" y="256" text-anchor="middle">2</text><g transform="translate(290 156) rotate(-41.4)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="288" cy="180" r="10"/><text class="pl-num" x="288" y="184" text-anchor="middle">3</text><g transform="translate(330 66) rotate(135.7)"><rect class="pl-cam" x="-11" y="-7" width="18" height="14" rx="2.5"/><path class="pl-cam" d="M7 -4L14 -7V7L7 4Z"/></g><circle class="pl-badge" cx="332" cy="44" r="10"/><text class="pl-num" x="332" y="48" text-anchor="middle">4</text></svg>
+          <div class="ifsi-cam" data-morph><img src="img/ifsi-flou.webp" width="1280" height="721" loading="lazy" decoding="async" alt="Le plan 1 de la vidéo, entièrement flouté : on ne distingue que des taches de couleur."><span class="cam-badge" aria-hidden="true">1</span></div>
+        </div>
         <figcaption>
           <ol class="shots" role="list">
             <li>Plan large sur les deux</li>
@@ -2047,7 +2054,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
             <li>Gros plan sur l’infirmière</li>
             <li>Contrechamp sur le patient</li>
           </ol>
-          <p>On n’avait pas le droit de diffuser la vidéo ni ses images en ligne, c’était une règle de la SAÉ : je ne peux donc pas les montrer ici. À la place, ce plan de la salle montre où était la caméra pour chaque plan de l’entretien. Les caméras s’allument dans l’ordre du montage, avec leur numéro.</p>
+          <p>On n’avait pas le droit de diffuser la vidéo ni ses images en ligne, c’était une règle de la SAÉ : l’image du plan 1 est donc entièrement floutée. Le plan de la salle montre où était la caméra pour chaque plan de l’entretien ; les caméras s’allument dans l’ordre du montage, avec leur numéro.</p>
         </figcaption>
       </figure>
     </div>
