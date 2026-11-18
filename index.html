@@ -1003,6 +1003,22 @@ body::after {
 .proj-text::before { content: counter(p, decimal-leading-zero) " / 05"; display: block; margin-bottom: 14px; font: 700 .74rem/1 var(--text); letter-spacing: .06em; color: var(--ink-2); }
 .proj h3 { font-size: clamp(1.7rem, 3.5vw, 3rem); line-height: .96; font-stretch: 76%; }
 .proj-meta dt { padding-top: .22em; }
+/* derrière chaque projet, son numéro en très grand, aligné sur le texte : sur grand écran seulement,
+   et il glisse à peine quand on fait défiler la page (si le navigateur sait lier une animation au défilement) */
+@media (min-width: 961px) {
+  .proj-stage { isolation: isolate; overflow: hidden; overflow: clip; view-timeline: --projet block; }
+  .proj-stage::before {
+    content: counter(p, decimal-leading-zero);
+    content: counter(p, decimal-leading-zero) / "";
+    position: absolute; z-index: -1; left: -.04em; bottom: -.1em;
+    font-family: var(--display); font-weight: 900; font-stretch: 62%; font-size: clamp(260px, 58vh, 600px); line-height: .8;
+    color: var(--soft); pointer-events: none;
+  }
+  @supports (animation-timeline: view()) {
+    .anim .proj-stage::before { animation: proj-num linear both; animation-timeline: --projet; }
+  }
+}
+@keyframes proj-num { from { translate: 0 8vh; } to { translate: 0 -8vh; } }
 .chip { border-width: 1px; border-color: var(--ink-2); padding: 6px 10px; font-size: .68rem; }
 .more { font-size: .78rem; }
 
@@ -1560,6 +1576,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
    Au moment d'imprimer, le script coupe les animations (tout ce qui attendait le défilement apparaît)
    et charge les images encore en attente. Ici : papier blanc, encre noire, et rien de ce qui ne sert qu'à l'écran. */
 @media print {
+  .proj-stage::before { content: none; }
   :root, :root:not([data-theme="light"]), :root[data-theme="dark"] {
     --canvas: #fff; --paper: #fff; --soft: #F1ECE0; --ink: #17130D; --ink-2: #4F483D; --line: #CFC5AF;
     --frame: #17130D; --guide: #1F5BFF; color-scheme: light;
