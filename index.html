@@ -382,6 +382,38 @@ h1, h2, h3 { text-wrap: balance; }
   .split-hint { left: calc(var(--x0, 0px) + 26px); right: auto; bottom: auto; top: 84px; max-width: 15rem; text-align: left; }
 }
 
+/* ---------- Bandeau des étapes : à gauche de la ligne le fil de fer, à droite le mot ---------- */
+.ticker {
+  position: relative; overflow: hidden; height: clamp(52px, 6vw, 74px);
+  background: #000; color: #fff;
+  --lx: clamp(86px, 23vw, 330px);
+  -webkit-user-select: none; user-select: none;
+}
+.ticker-layer { position: absolute; inset: 0; display: flex; align-items: center; }
+.ticker-layer.is-ui { clip-path: inset(0 0 0 var(--lx)); }
+.ticker-layer.is-wire { clip-path: inset(0 calc(100% - var(--lx)) 0 0); background: var(--w-bg); color: var(--w-stroke); }
+.ticker-track { display: flex; align-items: center; flex: none; width: max-content; transform: translateX(-25%); }
+.anim .ticker-track { animation: ticker var(--loop-band) linear infinite paused; }
+.anim .ticker.is-live .ticker-track { animation-play-state: running; }
+@keyframes ticker { from { transform: translateX(-25%); } to { transform: translateX(0); } }
+.tk {
+  font-family: var(--display); font-weight: 700; font-size: clamp(.92rem, 1.9vw, 1.4rem);
+  letter-spacing: -.03em; line-height: 1; white-space: nowrap;
+}
+.tk::before { content: attr(data-t); }
+.is-wire .tk::before { color: transparent; background: var(--w-bar); border-radius: 4px; }
+.tk-sep {
+  position: relative; flex: none; width: clamp(22px, 3vw, 40px); height: 2px;
+  margin-inline: clamp(14px, 1.8vw, 26px); background: var(--yellow);
+}
+.tk-sep::after {
+  content: ""; position: absolute; right: -1px; top: 50%; width: 9px; height: 9px; margin-top: -4.5px;
+  border-top: 2px solid var(--yellow); border-right: 2px solid var(--yellow); transform: rotate(45deg);
+}
+.is-wire .tk-sep { background: var(--w-stroke); }
+.is-wire .tk-sep::after { border-color: var(--w-stroke); }
+.ticker-line { position: absolute; top: 0; bottom: 0; left: var(--lx); width: 2px; margin-left: -1px; background: #1F5BFF; }
+
 /* ---------- Sections de l'accueil ---------- */
 .band { padding-block: clamp(56px, 8vw, 108px); }
 .band + .band { border-top: 1px solid var(--line); }
@@ -1354,8 +1386,8 @@ html.vt-solo::view-transition-old(planche) { animation-duration: 280ms; }
 }
 
 /* ---------- Le mouvement ----------
-   Sur l'accueil, peu d'animations, et chacune dit quelque chose : la ligne bleue de l'ouverture, le passage
-   du fil de fer à l'image sur les visuels des projets, le passage d'une page à l'autre, la planche qui s'ouvre,
+   Sur l'accueil, peu d'animations, et chacune dit quelque chose : la ligne bleue de l'ouverture et la bande des
+   étapes qui la prolonge, le passage du fil de fer à l'image sur les visuels des projets, le passage d'une page à l'autre, la planche qui s'ouvre,
    et ce qui répond à un geste (survol, filtre). Le texte, lui, n'attend jamais le défilement. Les études de cas, elles, gardent leur mise en scène : dessins, titres et figures qui apparaissent.
    Tout est rangé sous .anim, posé par le script seulement si les animations peuvent tourner. */
 
@@ -1441,6 +1473,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   .anim .work:hover .w-flyer .is-front { translate: -40% 4%; rotate: -8deg; }
   .anim .work:hover .w-hxh .browser { translate: 0 -6px; }
   .anim .work:hover .w-ifsi .plan-sheet { translate: 0 -6px; rotate: 0deg; }
+  .anim .ticker:hover .ticker-track { animation-play-state: paused; }
   .viewer-close:hover { background: var(--ink); color: var(--canvas); }
   .split-grab:hover .split-knob { scale: 1.08; }
   .next:hover b { translate: 10px 0; text-decoration: underline; text-decoration-thickness: .08em; text-underline-offset: .16em; }
@@ -1533,7 +1566,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
   }
   @page { margin: 14mm 12mm; }
   body { background: #fff; }
-  .topbar, .split, .split-hint, .hero-clip, .viewwipe, .motion, body::after,
+  .topbar, .split, .split-hint, .hero-clip, .ticker, .viewwipe, .motion, body::after,
   .skip, .actions, .filter, .seg, .ghost, .flowtabs, #copy, .copied, .back { display: none !important; }
   [data-reveal] { opacity: 1 !important; translate: none !important; }
   [data-reveal]::after, .wt::before, .wt::after { display: none !important; }
@@ -1688,6 +1721,8 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
     <input class="split-range" id="split" type="range" min="0" max="100" step="1" value="0" aria-label="Afficher le haut de page en fil de fer">
   </div>
 </header>
+
+<div class="ticker" aria-hidden="true"><div class="ticker-layer is-ui"><div class="ticker-track"><span class="tk" data-t="Benchmark"></span><i class="tk-sep"></i><span class="tk" data-t="Personae"></span><i class="tk-sep"></i><span class="tk" data-t="User flows"></span><i class="tk-sep"></i><span class="tk" data-t="Arborescence"></span><i class="tk-sep"></i><span class="tk" data-t="Fils de fer"></span><i class="tk-sep"></i><span class="tk" data-t="Maquettes"></span><i class="tk-sep"></i><span class="tk" data-t="Design system"></span><i class="tk-sep"></i><span class="tk" data-t="Intégration"></span><i class="tk-sep"></i><span class="tk" data-t="Benchmark"></span><i class="tk-sep"></i><span class="tk" data-t="Personae"></span><i class="tk-sep"></i><span class="tk" data-t="User flows"></span><i class="tk-sep"></i><span class="tk" data-t="Arborescence"></span><i class="tk-sep"></i><span class="tk" data-t="Fils de fer"></span><i class="tk-sep"></i><span class="tk" data-t="Maquettes"></span><i class="tk-sep"></i><span class="tk" data-t="Design system"></span><i class="tk-sep"></i><span class="tk" data-t="Intégration"></span><i class="tk-sep"></i><span class="tk" data-t="Benchmark"></span><i class="tk-sep"></i><span class="tk" data-t="Personae"></span><i class="tk-sep"></i><span class="tk" data-t="User flows"></span><i class="tk-sep"></i><span class="tk" data-t="Arborescence"></span><i class="tk-sep"></i><span class="tk" data-t="Fils de fer"></span><i class="tk-sep"></i><span class="tk" data-t="Maquettes"></span><i class="tk-sep"></i><span class="tk" data-t="Design system"></span><i class="tk-sep"></i><span class="tk" data-t="Intégration"></span><i class="tk-sep"></i><span class="tk" data-t="Benchmark"></span><i class="tk-sep"></i><span class="tk" data-t="Personae"></span><i class="tk-sep"></i><span class="tk" data-t="User flows"></span><i class="tk-sep"></i><span class="tk" data-t="Arborescence"></span><i class="tk-sep"></i><span class="tk" data-t="Fils de fer"></span><i class="tk-sep"></i><span class="tk" data-t="Maquettes"></span><i class="tk-sep"></i><span class="tk" data-t="Design system"></span><i class="tk-sep"></i><span class="tk" data-t="Intégration"></span><i class="tk-sep"></i></div></div><div class="ticker-layer is-wire"><div class="ticker-track"><span class="tk" data-t="Benchmark"></span><i class="tk-sep"></i><span class="tk" data-t="Personae"></span><i class="tk-sep"></i><span class="tk" data-t="User flows"></span><i class="tk-sep"></i><span class="tk" data-t="Arborescence"></span><i class="tk-sep"></i><span class="tk" data-t="Fils de fer"></span><i class="tk-sep"></i><span class="tk" data-t="Maquettes"></span><i class="tk-sep"></i><span class="tk" data-t="Design system"></span><i class="tk-sep"></i><span class="tk" data-t="Intégration"></span><i class="tk-sep"></i><span class="tk" data-t="Benchmark"></span><i class="tk-sep"></i><span class="tk" data-t="Personae"></span><i class="tk-sep"></i><span class="tk" data-t="User flows"></span><i class="tk-sep"></i><span class="tk" data-t="Arborescence"></span><i class="tk-sep"></i><span class="tk" data-t="Fils de fer"></span><i class="tk-sep"></i><span class="tk" data-t="Maquettes"></span><i class="tk-sep"></i><span class="tk" data-t="Design system"></span><i class="tk-sep"></i><span class="tk" data-t="Intégration"></span><i class="tk-sep"></i><span class="tk" data-t="Benchmark"></span><i class="tk-sep"></i><span class="tk" data-t="Personae"></span><i class="tk-sep"></i><span class="tk" data-t="User flows"></span><i class="tk-sep"></i><span class="tk" data-t="Arborescence"></span><i class="tk-sep"></i><span class="tk" data-t="Fils de fer"></span><i class="tk-sep"></i><span class="tk" data-t="Maquettes"></span><i class="tk-sep"></i><span class="tk" data-t="Design system"></span><i class="tk-sep"></i><span class="tk" data-t="Intégration"></span><i class="tk-sep"></i><span class="tk" data-t="Benchmark"></span><i class="tk-sep"></i><span class="tk" data-t="Personae"></span><i class="tk-sep"></i><span class="tk" data-t="User flows"></span><i class="tk-sep"></i><span class="tk" data-t="Arborescence"></span><i class="tk-sep"></i><span class="tk" data-t="Fils de fer"></span><i class="tk-sep"></i><span class="tk" data-t="Maquettes"></span><i class="tk-sep"></i><span class="tk" data-t="Design system"></span><i class="tk-sep"></i><span class="tk" data-t="Intégration"></span><i class="tk-sep"></i></div></div><i class="ticker-line"></i></div>
 
 
 <main data-main tabindex="-1">
@@ -3201,7 +3236,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
      Rien n'écoute le défilement : des observateurs préviennent quand une rubrique croise un repère. */
   var links = topbar ? $$('.site-nav a', topbar) : [];
   var tint = $('meta[name="theme-color"]');
-  var gate = null;                     /* l'ouverture : la barre du haut apparaît quand elle est passée */
+  var gate = null;                     /* la bande sous l'ouverture : la barre du haut apparaît quand elle est passée */
   var heroGone = !hero;
   var crossing = {};                   /* rubriques de l'accueil qui croisent le repère, à 40 % de la hauteur */
   var atContact = false;
@@ -3230,7 +3265,7 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
     });
   }
   if (hasIO && topbar) {
-    gate = hero;
+    gate = $('.ticker') || hero;
     if (gate) {
       new IntersectionObserver(function (e) {
         var last = e[e.length - 1];
@@ -3441,6 +3476,9 @@ html:not(.anim) .view.is-entering { animation: fondu var(--dur-base) var(--ease-
     };
     var covers = watch(0.3);
     $$('.case-art').forEach(function (el) { covers.observe(el); });
+    /* la bande des étapes ne défile que tant qu'on la voit */
+    var bands = watch(0);
+    $$('.ticker').forEach(function (el) { bands.observe(el); });
   }
 
   /* ---------- Filtre des projets ---------- */
